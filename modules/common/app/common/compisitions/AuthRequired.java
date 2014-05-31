@@ -1,4 +1,4 @@
-package common.compisition;
+package common.compisitions;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

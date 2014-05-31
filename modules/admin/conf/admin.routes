@@ -1,0 +1,9 @@
+GET     /                               controllers.common.BaseController.redirectTo(url="/admin/index")
+GET     /index                          controllers.admin.Admin.index()
+
+GET     /login                          controllers.admin.Backend.login(returnUrl: String?=null)
+POST    /login                          controllers.admin.Backend.login(returnUrl: String?=null)
+GET     /logout                         controllers.admin.Backend.logout(returnUrl: String?=null)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                   controllers.admin.Assets.at(path="/public", file)
