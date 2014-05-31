@@ -1,4 +1,4 @@
-package com.litha.truyen.common.bo.user;
+package common.bo.user;
 
 import java.util.Date;
 

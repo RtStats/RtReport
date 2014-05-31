@@ -1,4 +1,4 @@
-package com.litha.truyen.common.bo.truyen;
+package common.bo.truyen;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -7,8 +7,8 @@ import java.util.Map;
 
 import com.github.ddth.commons.utils.DPathUtils;
 import com.github.ddth.plommon.bo.jdbc.BaseMysqlDao;
-import com.litha.truyen.common.Constants;
-import com.litha.truyen.common.bo.CounterDao;
+import common.Constants;
+import common.bo.CounterDao;
 
 public class TruyenDao extends BaseMysqlDao {
 

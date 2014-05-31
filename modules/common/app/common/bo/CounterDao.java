@@ -1,4 +1,4 @@
-package com.litha.truyen.common.bo;
+package common.bo;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import play.db.DB;
 
 import com.github.ddth.commons.utils.DPathUtils;
 import com.github.ddth.plommon.bo.jdbc.BaseMysqlDao;
-import com.litha.truyen.common.Constants;
+import common.Constants;
 
 public class CounterDao extends BaseMysqlDao {
 

@@ -1,4 +1,4 @@
-package com.litha.truyen.common.bo.user;
+package common.bo.user;
 
 import com.github.ddth.plommon.bo.BaseBo;
 

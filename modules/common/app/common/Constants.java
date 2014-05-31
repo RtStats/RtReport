@@ -1,4 +1,4 @@
-package com.litha.truyen.common;
+package common;
 
 import com.github.ddth.commons.utils.HashUtils;
 import com.github.ddth.plommon.utils.PlayAppUtils;

@@ -1,4 +1,4 @@
-package com.litha.truyen.common.httpclient;
+package common.httpclient;
 
 import java.io.BufferedReader;
 import java.io.File;
