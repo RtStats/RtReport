@@ -57,3 +57,27 @@ CREATE TABLE truyen_user (
 INSERT INTO truyen_user (uid, uemail, display_name, upassword, group_id, timestamp_create)
 VALUES (1, 'admin@local', 'Administrator', 'a153ba7319d815ada7f473a54c209b4e7c9e3836', 1, UTC_TIMESTAMP());
 UPDATE truyen_counter SET cvalue=cvalue+1 WHERE cname='user-id';
+
+DROP TABLE IF EXISTS truyen_category;
+CREATE TABLE truyen_category (
+    cid                             INT                         NOT NULL,
+        PRIMARY KEY (cid),
+    cposition                       INT                         NOT NULL DEFAULT 0,
+        INDEX (cposition),
+    cnum_stories                    INT                         NOT NULL DEFAULT 0,
+    ctitle                          VARCHAR(100),
+    csummary                        TEXT
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+DROP TABLE IF EXISTS truyen_story;
+CREATE TABLE truyen_story (
+    sid                             INT                         NOT NULL,
+        PRIMARY KEY (sid),
+    sstatus                         INT                         NOT NULL DEFAULT 0,
+        INDEX (sstatus),
+    sis_published                   INT                         NOT NULL DEFAULT 0,
+        INDEX (sis_published),
+    stitle                          VARCHAR(100),
+    savatar                         VARCHAR(255),
+    ssummary                        TEXT
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;

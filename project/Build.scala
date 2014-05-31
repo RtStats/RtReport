@@ -18,6 +18,8 @@ object ApplicationBuild extends Build {
         "mysql"                 %  "mysql-connector-java"   % "5.1.29",
         "com.google.guava"      %  "guava"                  % "16.0.1",
         "org.apache.commons"    %  "commons-pool2"          % "2.2",
+        "org.jodd"              %  "jodd-http"              % "3.5.2",
+        "org.jodd"              %  "jodd-lagarto"           % "3.5.2",
         "com.github.ddth"       %  "ddth-commons"           % "0.2.2.1",
         "com.github.ddth"       %% "play-module-plommon"    % "0.5.1.1",
         javaJdbc,
