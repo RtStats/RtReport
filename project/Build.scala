@@ -46,13 +46,24 @@ object ApplicationBuild extends Build {
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     )
+    
+    val moduleAdmin = play.Project(
+        appName + "-admin", appVersion, appDependencies, path = file("modules/admin")
+    ).dependsOn(
+        moduleCommon, moduleWorker
+    ).aggregate(
+        moduleCommon, moduleWorker
+    ).settings(
+        // Force compilation in java 1.6
+        javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
+    )
 
     val main = play.Project(appName, appVersion, appDependencies, path = file(".")).settings(
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     ).dependsOn(
-        moduleCommon, moduleWorker
+        moduleCommon, moduleWorker, moduleAdmin
     ).aggregate(
-        moduleCommon, moduleWorker
+        moduleCommon, moduleWorker, moduleAdmin
     )
 }
