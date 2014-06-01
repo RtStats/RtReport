@@ -11,7 +11,7 @@ import play.mvc.With;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AuthRequired {
-    String[] userGroups() default {};
+    int[] userGroups() default {};
 
     String urlLogin() default "";
 

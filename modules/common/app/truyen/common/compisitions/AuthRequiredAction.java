@@ -42,7 +42,7 @@ public class AuthRequiredAction extends Action<AuthRequired> {
     }
 
     public Promise<SimpleResult> call(final Http.Context ctx) throws Throwable {
-        String[] userGroups = configuration.userGroups();
+        int[] userGroups = configuration.userGroups();
         if (userGroups != null && userGroups.length > 0) {
             UserBo user = Application.currentUser();
             if (user == null) {
