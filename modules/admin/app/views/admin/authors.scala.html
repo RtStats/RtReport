@@ -1,0 +1,79 @@
+@(authors: Array[truyen.common.bo.truyen.AuthorBo])
+@import truyen.common._
+@import play.mvc._
+@import com.github.ddth.plommon.utils._
+@_layout(
+	active="authors",
+	customJs=Array("avant-1.2.1/assets/plugins/datatables/jquery.dataTables.min.js",
+	    "avant-1.2.1/assets/plugins/datatables/dataTables.bootstrap.js"),
+    customCss=Array("avant-1.2.1/assets/plugins/datatables/dataTables.css")
+){
+    <div id="page-heading">
+        <ol class="breadcrumb">
+            <li><a href="@controllers.admin.routes.Admin.index()">@Messages("msg.dashboard")</a></li>
+            <li class="active">@Messages("msg.authors")</li>
+        </ol>
+
+        <h1>@Messages("msg.authors")</h1>
+    </div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                @_macro_displayPageFlashMessage(Controller.flash(controllers.admin.Admin.VIEW_AUTHORS))
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4>@Messages("msg.authors")</h4>
+                        <div class="options">
+                            <a href="javascript:;" class="panel-collapse"><i class="fa fa-chevron-down"></i></a>
+                            <a href="javascript:;"><i class="fa fa-plus"></i></a>
+                        </div>
+                    </div>
+                    <div class="panel-body collapse in">
+                        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered datatables" id="tblAuthors">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center;">@Messages("msg.author.name")</th>
+                                    <th style="text-align: center;">@Messages("msg.author.num_stories")</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for(author <- authors){
+                                    <tr>
+                                        <td style="vertical-align: middle">@author.getName()</td>
+                                        <td style="text-align: center; vertical-align: middle">@author.getNumStories()</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('.datatables').dataTable({
+                                "sDom": "<'row'<'col-xs-6'l><'col-xs-6'f>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+                                "sPaginationType": "bootstrap",
+                                "oLanguage": {
+                                    "sLengthMenu"  : "_MENU_ @Messages("msg.records_per_page")",
+                                    "sSearch"      : "",
+                                    "sEmptyTable"  : "@Messages("msg.nodata")",
+                                    "sZeroRecords" : "@Messages("msg.nodata")",
+                                    "sInfo"        : "@Messages("msg.datatables.sInfo")",
+                                    "sInfoEmpty"   : "@Messages("msg.nodata")",
+                                    "sInfoFiltered": "@Messages("msg.datatables.sInfoFiltered")",
+                                    "oPaginate"    : {
+                                        "sPrevious": "@Messages("msg.prev")",
+                                        "sNext"    : "@Messages("msg.next")",
+                                        "sFirst"   : "@Messages("msg.first")",
+                                        "sLast"    : "@Messages("msg.last")"
+                                    }
+                                }
+                            });
+                            $('.dataTables_filter input').addClass('form-control').attr('placeholder','@Messages("msg.search")');
+                            $('.dataTables_length select').addClass('form-control');
+                        });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

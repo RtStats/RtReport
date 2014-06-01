@@ -1,22 +1,3 @@
-msg.or = or
-msg.signin = Sign-in
-msg.signin.info = Please sign-in
-msg.signup = Sign-up
-msg.signout = Sign-out
-msg.signin.facebook = Sign in with Facebook
-error.signin.facebook = Error: Your Facebook account has not been registered with the website!
-error.signin.failed = Error: Email and/or Password not match!
-
-msg.yes = Yes
-msg.no = No
-msg.ok = Ok
-msg.cancel = Cancel
-msg.reset = Reset
-msg.update = Update
-
 msg.hello = Hi, {0}!
 msg.logged_in = Logged in as {0}
 msg.dashboard = Dashboard
-
-msg.user.email = Email
-msg.user.password = Password

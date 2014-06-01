@@ -1,0 +1,7 @@
+@(flashMsg: String)
+@if(flashMsg!=null && !flashMsg.equals("")){
+    <div class="alert alert-info alert-dismissable">
+        <i class="fa fa-info-circle"></i> @flashMsg
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+    </div>
+}

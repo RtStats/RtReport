@@ -1,0 +1,35 @@
+msg.or = or
+msg.and = and
+msg.yes = Yes
+msg.no = No
+msg.ok = Ok
+msg.cancel = Cancel
+msg.reset = Reset
+msg.update = Update
+
+msg.search = Search
+msg.prev = Prev
+msg.next = Next
+msg.first = First
+msg.last = Last
+
+msg.signin = Sign-in
+msg.signin.info = Please sign-in
+msg.signup = Sign-up
+msg.signout = Sign-out
+msg.signin.facebook = Sign in with Facebook
+error.signin.facebook = Error: Your Facebook account has not been registered with the website!
+error.signin.failed = Error: Email and/or Password not match!
+
+msg.user.email = Email
+msg.user.password = Password
+
+msg.authors = Authors
+msg.author = Author
+msg.author.name = Name
+msg.author.num_stories = Stories
+
+msg.nodata = No data
+msg.records_per_page = records/page
+msg.datatables.sInfo = Display from _START_ to _END_ of _TOTAL_
+msg.datatables.sInfoFiltered = (filtered from total of _MAX_)
