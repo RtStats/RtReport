@@ -1,0 +1,11 @@
+@(section: String="", active: String="")
+@import truyen.common._
+<nav id="page-leftbar" role="navigation">
+    <ul class="acc-menu" id="sidebar">
+        <li @if(active=="dashboard"){class="active"}><a href="@controllers.admin.routes.Admin.index()"><i class="fa fa-dashboard"></i> <span>@Messages("msg.dashboard")</span></a></li>
+        @*
+        <li @if(active=="create-poll"){class="active"}><a href="@routes.Cp.createPoll()"><i class="fa fa-ticket"></i> <span>@Messages("msg.create_poll")</span></a></li>
+        <li @if(active=="poll-list"){class="active"}><a href="@routes.Cp.index()"><i class="fa fa-list-ol"></i> <span>@Messages("msg.poll_list")</span></a></li>
+        *@
+    </ul>
+</nav>
