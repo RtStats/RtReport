@@ -7,10 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import play.data.validation.ValidationError;
 import play.i18n.Messages;
-import utils.common.AuthUtils;
-
-import common.bo.user.UserBo;
-import common.bo.user.UserDao;
+import truyen.common.bo.user.UserBo;
+import truyen.common.bo.user.UserDao;
+import truyen.common.util.AuthUtils;
 
 public class FormLogin {
     public String email, password, captcha;

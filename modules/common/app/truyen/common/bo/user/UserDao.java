@@ -1,14 +1,15 @@
-package common.bo.user;
+package truyen.common.bo.user;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import truyen.common.Constants;
+import truyen.common.bo.CounterDao;
+
 import com.github.ddth.commons.utils.DPathUtils;
 import com.github.ddth.plommon.bo.jdbc.BaseMysqlDao;
 import com.github.ddth.plommon.bo.jdbc.ParamExpression;
-import common.Constants;
-import common.bo.CounterDao;
 
 public class UserDao extends BaseMysqlDao {
 

@@ -1,0 +1,140 @@
+@(message: String=null, form: play.data.Form[forms.admin.FormLogin]=null, captcha: Boolean=false)
+@import truyen.common._
+@import play.mvc._
+@import com.github.ddth.plommon.utils._
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>@PlayAppUtils.appConfigString("app.name") - @Messages("site.title")</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Avant">
+    <meta name="author" content="The Red Team">
+
+    <!-- <link href="@controllers.admin.routes.Assets.at("avant-1.2.1/assets/less/styles.less")" rel="stylesheet/less" media="all"> -->
+    <link rel="stylesheet" href="@controllers.admin.routes.Assets.at("avant-1.2.1/assets/css/styles.min.css")">
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
+
+    <script type='text/javascript' src='@controllers.admin.routes.Assets.at("avant-1.2.1/assets/js/jquery-1.10.2.min.js")'></script>
+    <!-- <script type="text/javascript" src="@controllers.admin.routes.Assets.at("avant-1.2.1/assets/js/less.js")"></script> -->
+</head>
+<body class="focusedform">
+    @if(Application.appConfig(Constants.CONFIG_FACEBOOK_APP_ID)!=""){<div id="fb-root"></div>}
+    <div class="verticalcenter">
+        <a href="#"><img src="@controllers.admin.routes.Assets.at("avant-1.2.1/assets/img/logo-big.png")" alt="Logo" class="brand" /></a>
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                @defining(Controller.flash(controllers.admin.Backend.VIEW_LOGIN)){flashMsg =>
+                    @if(flashMsg!=null && !flashMsg.equals("")){
+                        <div class="alert alert-danger">
+                            <p>@flashMsg</p>
+                        </div>
+                    }                   
+                }     
+                @if(message!=null && message.equals("")){
+                    <h4 class="text-center" style="margin-bottom: 25px;">@message</h4>
+                } else {
+                    <h4 class="text-center" style="margin-bottom: 25px;">@Messages("msg.signin.info")</h4>
+                }
+                @_macro_displayFormErrors(form, Array("email", "password"))
+                <form action="@controllers.admin.routes.Backend.login()" method="post" class="form-horizontal" style="margin-bottom: 0px !important;" id="frmSignin">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
+                                <input type="text" class="form-control" name="email" id="frm_email" placeholder="@Messages("msg.user.email")" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                <input type="password" class="form-control" name="password" id="frm_password" placeholder="@Messages("msg.user.password")">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: none"><button type="submit">&nbsp;</button></div>
+                    @if(Application.appConfigAsBoolean(Constants.CONFIG_FACEBOOK_LOGIN)){
+                        <div class="clearfix">
+                            <div class="pull-right">
+                                <fb:login-button show-faces="false" onclick="javascript:;" size="medium"
+                                        onlogin="javascript:fbLoggedIn();"
+                                        scope="email">@Messages("msg.signin.facebook")</fb:login-button>
+                                <!-- 
+                                <div class="pull-right"><label><input type="checkbox" style="margin-bottom: 20px" checked=""> Remember Me</label></div>
+                                -->
+                            </div>
+                        </div>
+                    }
+                </form>                    
+            </div>
+            <div class="panel-footer">
+                <!-- <a href="extras-forgotpassword.php" class="pull-left btn btn-link" style="padding-left:0">Forgot password?</a> -->
+                <div class="pull-right">
+                    <a href="javascript:$('#frmSignin').get(0).reset();" class="btn btn-default">@Messages("msg.reset")</a>
+                    <a href="javascript:$('#frmSignin').get(0).submit();" class="btn btn-primary">@Messages("msg.signin")</a>
+                </div>
+                <script type="text/javascript">
+                $(document).ready(function(){
+                    $('#frm_email').keypress(function(e){
+                        if (e.which == 13) {
+                            e.preventDefault();
+                            $('#frm_password').get(0).focus();
+                        }
+                    });
+                    $('#frm_password').keypress(function(e){
+                        if (e.which == 13) {
+                            e.preventDefault();
+                            $('#frmSignin').get(0).submit();
+                        }
+                    });
+                });
+                </script>
+            </div>
+        </div>
+     </div>
+     @if(Application.appConfig(Constants.CONFIG_FACEBOOK_APP_ID)!=""){
+         <script type="text/javascript" src="@controllers.admin.routes.Assets.at("avant-1.2.1/assets/js/jquery.cookie.js")"></script>
+         <script type="text/javascript">
+         function fbLoggedIn() {
+             var authResp = FB.getAuthResponse();
+             if ( authResp && authResp.accessToken ) {
+                 var fbAccessToken = authResp.accessToken;
+                 var fbUserId = authResp.userID;
+                 var fbExpiresIn = authResp.expiresIn;
+                 $.cookie('@Constants.COOKIE_FB_ACC_TOKEN', fbAccessToken, { path: '/' });
+                 $.cookie('@Constants.COOKIE_FB_UID', fbUserId, { path: '/' });
+                 $.cookie('@Constants.COOKIE_FB_EXPIRY', fbExpiresIn, { path: '/' });
+              }
+              @* window.location.href = '@routes.Cp.loginFacebook(PlayAppUtils.queryString("url"))'; *@
+         }
+         </script>
+         <script type="text/javascript">
+         window.fbAsyncInit = function() {
+             // init the FB JS SDK
+             FB.init({
+               appId     : '@Application.appConfig(Constants.CONFIG_FACEBOOK_APP_ID)',
+               channelUrl: '@controllers.admin.routes.Assets.at("fbchannel.html")',
+               status    : true,  // Check Facebook Login status
+               xfbml     : true,  // Look for social plugins on the page
+               cookie    : true,  // enable cookies to allow the server to access the session
+             });
+            
+             //FB.Event.subscribe('auth.login', function() {
+                 //_fbRefreshLoginStatus();
+             //});
+             //_fbRefreshLoginStatus();
+        };
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id; js.async = true;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+        </script>
+    }
+</body>
+</html>

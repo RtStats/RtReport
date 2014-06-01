@@ -1,10 +1,11 @@
-package common;
+package truyen.common;
+
+import truyen.common.bo.ConfDao;
+import truyen.common.bo.user.UserBo;
+import truyen.common.bo.user.UserDao;
 
 import com.github.ddth.commons.utils.IdGenerator;
 import com.github.ddth.plommon.utils.SessionUtils;
-import common.bo.ConfDao;
-import common.bo.user.UserBo;
-import common.bo.user.UserDao;
 
 public class Application {
 

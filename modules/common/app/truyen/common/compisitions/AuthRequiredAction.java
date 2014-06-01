@@ -1,4 +1,4 @@
-package common.compisitions;
+package truyen.common.compisitions;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -9,9 +9,8 @@ import play.mvc.Action;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.SimpleResult;
-
-import common.Application;
-import common.bo.user.UserBo;
+import truyen.common.Application;
+import truyen.common.bo.user.UserBo;
 
 public class AuthRequiredAction extends Action<AuthRequired> {
 

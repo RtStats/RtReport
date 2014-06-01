@@ -1,4 +1,4 @@
-package common.httpclient;
+package truyen.common.httpclient;
 
 import java.io.File;
 import java.util.List;

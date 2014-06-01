@@ -1,4 +1,4 @@
-package common.bo;
+package truyen.common.bo;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -8,10 +8,10 @@ import java.util.Map;
 
 import play.Logger;
 import play.db.DB;
+import truyen.common.Constants;
 
 import com.github.ddth.commons.utils.DPathUtils;
 import com.github.ddth.plommon.bo.jdbc.BaseMysqlDao;
-import common.Constants;
 
 public class ConfDao extends BaseMysqlDao {
 

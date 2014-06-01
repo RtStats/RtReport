@@ -5,12 +5,10 @@ import play.data.Form;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
 import play.mvc.Result;
-
-import common.Application;
-import common.bo.user.UserBo;
-import common.bo.user.UserDao;
-import common.compisitions.AuthRequired;
-
+import truyen.common.Application;
+import truyen.common.bo.user.UserBo;
+import truyen.common.bo.user.UserDao;
+import truyen.common.compisitions.AuthRequired;
 import controllers.common.BaseController;
 import forms.admin.FormLogin;
 
@@ -54,7 +52,7 @@ public class Backend extends BaseController {
                 if (returnUrl != null && returnUrl.startsWith("/")) {
                     return redirect(returnUrl);
                 } else {
-                    return redirect(admin.routes.Admin.index().url());
+                    return redirect(controllers.admin.routes.Admin.index().url());
                 }
             }
         });
@@ -71,7 +69,7 @@ public class Backend extends BaseController {
                 if (returnUrl != null && returnUrl.startsWith("/")) {
                     return redirect(returnUrl);
                 } else {
-                    return redirect(admin.routes.Admin.index().url());
+                    return redirect(controllers.admin.routes.Admin.index().url());
                 }
             }
         });

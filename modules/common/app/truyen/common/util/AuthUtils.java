@@ -1,7 +1,8 @@
-package utils.common;
+package truyen.common.util;
+
+import truyen.common.bo.user.UserBo;
 
 import com.github.ddth.commons.utils.HashUtils;
-import common.bo.user.UserBo;
 
 public class AuthUtils {
     public static String encryptPassword(UserBo user, String rawPassword) {

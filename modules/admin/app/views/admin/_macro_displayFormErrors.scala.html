@@ -1,0 +1,10 @@
+@(form: play.data.Form[_], fields: Array[String])
+@if(form!=null && form.hasErrors){
+    <div class="alert alert-danger">
+        @for(field <- fields){
+            @for(error <- form(field).errors) {
+                <p>@error.message</p>
+            }    
+        }
+    </div>
+}

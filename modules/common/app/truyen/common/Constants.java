@@ -1,4 +1,4 @@
-package common;
+package truyen.common;
 
 import com.github.ddth.commons.utils.HashUtils;
 import com.github.ddth.plommon.utils.PlayAppUtils;

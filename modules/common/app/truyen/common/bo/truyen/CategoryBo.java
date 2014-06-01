@@ -1,4 +1,4 @@
-package common.bo.truyen;
+package truyen.common.bo.truyen;
 
 import com.github.ddth.plommon.bo.BaseBo;
 

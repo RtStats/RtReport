@@ -1,4 +1,4 @@
-package common.bo.user;
+package truyen.common.bo.user;
 
 import java.util.Date;
 

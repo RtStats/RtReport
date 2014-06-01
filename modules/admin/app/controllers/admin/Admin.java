@@ -4,10 +4,8 @@ import play.api.templates.Html;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
 import play.mvc.Result;
-
-import common.Constants;
-import common.compisitions.AuthRequired;
-
+import truyen.common.Constants;
+import truyen.common.compisitions.AuthRequired;
 import controllers.common.BaseController;
 
 @AuthRequired(userGroups = { Constants.USER_GROUP_ADMINISTRATOR, Constants.USER_GROUP_MODERATOR,
