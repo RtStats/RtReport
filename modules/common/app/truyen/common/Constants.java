@@ -19,6 +19,7 @@ public class Constants {
     public final static String COUNTER_USER_ID = "user-id";
     public final static String COUNTER_USERGROUP_ID = "usergroup-id";
     public final static String COUNTER_CATEGORY_ID = "category-id";
+    public final static String COUNTER_AUTHOR_ID = "author-id";
     public final static String COUNTER_STORY_ID = "story-id";
 
     public final static String CONFIG_FACEBOOK_APP_ID = "facebook.app_id";
