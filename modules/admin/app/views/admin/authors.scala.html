@@ -17,6 +17,34 @@
         <h1>@Messages("msg.authors")</h1>
     </div>
     
+    <style type="text/css">.modal-title{text-transform:capitalize} label{font-weight:bold}</style>
+    <div class="modal fade" id="dlgAddAuthor" tabindex="-1" role="dialog" aria-labelledby="dlgAddAuthor_Title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form role="form" method="post">
+	                <div class="modal-header">
+	                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                    <h4 class="modal-title" id="dlgAddAuthor_Title">@Messages("msg.add_author")</h4>
+	                </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="frm_name">@Messages("msg.author.name")</label>
+                            <input type="text" class="form-control" id="frm_name" name="name" placeholder="@Messages("msg.author.name")">
+                        </div>
+                        <div class="form-group">
+                            <label for="frm_info">@Messages("msg.author.info")</label>
+                            <textarea rows="6" name="name" class="form-control" id="frm_info" placeholder="@Messages("msg.author.info")"></textarea>
+                        </div>
+                    </div>
+	                <div class="modal-footer">
+	                    <button type="submit" class="btn btn-primary">@Messages("msg.add_author")</button>
+	                    <button type="button" class="btn btn-default" data-dismiss="modal">@Messages("msg.cancel")</button>
+	                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
@@ -26,7 +54,7 @@
                         <h4>@Messages("msg.authors")</h4>
                         <div class="options">
                             <a href="javascript:;" class="panel-collapse"><i class="fa fa-chevron-down"></i></a>
-                            <a href="javascript:;"><i class="fa fa-plus"></i></a>
+                            <a data-toggle="modal" data-target="#dlgAddAuthor" href="javascript:;"><i class="fa fa-plus"></i></a>
                         </div>
                     </div>
                     <div class="panel-body collapse in">

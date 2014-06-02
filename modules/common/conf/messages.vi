@@ -24,9 +24,12 @@ error.signin.failed = Lỗi: Email và/hoặc Mật mã không khớp!
 msg.user.email = Email
 msg.user.password = Mật mã
 
+msg.add_author = Thêm tác giả
+
 msg.authors = Tác giả
 msg.author = Tác giả
 msg.author.name = Tên
+msg.author.info = Thông tin
 msg.author.num_stories = Truyện
 
 msg.nodata = Không có dữ liệu

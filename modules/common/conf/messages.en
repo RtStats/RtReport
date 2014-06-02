@@ -24,9 +24,12 @@ error.signin.failed = Error: Email and/or Password not match!
 msg.user.email = Email
 msg.user.password = Password
 
+msg.add_author = Add new author
+
 msg.authors = Authors
 msg.author = Author
 msg.author.name = Name
+msg.author.info = Info
 msg.author.num_stories = Stories
 
 msg.nodata = No data
