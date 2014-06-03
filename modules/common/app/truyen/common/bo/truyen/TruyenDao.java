@@ -121,7 +121,7 @@ public class TruyenDao extends BaseMysqlDao {
         final String CACHE_KEY = cacheKeyAllAuthors();
         List<Map<String, Object>> dbRows = getFromCache(CACHE_KEY, List.class);
         if (dbRows == null) {
-            final String SQL = MessageFormat.format("SELECT {1} AS {2} FROM {0} ORDER BY {3}",
+            final String SQL = MessageFormat.format("SELECT {1} AS {2} FROM {0} ORDER BY {3} DESC",
                     TABLE_AUTHOR, AuthorBo.COL_ID[0], AuthorBo.COL_ID[1], AuthorBo.COL_ID[0]);
             dbRows = select(SQL, null);
             putToCache(CACHE_KEY, dbRows);

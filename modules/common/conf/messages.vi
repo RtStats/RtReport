@@ -24,13 +24,15 @@ error.signin.failed = Lỗi: Email và/hoặc Mật mã không khớp!
 msg.user.email = Email
 msg.user.password = Mật mã
 
-msg.add_author = Thêm tác giả
-
 msg.authors = Tác giả
 msg.author = Tác giả
 msg.author.name = Tên
 msg.author.info = Thông tin
 msg.author.num_stories = Truyện
+msg.add_author = Thêm tác giả
+msg.edit_author = Cập nhật thông tin tác giả
+error.author.empty_name = Lỗi: Vui lòng nhập vào tên tác giả!
+error.author.not_found = Lỗi: Tác giả không tồn tại!
 
 msg.nodata = Không có dữ liệu
 msg.records_per_page = dòng/trang

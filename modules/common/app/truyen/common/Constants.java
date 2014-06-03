@@ -16,6 +16,8 @@ public class Constants {
 
     public final static Integer INT_0 = new Integer(0), INT_1 = new Integer(1);
 
+    public final static String FLASH_MSG_PREFIX_ERROR = "_E_:";
+
     public final static String COUNTER_USER_ID = "user-id";
     public final static String COUNTER_USERGROUP_ID = "usergroup-id";
     public final static String COUNTER_CATEGORY_ID = "category-id";
