@@ -21,11 +21,21 @@
     function _addAuthor() {
     	$('#dlgAddAuthor').modal({});
     }
-    function _editAuthor(url, title, info) {
-    	$('#frmedit').attr('action', url);
-        $('#frmedit_name').val(title);
-        $('#frmedit_info').val(info);
-    	$('#dlgEditAuthor').modal({});
+    function _editAuthor(urlForm, urlAjaxData) {
+        $.get(urlAjaxData, null, "json")
+            .done(function(data, status, jqXHR){
+                if ( data.status == 200 ) {
+                	$('#frmedit').attr('action', urlForm);
+                	$('#frmedit_name').val(data.message.name);
+                    $('#frmedit_info').val(data.message.info);
+                    $('#dlgEditAuthor').modal({});
+                } else {
+                	alert("Error while processing, plrease retry. Error code: " + data.status);
+                }
+            })
+            .fail(function(data, status, jqXHR){
+                alert("Error while processing, plrease retry. Error code: " + status);
+            });
     }
     </script>
     <style type="text/css">.modal-title{text-transform:capitalize} label{font-weight:bold}</style>
@@ -100,7 +110,7 @@
                                 <tr>
                                     <th style="text-align: center;">@Messages("msg.author.name")</th>
                                     <th style="text-align: center;">@Messages("msg.author.num_stories")</th>
-                                    <th style="width: auto;">&nbsp;</th>
+                                    <th>&nbsp;</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -111,8 +121,9 @@
                                             <p>@author.getInfo()</p>
                                         </td>
                                         <td style="text-align: center; vertical-align: middle">@author.getNumStories()</td>
-                                        <td style="text-align: center; width: auto;">
-                                            <a href="javascript:;" onclick="_editAuthor('@controllers.admin.routes.Admin.editAuthorSubmit(author.getId())', '@author.getName()', '@author.getInfo()')"><i style="font-size: x-large; color: blue;" class="fa fa-edit"></i></a>
+                                        <td style="text-align: center; vertical-align: middle" nowrap="nowrap">
+                                            <a href="javascript:;"
+                                                onclick="_editAuthor('@controllers.admin.routes.Admin.editAuthorSubmit(author.getId())', '@controllers.admin.routes.Json.author(author.getId())')"><i style="font-size: x-large; color: blue;" class="fa fa-edit"></i></a>
                                             <a href="javascript:;"><i style="font-size: x-large; color: red;" class="fa fa-times"></i></a>
                                         </td>
                                     </tr>

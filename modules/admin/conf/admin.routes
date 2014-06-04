@@ -9,5 +9,7 @@ GET     /authors                        controllers.admin.Admin.authors()
 POST    /addAuthor                      controllers.admin.Admin.addAuthorSubmit()
 POST    /editAuthor                     controllers.admin.Admin.editAuthorSubmit(id: Integer?=0)
 
+GET     /jsonAuthor                     controllers.admin.Json.author(id: Integer?=0)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                   controllers.admin.Assets.at(path="/public", file)

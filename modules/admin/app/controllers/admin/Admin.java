@@ -13,8 +13,7 @@ import truyen.common.compisitions.AuthRequired;
 import controllers.common.BaseController;
 import forms.admin.FormAddAuthor;
 
-@AuthRequired(userGroups = { Constants.USER_GROUP_ADMINISTRATOR, Constants.USER_GROUP_MODERATOR,
-        Constants.USER_GROUP_MEMBER })
+@AuthRequired(userGroups = { Constants.USER_GROUP_ADMINISTRATOR, Constants.USER_GROUP_MODERATOR })
 public class Admin extends BaseController {
 
     public final static String SECTION = "admin.";
