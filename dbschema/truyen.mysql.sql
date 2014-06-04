@@ -63,7 +63,7 @@ CREATE TABLE truyen_author (
     aid                             INT                         NOT NULL,
         PRIMARY KEY (aid),
     aname                           VARCHAR(50),
-    anum_stories                    INT                         NOT NULL DEFAULT 0,
+    anum_books                      INT                         NOT NULL DEFAULT 0,
     ainfo                           TEXT
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
@@ -73,13 +73,13 @@ CREATE TABLE truyen_category (
         PRIMARY KEY (cid),
     cposition                       INT                         NOT NULL DEFAULT 0,
         INDEX (cposition),
-    cnum_stories                    INT                         NOT NULL DEFAULT 0,
+    cnum_books                      INT                         NOT NULL DEFAULT 0,
     ctitle                          VARCHAR(100),
     csummary                        TEXT
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
-DROP TABLE IF EXISTS truyen_story;
-CREATE TABLE truyen_story (
+DROP TABLE IF EXISTS truyen_book;
+CREATE TABLE truyen_book (
     sid                             INT                         NOT NULL,
         PRIMARY KEY (sid),
     sstatus                         INT                         NOT NULL DEFAULT 0,

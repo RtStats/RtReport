@@ -5,7 +5,7 @@ import com.github.ddth.plommon.bo.BaseBo;
 public class AuthorBo extends BaseBo {
     public static String[] COL_ID = { "aid", "id" };
     public static String[] COL_NAME = { "aname", "name" };
-    public static String[] COL_NUM_STORIES = { "anum_stories", "num_stories" };
+    public static String[] COL_NUM_BOOKS = { "anum_books", "num_books" };
     public static String[] COL_INFO = { "ainfo", "info" };
 
     public int getId() {
@@ -17,13 +17,13 @@ public class AuthorBo extends BaseBo {
         return (AuthorBo) setAttribute(COL_ID[1], id);
     }
 
-    public int getNumStories() {
-        Integer result = getAttribute(COL_NUM_STORIES[1], Integer.class);
+    public int getNumBooks() {
+        Integer result = getAttribute(COL_NUM_BOOKS[1], Integer.class);
         return result != null ? result.intValue() : 0;
     }
 
-    public AuthorBo setNumStories(int numStories) {
-        return (AuthorBo) setAttribute(COL_NUM_STORIES[1], numStories);
+    public AuthorBo setNumBooks(int numBooks) {
+        return (AuthorBo) setAttribute(COL_NUM_BOOKS[1], numBooks);
     }
 
     public String getName() {

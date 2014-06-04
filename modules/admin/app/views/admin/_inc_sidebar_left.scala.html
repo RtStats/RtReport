@@ -6,5 +6,9 @@
             ><i class="fa fa-dashboard"></i> <span>@Messages("msg.dashboard")</span></a></li>
         <li @if(active=="author"||active=="authors"){class="active"}><a href="@controllers.admin.routes.Author.authors()"
             ><i class="fa fa-child"></i> <span>@Messages("msg.authors")</span></a></li>
+        <li @if(active=="category"||active=="categories"){class="active"}><a href="@controllers.admin.routes.Category.categories()"
+            ><i class="fa fa-folder-open-o"></i> <span>@Messages("msg.categories")</span></a></li>
+        <li @if(active=="book"||active=="books"){class="active"}><a href="@controllers.admin.routes.Category.categories()"
+            ><i class="fa fa-book"></i> <span>@Messages("msg.books")</span></a></li>
     </ul>
 </nav>

@@ -8,6 +8,7 @@ import play.libs.F.Promise;
 import play.mvc.Result;
 import truyen.common.Constants;
 import truyen.common.bo.truyen.AuthorBo;
+import truyen.common.bo.truyen.CategoryBo;
 import truyen.common.bo.truyen.TruyenDao;
 import truyen.common.compisitions.AuthRequired;
 
@@ -41,6 +42,24 @@ public class Json extends BaseController {
                 } else {
                     Map<String, Object> authorData = author.toMap();
                     return doResponse(200, authorData);
+                }
+            }
+        });
+        return promise;
+    }
+
+    /*
+     * Handles GET:/jsonCategory
+     */
+    public static Promise<Result> category(final int id) {
+        Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            public Result apply() throws Exception {
+                CategoryBo category = TruyenDao.getCategory(id);
+                if (category == null) {
+                    return doResponse(404, Messages.get("error.category.not_found"));
+                } else {
+                    Map<String, Object> categoryData = category.toMap();
+                    return doResponse(200, categoryData);
                 }
             }
         });

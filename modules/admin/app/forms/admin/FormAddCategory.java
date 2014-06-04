@@ -8,16 +8,16 @@ import org.apache.commons.lang3.StringUtils;
 import play.data.validation.ValidationError;
 import play.i18n.Messages;
 
-public class FormAddAuthor {
-    public String name, info;
+public class FormAddCategory {
+    public String title, summary;
 
     public List<ValidationError> validate() {
         List<ValidationError> errors = new ArrayList<ValidationError>();
 
-        name = !StringUtils.isBlank(this.name) ? this.name.trim() : null;
-        info = !StringUtils.isBlank(this.info) ? this.info.trim() : null;
-        if (StringUtils.isBlank(name)) {
-            errors.add(new ValidationError("name", Messages.get("error.author.empty_name")));
+        title = !StringUtils.isBlank(this.title) ? this.title.trim() : null;
+        summary = !StringUtils.isBlank(this.summary) ? this.summary.trim() : null;
+        if (StringUtils.isBlank(title)) {
+            errors.add(new ValidationError("title", Messages.get("error.title.empty_title")));
         }
         return errors.isEmpty() ? null : errors;
     }

@@ -29,16 +29,15 @@ msg.authors = Tác giả
 msg.author = Tác giả
 msg.author.name = Tên
 msg.author.info = Thông tin
-msg.author.num_stories = Truyện
-msg.add_author = Thêm tác giả
-msg.add_author.done = Tác giả "{0}" đã được thêm vào hệ thống.
-msg.edit_author = Cập nhật thông tin tác giả
-msg.edit_author.done = Thông tin của tác giả "{0}" đã được cập nhật thành công.
-msg.delete_author = Xoá tác giả
-msg.delete_author.confirmation = Bạn có chắc là bạn muốn xoá tác giả "{0}" khỏi hệ thống?
-msg.delete_author.done = Tác giả "{0}" đã được xoá thành công.
-error.author.empty_name = Lỗi: Vui lòng nhập vào tên tác giả!
+msg.author.num_books = Truyện
 error.author.not_found = Lỗi: Tác giả không tồn tại!
+
+msg.categories = Danh mục
+msg.category = Danh mục
+msg.category.title = Tên danh mục
+msg.category.summary = Giới thiệu tóm tắt
+msg.category.num_books = Truyện
+error.category.not_found = Lỗi: Danh mục không tồn tại!
 
 msg.nodata = Không có dữ liệu
 msg.records_per_page = dòng/trang

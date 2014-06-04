@@ -1,3 +1,21 @@
 msg.hello = Chào {0}!
 msg.logged_in = Đăng nhập với {0}
 msg.dashboard = Trang chủ
+
+msg.add_author = Thêm tác giả
+msg.add_author.done = Tác giả "{0}" đã được thêm vào hệ thống.
+msg.edit_author = Cập nhật thông tin tác giả
+msg.edit_author.done = Thông tin của tác giả "{0}" đã được cập nhật thành công.
+msg.delete_author = Xoá tác giả
+msg.delete_author.confirmation = Bạn có chắc là bạn muốn xoá tác giả "{0}" khỏi hệ thống?
+msg.delete_author.done = Tác giả "{0}" đã được xoá thành công.
+error.author.empty_name = Lỗi: Vui lòng nhập vào tên tác giả!
+
+msg.add_category = Thêm danh mục
+msg.add_category.done = Danh mục "{0}" đã được thêm vào hệ thống.
+msg.edit_category = Sửa danh mục
+msg.edit_category.done = Danh mục "{0}" đã được cập nhật thành công.
+msg.delete_category = Xoá danh mục
+msg.delete_category.confirmation = Bạn có chắc là bạn muốn xoá danh mục "{0}" ra khỏi hệ thống?
+msg.delete_category.done = Danh mục "{0}" đã được xoá thành công.
+error.category.empty_title = Lỗi: Vui lòng nhập vào tên của danh mục!

@@ -68,9 +68,9 @@ public class TruyenDao extends BaseMysqlDao {
             author.setId((int) CounterDao.nextId(Constants.COUNTER_AUTHOR_ID));
         }
         final String[] COLUMNS = new String[] { AuthorBo.COL_ID[0], AuthorBo.COL_NAME[0],
-                AuthorBo.COL_NUM_STORIES[0], AuthorBo.COL_INFO[0] };
+                AuthorBo.COL_NUM_BOOKS[0], AuthorBo.COL_INFO[0] };
         final Object[] VALUES = new Object[] { author.getId(), author.getName(),
-                author.getNumStories(), author.getInfo() };
+                author.getNumBooks(), author.getInfo() };
         insertIgnore(TABLE_AUTHOR, COLUMNS, VALUES);
         invalidate(author);
         return (AuthorBo) author.markClean();
@@ -100,7 +100,7 @@ public class TruyenDao extends BaseMysqlDao {
         Map<String, Object> dbRow = getFromCache(CACHE_KEY, Map.class);
         if (dbRow == null) {
             final String[][] columns = { AuthorBo.COL_ID, AuthorBo.COL_NAME,
-                    AuthorBo.COL_NUM_STORIES, AuthorBo.COL_INFO };
+                    AuthorBo.COL_NUM_BOOKS, AuthorBo.COL_INFO };
             final String whereClause = AuthorBo.COL_ID[0] + "=?";
             final Object[] paramValues = { id };
             List<Map<String, Object>> dbResult = select(TABLE_AUTHOR, columns, whereClause,
@@ -174,9 +174,9 @@ public class TruyenDao extends BaseMysqlDao {
             category.setPosition((int) (System.currentTimeMillis() / 1000));
         }
         final String[] COLUMNS = new String[] { CategoryBo.COL_ID[0], CategoryBo.COL_POSITION[0],
-                CategoryBo.COL_NUM_STORIES[0], CategoryBo.COL_TITLE[0], CategoryBo.COL_SUMMARY[0] };
+                CategoryBo.COL_NUM_BOOKS[0], CategoryBo.COL_TITLE[0], CategoryBo.COL_SUMMARY[0] };
         final Object[] VALUES = new Object[] { category.getId(), category.getPosition(),
-                category.getNumStories(), category.getTitle(), category.getSummary() };
+                category.getNumBooks(), category.getTitle(), category.getSummary() };
         insertIgnore(TABLE_CATEGORY, COLUMNS, VALUES);
         invalidate(category);
         return (CategoryBo) category.markClean();
@@ -206,7 +206,7 @@ public class TruyenDao extends BaseMysqlDao {
         Map<String, Object> dbRow = getFromCache(CACHE_KEY, Map.class);
         if (dbRow == null) {
             final String[][] columns = { CategoryBo.COL_ID, CategoryBo.COL_POSITION,
-                    CategoryBo.COL_NUM_STORIES, CategoryBo.COL_TITLE, CategoryBo.COL_SUMMARY };
+                    CategoryBo.COL_NUM_BOOKS, CategoryBo.COL_TITLE, CategoryBo.COL_SUMMARY };
             final String whereClause = CategoryBo.COL_ID[0] + "=?";
             final Object[] paramValues = { id };
             List<Map<String, Object>> dbResult = select(TABLE_CATEGORY, columns, whereClause,
