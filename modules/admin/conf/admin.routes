@@ -5,10 +5,10 @@ GET     /login                          controllers.admin.Backend.login(returnUr
 POST    /login                          controllers.admin.Backend.loginSubmit(returnUrl: String?=null)
 GET     /logout                         controllers.admin.Backend.logout(returnUrl: String?=null)
 
-GET     /authors                        controllers.admin.Admin.authors()
-POST    /addAuthor                      controllers.admin.Admin.addAuthorSubmit()
-POST    /editAuthor                     controllers.admin.Admin.editAuthorSubmit(id: Integer?=0)
-POST    /deleteAuthor                   controllers.admin.Admin.deleteAuthorSubmit(id: Integer?=0)
+GET     /authors                        controllers.admin.Author.authors()
+POST    /addAuthor                      controllers.admin.Author.addAuthorSubmit()
+POST    /editAuthor                     controllers.admin.Author.editAuthorSubmit(id: Integer?=0)
+POST    /deleteAuthor                   controllers.admin.Author.deleteAuthorSubmit(id: Integer?=0)
 
 GET     /jsonAuthor                     controllers.admin.Json.author(id: Integer?=0)
 

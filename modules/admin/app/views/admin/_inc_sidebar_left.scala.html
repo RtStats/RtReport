@@ -4,7 +4,7 @@
     <ul class="acc-menu" id="sidebar">
         <li @if(active=="dashboard"){class="active"}><a href="@controllers.admin.routes.Admin.index()"
             ><i class="fa fa-dashboard"></i> <span>@Messages("msg.dashboard")</span></a></li>
-        <li @if(active=="author"||active=="authors"){class="active"}><a href="@controllers.admin.routes.Admin.authors()"
+        <li @if(active=="author"||active=="authors"){class="active"}><a href="@controllers.admin.routes.Author.authors()"
             ><i class="fa fa-child"></i> <span>@Messages("msg.authors")</span></a></li>
     </ul>
 </nav>

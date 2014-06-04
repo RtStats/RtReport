@@ -11,6 +11,8 @@ import play.mvc.Result;
 
 public class BaseController extends Controller {
 
+    protected final static String SECTION = "admin.";
+
     /**
      * Redirects to a url.
      * 

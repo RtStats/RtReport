@@ -59,7 +59,7 @@
     <div class="modal fade" id="dlgAddAuthor" tabindex="-1" role="dialog" aria-labelledby="dlgAddAuthor_Title" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form id="frmadd" role="form" method="post" action="@controllers.admin.routes.Admin.addAuthorSubmit()">
+                <form id="frmadd" role="form" method="post" action="@controllers.admin.routes.Author.addAuthorSubmit()">
 	                <div class="modal-header">
 	                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 	                    <h4 class="modal-title" id="dlgAddAuthor_Title">@Messages("msg.add_author")</h4>
@@ -135,7 +135,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                @_macro_displayPageFlashMessage(Controller.flash(controllers.admin.Admin.VIEW_AUTHORS))
+                @_macro_displayPageFlashMessage(Controller.flash(controllers.admin.Author.VIEW_AUTHORS))
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h4>@Messages("msg.authors")</h4>
@@ -163,9 +163,9 @@
                                         <td style="text-align: center; vertical-align: middle">@author.getNumStories()</td>
                                         <td style="text-align: center; vertical-align: middle" nowrap="nowrap">
                                             <a href="javascript:;"
-                                                onclick="_editAuthor('@controllers.admin.routes.Admin.editAuthorSubmit(author.getId())', '@controllers.admin.routes.Json.author(author.getId())')"><i style="font-size: x-large; color: blue;" class="fa fa-edit"></i></a>
+                                                onclick="_editAuthor('@controllers.admin.routes.Author.editAuthorSubmit(author.getId())', '@controllers.admin.routes.Json.author(author.getId())')"><i style="font-size: x-large; color: blue;" class="fa fa-edit"></i></a>
                                             <a href="javascript:;"
-                                                onclick="_deleteAuthor('@controllers.admin.routes.Admin.deleteAuthorSubmit(author.getId())', '@controllers.admin.routes.Json.author(author.getId())', '@Messages("msg.delete_author.confirmation", author.getName())')"><i style="font-size: x-large; color: red;" class="fa fa-times"></i></a>
+                                                onclick="_deleteAuthor('@controllers.admin.routes.Author.deleteAuthorSubmit(author.getId())', '@controllers.admin.routes.Json.author(author.getId())', '@Messages("msg.delete_author.confirmation", author.getName())')"><i style="font-size: x-large; color: red;" class="fa fa-times"></i></a>
                                         </td>
                                     </tr>
                                 }
