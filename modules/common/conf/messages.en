@@ -6,6 +6,7 @@ msg.ok = Ok
 msg.cancel = Cancel
 msg.reset = Reset
 msg.update = Update
+msg.delete = Delete
 
 msg.search = Search
 msg.prev = Prev
@@ -30,7 +31,12 @@ msg.author.name = Name
 msg.author.info = Info
 msg.author.num_stories = Stories
 msg.add_author = Add new author
+msg.add_author.done = Author "{0}" has been added successfully.
 msg.edit_author = Edit author
+msg.edit_author.done = Author "{0}" has been updated successfully.
+msg.delete_author = Delete author
+msg.delete_author.confirmation = Are you really sure you wish to delete author "{0}"?
+msg.delete_author.done = Author "{0}" has been deleted successfully.
 error.author.empty_name = Error: Empty author name!
 error.author.not_found = Error: Author not found!
 

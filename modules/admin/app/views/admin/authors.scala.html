@@ -37,6 +37,23 @@
                 alert("Error while processing, plrease retry. Error code: " + status);
             });
     }
+    function _deleteAuthor(urlForm, urlAjaxData, txtConfirmation) {
+    	$.get(urlAjaxData, null, "json")
+	        .done(function(data, status, jqXHR){
+	            if ( data.status == 200 ) {
+	            	$('#frmdelete').attr('action', urlForm);
+	            	$('#frmdelete_confirmation').html(txtConfirmation);
+	            	$('#frmdelete_name').html(data.message.name);
+	            	$('#frmdelete_info').html(data.message.info);
+	                $('#dlgDeleteAuthor').modal({});
+	            } else {
+	                alert("Error while processing, plrease retry. Error code: " + data.status);
+	            }
+	        })
+	        .fail(function(data, status, jqXHR){
+	            alert("Error while processing, plrease retry. Error code: " + status);
+	        });
+    }
     </script>
     <style type="text/css">.modal-title{text-transform:capitalize} label{font-weight:bold}</style>
     <div class="modal fade" id="dlgAddAuthor" tabindex="-1" role="dialog" aria-labelledby="dlgAddAuthor_Title" aria-hidden="true">
@@ -91,6 +108,29 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="dlgDeleteAuthor" tabindex="-1" role="dialog" aria-labelledby="dlgDeleteAuthor_Title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="frmdelete" role="form" method="post" action="">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="dlgDeleteAuthor_Title">@Messages("msg.delete_author")</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger">
+                            <i class="fa fa-question-circle"></i> <span id="frmdelete_confirmation"></span>
+                        </div>
+                        <div id="frmdelete_name" style="font-weight: bold"></div>
+                        <div id="frmdelete_info"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">@Messages("msg.delete")</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">@Messages("msg.cancel")</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     
     <div class="container">
         <div class="row">
@@ -124,7 +164,8 @@
                                         <td style="text-align: center; vertical-align: middle" nowrap="nowrap">
                                             <a href="javascript:;"
                                                 onclick="_editAuthor('@controllers.admin.routes.Admin.editAuthorSubmit(author.getId())', '@controllers.admin.routes.Json.author(author.getId())')"><i style="font-size: x-large; color: blue;" class="fa fa-edit"></i></a>
-                                            <a href="javascript:;"><i style="font-size: x-large; color: red;" class="fa fa-times"></i></a>
+                                            <a href="javascript:;"
+                                                onclick="_deleteAuthor('@controllers.admin.routes.Admin.deleteAuthorSubmit(author.getId())', '@controllers.admin.routes.Json.author(author.getId())', '@Messages("msg.delete_author.confirmation", author.getName())')"><i style="font-size: x-large; color: red;" class="fa fa-times"></i></a>
                                         </td>
                                     </tr>
                                 }

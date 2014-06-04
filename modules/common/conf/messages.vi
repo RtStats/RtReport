@@ -6,6 +6,7 @@ msg.ok = Đồng ý
 msg.cancel = Bỏ chọn
 msg.reset = Xoá form
 msg.update = Cập nhật
+msg.delete = Xoá
 
 msg.search = Tìm kiếm
 msg.prev = Trước
@@ -30,7 +31,12 @@ msg.author.name = Tên
 msg.author.info = Thông tin
 msg.author.num_stories = Truyện
 msg.add_author = Thêm tác giả
+msg.add_author.done = Tác giả "{0}" đã được thêm vào hệ thống.
 msg.edit_author = Cập nhật thông tin tác giả
+msg.edit_author.done = Thông tin của tác giả "{0}" đã được cập nhật thành công.
+msg.delete_author = Xoá tác giả
+msg.delete_author.confirmation = Bạn có chắc là bạn muốn xoá tác giả "{0}" khỏi hệ thống?
+msg.delete_author.done = Tác giả "{0}" đã được xoá thành công.
 error.author.empty_name = Lỗi: Vui lòng nhập vào tên tác giả!
 error.author.not_found = Lỗi: Tác giả không tồn tại!
 

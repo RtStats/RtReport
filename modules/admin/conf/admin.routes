@@ -8,6 +8,7 @@ GET     /logout                         controllers.admin.Backend.logout(returnU
 GET     /authors                        controllers.admin.Admin.authors()
 POST    /addAuthor                      controllers.admin.Admin.addAuthorSubmit()
 POST    /editAuthor                     controllers.admin.Admin.editAuthorSubmit(id: Integer?=0)
+POST    /deleteAuthor                   controllers.admin.Admin.deleteAuthorSubmit(id: Integer?=0)
 
 GET     /jsonAuthor                     controllers.admin.Json.author(id: Integer?=0)
 
