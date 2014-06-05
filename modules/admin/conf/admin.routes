@@ -14,6 +14,8 @@ GET     /categories                     controllers.admin.Category.categories()
 POST    /addCategory                    controllers.admin.Category.addCategorySubmit()
 POST    /editCategory                   controllers.admin.Category.editCategorySubmit(id: Integer?=0)
 POST    /deleteCategory                 controllers.admin.Category.deleteCategorySubmit(id: Integer?=0)
+GET     /moveUpCategory                 controllers.admin.Category.moveUpCategory(id: Integer?=0)
+GET     /moveDownCategory               controllers.admin.Category.moveDownCategory(id: Integer?=0)
 
 GET     /jsonAuthor                     controllers.admin.Json.author(id: Integer?=0)
 GET     /jsonCategory                   controllers.admin.Json.category(id: Integer?=0)

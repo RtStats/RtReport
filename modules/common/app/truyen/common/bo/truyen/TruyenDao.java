@@ -268,5 +268,45 @@ public class TruyenDao extends BaseMysqlDao {
         return (CategoryBo) category.markClean();
     }
 
+    /**
+     * Moves a category up the list.
+     * 
+     * @param cat
+     */
+    public static void moveUp(CategoryBo cat) {
+        CategoryBo[] allCats = TruyenDao.getAllCategories();
+        for (int i = 1; i < allCats.length; i++) {
+            if (allCats[i].getId() == cat.getId()) {
+                int temp = allCats[i].getPosition();
+                allCats[i].setPosition(temp + 1);
+                allCats[i - 1].setPosition(temp);
+                TruyenDao.update(allCats[i]);
+                TruyenDao.update(allCats[i - 1]);
+                removeFromCache(cacheKeyAllCategories());
+                break;
+            }
+        }
+    }
+
+    /**
+     * Moves a category down the list.
+     * 
+     * @param cat
+     */
+    public static void moveDown(CategoryBo cat) {
+        CategoryBo[] allCats = TruyenDao.getAllCategories();
+        for (int i = 0, n = allCats.length - 1; i < n; i++) {
+            if (allCats[i].getId() == cat.getId()) {
+                int temp = allCats[i].getPosition();
+                allCats[i].setPosition(temp - 1);
+                allCats[i + 1].setPosition(temp);
+                TruyenDao.update(allCats[i]);
+                TruyenDao.update(allCats[i + 1]);
+                removeFromCache(cacheKeyAllCategories());
+                break;
+            }
+        }
+    }
+
     /*----------------------------------------------------------------------*/
 }
