@@ -17,7 +17,7 @@ public class FormAddCategory {
         title = !StringUtils.isBlank(this.title) ? this.title.trim() : null;
         summary = !StringUtils.isBlank(this.summary) ? this.summary.trim() : null;
         if (StringUtils.isBlank(title)) {
-            errors.add(new ValidationError("title", Messages.get("error.title.empty_title")));
+            errors.add(new ValidationError("title", Messages.get("error.category.empty_title")));
         }
         return errors.isEmpty() ? null : errors;
     }

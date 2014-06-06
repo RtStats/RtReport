@@ -17,8 +17,14 @@ POST    /deleteCategory                 controllers.admin.Category.deleteCategor
 GET     /moveUpCategory                 controllers.admin.Category.moveUpCategory(id: Integer?=0)
 GET     /moveDownCategory               controllers.admin.Category.moveDownCategory(id: Integer?=0)
 
+GET     /books                          controllers.admin.Book.books()
+POST    /addBook                        controllers.admin.Book.addBookSubmit()
+POST    /editBook                       controllers.admin.Book.editBookSubmit(id: Integer?=0)
+POST    /deleteBook                     controllers.admin.Book.deleteBookSubmit(id: Integer?=0)
+
 GET     /jsonAuthor                     controllers.admin.Json.author(id: Integer?=0)
 GET     /jsonCategory                   controllers.admin.Json.category(id: Integer?=0)
+GET     /jsonBook                       controllers.admin.Json.book(id: Integer?=0)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                   controllers.admin.Assets.at(path="/public", file)

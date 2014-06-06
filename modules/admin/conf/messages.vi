@@ -19,3 +19,12 @@ msg.delete_category = Xoá danh mục
 msg.delete_category.confirmation = Bạn có chắc là bạn muốn xoá danh mục "{0}" ra khỏi hệ thống?
 msg.delete_category.done = Danh mục "{0}" đã được xoá thành công.
 error.category.empty_title = Lỗi: Vui lòng nhập vào tên của danh mục!
+
+msg.add_book = Thêm truyện mới
+msg.add_book.done = Truyện "{0}" đã được thêm vào hệ thống.
+msg.edit_book = Cập nhật thông tin truyện
+msg.edit_book.done = Truyện "{0}" đã được cập nhật thành công.
+msg.delete_book = Xoá truyện
+msg.delete_book.confirmation = Bạn có chắc là bạn muốn xoá truyện "{0}" ra khỏi hệ thống?
+msg.delete_book.done = Truyện "{0}" đã được xoá thành công.
+error.book.empty_title = Lỗi: Vui lòng nhập vào tiêu đề truyện!

@@ -39,6 +39,23 @@ msg.category.summary = Summary
 msg.category.num_books = Books
 error.category.not_found = Error: Category not found!
 
+msg.books = Books
+msg.book = Book
+msg.book.title = Title
+msg.book.summary = Summary
+msg.book.avatar = Avatar
+msg.book.category = Category
+msg.book.author = Author
+msg.book.status = Status
+msg.book.status.0 = New
+msg.book.status.1 = Normal
+msg.book.status.2 = Inactive
+msg.book.status.3 = Finished
+msg.book.status.255 = Deleted
+msg.book.is_published = Published
+msg.book.num_chapters = Chapters
+error.book.not_found = Error: Book not found!
+
 msg.nodata = No data
 msg.records_per_page = records/page
 msg.datatables.sInfo = Display from _START_ to _END_ of _TOTAL_

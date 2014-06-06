@@ -15,9 +15,11 @@ public class TruyenDao extends BaseMysqlDao {
 
     public final static String TABLE_AUTHOR = Constants.APP_ID + "_author";
     public final static String TABLE_CATEGORY = Constants.APP_ID + "_category";
+    public final static String TABLE_BOOK = Constants.APP_ID + "_book";
 
     private final static AuthorBo[] EMPTY_ARR_AUTHOR_BO = new AuthorBo[0];
     private final static CategoryBo[] EMPTY_ARR_CATEGORY_BO = new CategoryBo[0];
+    private final static BookBo[] EMPTY_ARR_BOOK_BO = new BookBo[0];
 
     /*----------------------------------------------------------------------*/
     private static String cacheKeyAuthor(int id) {
@@ -54,6 +56,33 @@ public class TruyenDao extends BaseMysqlDao {
     private static void invalidate(CategoryBo category) {
         removeFromCache(cacheKey(category));
         removeFromCache(cacheKeyAllCategories());
+    }
+
+    /*--------------------*/
+
+    private static String cacheKeyBook(int id) {
+        return Constants.CACHE_PREFIX + "_BOOK_" + id;
+    }
+
+    private static String cacheKey(BookBo book) {
+        return cacheKeyBook(book.getId());
+    }
+
+    private static String cacheKeyAllBooks() {
+        return Constants.CACHE_PREFIX + "_ALLBOOKS";
+    }
+
+    private static String cacheKeyAllBooks(CategoryBo cat) {
+        return Constants.CACHE_PREFIX + "_BOOKS_" + cat.getId();
+    }
+
+    private static void invalidate(BookBo book) {
+        removeFromCache(cacheKey(book));
+        removeFromCache(cacheKeyAllBooks());
+        CategoryBo cat = book.getCategory();
+        if (cat != null) {
+            removeFromCache(cacheKeyAllBooks(cat));
+        }
     }
 
     /*----------------------------------------------------------------------*/
@@ -306,6 +335,151 @@ public class TruyenDao extends BaseMysqlDao {
                 break;
             }
         }
+    }
+
+    /*----------------------------------------------------------------------*/
+    /**
+     * Creates a new book.
+     * 
+     * @param book
+     * @return
+     */
+    public static BookBo create(final BookBo book) {
+        if (book.getId() < 1) {
+            book.setId((int) CounterDao.nextId(Constants.COUNTER_BOOK_ID));
+        }
+        final String[] COLUMNS = new String[] { BookBo.COL_ID[0], BookBo.COL_STATUS[0],
+                BookBo.COL_IS_PUBLISHED[0], BookBo.COL_NUM_CHAPTERS[0], BookBo.COL_CATEGORY_ID[0],
+                BookBo.COL_AUTHOR_ID[0], BookBo.COL_TITLE[0], BookBo.COL_SUMMARY[0],
+                BookBo.COL_AVATAR[0], BookBo.COL_TIMESTAMP_CREATE[0],
+                BookBo.COL_TIMESTAMP_UPDATE[0] };
+        final Object[] VALUES = new Object[] { book.getId(), book.getStatus(),
+                book.isPublished() ? Constants.INT_1 : Constants.INT_0, book.getNumChapters(),
+                book.getCategoryId(), book.getAuthorId(), book.getTitle(), book.getSummary(),
+                book.getAvatar(), book.getTimestampCreate(), book.getTimestampUpdate() };
+        insertIgnore(TABLE_BOOK, COLUMNS, VALUES);
+        invalidate(book);
+        return (BookBo) book.markClean();
+    }
+
+    /**
+     * Deletes an existing book.
+     * 
+     * @param book
+     */
+    public static void delete(BookBo book) {
+        final String[] COLUMNS = new String[] { BookBo.COL_ID[0] };
+        final Object[] VALUES = new Object[] { book.getId() };
+        delete(TABLE_BOOK, COLUMNS, VALUES);
+        invalidate(book);
+    }
+
+    /**
+     * Gets a book by id.
+     * 
+     * @param id
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static BookBo getBook(int id) {
+        final String CACHE_KEY = cacheKeyBook(id);
+        Map<String, Object> dbRow = getFromCache(CACHE_KEY, Map.class);
+        dbRow = null;
+        if (dbRow == null) {
+            final String[][] columns = { BookBo.COL_ID, BookBo.COL_STATUS, BookBo.COL_IS_PUBLISHED,
+                    BookBo.COL_NUM_CHAPTERS, BookBo.COL_CATEGORY_ID, BookBo.COL_AUTHOR_ID,
+                    BookBo.COL_TITLE, BookBo.COL_SUMMARY, BookBo.COL_AVATAR,
+                    BookBo.COL_TIMESTAMP_CREATE, BookBo.COL_TIMESTAMP_UPDATE };
+            final String whereClause = BookBo.COL_ID[0] + "=?";
+            final Object[] paramValues = { id };
+            List<Map<String, Object>> dbResult = select(TABLE_BOOK, columns, whereClause,
+                    paramValues);
+            dbRow = dbResult != null && dbResult.size() > 0 ? dbResult.get(0) : null;
+            putToCache(CACHE_KEY, dbRow);
+        }
+        return dbRow != null ? (BookBo) new BookBo().fromMap(dbRow) : null;
+    }
+
+    /**
+     * Gets all books of category.
+     * 
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static BookBo[] getAllBooksForCategory(CategoryBo cat) {
+        final String CACHE_KEY = cacheKeyAllBooks(cat);
+        List<Map<String, Object>> dbRows = getFromCache(CACHE_KEY, List.class);
+        if (dbRows == null) {
+            final String SQL = MessageFormat
+                    .format("SELECT {1} AS {2} FROM {0} WHERE {3}=? ORDER BY {4} DESC", TABLE_BOOK,
+                            BookBo.COL_ID[0], BookBo.COL_ID[1], BookBo.COL_CATEGORY_ID[0],
+                            BookBo.COL_ID[0]);
+            dbRows = select(SQL, null);
+            putToCache(CACHE_KEY, dbRows);
+        }
+        List<BookBo> result = new ArrayList<BookBo>();
+        if (dbRows != null) {
+            for (Map<String, Object> dbRow : dbRows) {
+                int id = DPathUtils.getValue(dbRow, BookBo.COL_ID[1], int.class);
+                BookBo book = getBook(id);
+                if (book != null) {
+                    result.add(book);
+                }
+            }
+        }
+        return result.toArray(EMPTY_ARR_BOOK_BO);
+    }
+
+    /**
+     * Gets all books.
+     * 
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static BookBo[] getAllBooks() {
+        final String CACHE_KEY = cacheKeyAllBooks();
+        List<Map<String, Object>> dbRows = getFromCache(CACHE_KEY, List.class);
+        if (dbRows == null) {
+            final String SQL = MessageFormat.format("SELECT {1} AS {2} FROM {0} ORDER BY {3} DESC",
+                    TABLE_BOOK, BookBo.COL_ID[0], BookBo.COL_ID[1], BookBo.COL_ID[0]);
+            dbRows = select(SQL, null);
+            putToCache(CACHE_KEY, dbRows);
+        }
+        List<BookBo> result = new ArrayList<BookBo>();
+        if (dbRows != null) {
+            for (Map<String, Object> dbRow : dbRows) {
+                int id = DPathUtils.getValue(dbRow, BookBo.COL_ID[1], int.class);
+                BookBo book = getBook(id);
+                if (book != null) {
+                    result.add(book);
+                }
+            }
+        }
+        return result.toArray(EMPTY_ARR_BOOK_BO);
+    }
+
+    /**
+     * Updates an existing book.
+     * 
+     * @param book
+     * @return
+     */
+    public static BookBo update(BookBo book) {
+        if (book.isDirty()) {
+            final String CACHE_KEY = cacheKey(book);
+            final String[] COLUMNS = new String[] { BookBo.COL_STATUS[0],
+                    BookBo.COL_IS_PUBLISHED[0], BookBo.COL_CATEGORY_ID[0], BookBo.COL_AUTHOR_ID[0],
+                    BookBo.COL_TITLE[0], BookBo.COL_SUMMARY[0], BookBo.COL_AVATAR[0] };
+            final Object[] VALUES = new Object[] { book.getStatus(),
+                    book.isPublished() ? Constants.INT_1 : Constants.INT_0, book.getCategoryId(),
+                    book.getAuthorId(), book.getTitle(), book.getSummary(), book.getAvatar() };
+            final String[] WHERE_COLUMNS = new String[] { BookBo.COL_ID[0] };
+            final Object[] WHERE_VALUES = new Object[] { book.getId() };
+            update(TABLE_CATEGORY, COLUMNS, VALUES, WHERE_COLUMNS, WHERE_VALUES);
+            Map<String, Object> dbRow = book.toMap();
+            putToCache(CACHE_KEY, dbRow);
+        }
+        return (BookBo) book.markClean();
     }
 
     /*----------------------------------------------------------------------*/

@@ -80,14 +80,21 @@ CREATE TABLE truyen_category (
 
 DROP TABLE IF EXISTS truyen_book;
 CREATE TABLE truyen_book (
-    sid                             INT                         NOT NULL,
-        PRIMARY KEY (sid),
-    sstatus                         INT                         NOT NULL DEFAULT 0,
-        INDEX (sstatus),
-    sis_published                   INT                         NOT NULL DEFAULT 0,
-        INDEX (sis_published),
-    stitle                          VARCHAR(100),
-    savatar                         VARCHAR(255),
-    ssummary                        TEXT
+    bid                             INT                         NOT NULL,
+        PRIMARY KEY (bid),
+    bstatus                         INT                         NOT NULL DEFAULT 0,
+        INDEX (bstatus),
+    bis_published                   INT                         NOT NULL DEFAULT 0,
+        INDEX (bis_published),
+    bnum_chapters                   INT                         NOT NULL DEFAULT 0,
+    bcategory_id                    INT                         NOT NULL,
+        INDEX (bcategory_id),
+    bauthor_id                      INT                         NOT NULL,
+        INDEX (bauthor_id),
+    btitle                          VARCHAR(100),
+    btimestamp_create               DATETIME,
+    btimestamp_update               DATETIME,
+        INDEX (btimestamp_update),
+    bavatar                         VARCHAR(255),
+    bsummary                        TEXT
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-
