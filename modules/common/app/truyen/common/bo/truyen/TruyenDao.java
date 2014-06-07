@@ -475,11 +475,35 @@ public class TruyenDao extends BaseMysqlDao {
                     book.getAuthorId(), book.getTitle(), book.getSummary(), book.getAvatar() };
             final String[] WHERE_COLUMNS = new String[] { BookBo.COL_ID[0] };
             final Object[] WHERE_VALUES = new Object[] { book.getId() };
-            update(TABLE_CATEGORY, COLUMNS, VALUES, WHERE_COLUMNS, WHERE_VALUES);
+            update(TABLE_BOOK, COLUMNS, VALUES, WHERE_COLUMNS, WHERE_VALUES);
             Map<String, Object> dbRow = book.toMap();
             putToCache(CACHE_KEY, dbRow);
         }
         return (BookBo) book.markClean();
+    }
+
+    /**
+     * Updates a book's author.
+     * 
+     * @param book
+     * @param author
+     * @return
+     */
+    public static BookBo update(BookBo book, AuthorBo author) {
+        book.setAuthor(author);
+        return update(book);
+    }
+
+    /**
+     * Updates a book's category.
+     * 
+     * @param book
+     * @param category
+     * @return
+     */
+    public static BookBo update(BookBo book, CategoryBo category) {
+        book.setCategory(category);
+        return update(book);
     }
 
     /*----------------------------------------------------------------------*/

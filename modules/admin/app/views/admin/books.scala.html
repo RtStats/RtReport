@@ -29,7 +29,6 @@
         $.get(urlAjaxData, null, "json")
             .done(function(data, status, jqXHR){
                 if ( data.status == 200 ) {
-                    console.log(data.message);
                 	$('#frmedit').attr('action', urlForm);
                 	$('#frmedit_title').val(data.message.title);
                 	$('#frmedit_avatar').val(data.message.avatar);
@@ -51,10 +50,11 @@
     	$.get(urlAjaxData, null, "json")
 	        .done(function(data, status, jqXHR){
 	            if ( data.status == 200 ) {
-	            	//$('#frmdelete').attr('action', urlForm);
-	            	//$('#frmdelete_confirmation').html(txtConfirmation);
-	            	//$('#frmdelete_title').html(data.message.title);
-	            	//$('#frmdelete_summary').html(data.message.summary);
+	            	$('#frmdelete').attr('action', urlForm);
+	            	$('#frmdelete_confirmation').html(txtConfirmation);
+
+	                $('#frmdelete_title').html(data.message.title);
+                    $('#frmdelete_summary').html(data.message.summary);
 	                $('#dlgDeleteBook').modal({});
 	            } else {
 	                alert("Error while processing, plrease retry. Error code: " + data.status);
@@ -240,7 +240,7 @@
                                             }
                                         }
                                     }">
-                                        <td style="text-align: center; vertical-align: middle"><i class="fa @if(book.isPublished()){fa-check}" style="color: green"></i></td>
+                                        <td style="text-align: center; vertical-align: middle"><i class="fa @if(book.isPublished()){fa-check}else{fa-minus}" style="color: @if(book.isPublished()){green}else{grey}"></i></td>
                                         <td style="vertical-align: middle">
                                             <p><span style="font-size: x-small">[@book.getStatusText()]</span> <span style="font-weight: bold">@book.getTitle()</span></p>
                                             <p>@Messages("msg.book.num_chapters"): @book.getNumChapters()</p>

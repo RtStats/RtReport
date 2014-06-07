@@ -77,7 +77,9 @@ public class Book extends BaseController {
                                 + form.error("title").message());
                     } else {
                         FormAddBook formData = form.get();
-                        book.setTitle(formData.title).setSummary(formData.summary);
+                        book.setTitle(formData.title).setSummary(formData.summary)
+                                .setAvatar(formData.avatar).setPublished(formData.isPublished)
+                                .setStatus(BookBo.parseStatusString(formData.status));
                         book = TruyenDao.update(book);
                         flash(VIEW_BOOKS, Messages.get("msg.edit_book.done", book.getTitle()));
                     }
@@ -99,9 +101,12 @@ public class Book extends BaseController {
                     flash(VIEW_BOOKS,
                             Constants.FLASH_MSG_PREFIX_ERROR + Messages.get("error.book.not_found"));
                 } else {
-                    // TruyenDao.delete(book);
-                    book.setStatus(BookBo.STATUS_DELETED);
-                    book = TruyenDao.update(book);
+                    if (book.getNumChapters() == 0) {
+                        TruyenDao.delete(book);
+                    } else {
+                        book.setStatus(BookBo.STATUS_DELETED);
+                        book = TruyenDao.update(book);
+                    }
                     flash(VIEW_BOOKS, Messages.get("msg.delete_book.done", book.getTitle()));
                 }
                 return redirect(controllers.admin.routes.Book.books().url());

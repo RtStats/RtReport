@@ -15,6 +15,24 @@ public class BookBo extends BaseBo {
     public static final int STATUS_FINISHED = 3;
     public static final int STATUS_DELETED = 255;
 
+    public static int parseStatusString(String strStatus) {
+        int status = STATUS_NEW;
+        try {
+            status = Integer.parseInt(strStatus);
+        } catch (Exception e) {
+            status = STATUS_NEW;
+        }
+        switch (status) {
+        case STATUS_DELETED:
+        case STATUS_FINISHED:
+        case STATUS_INACTIVE:
+        case STATUS_NORMAL:
+            return status;
+        default:
+            return STATUS_NEW;
+        }
+    }
+
     public static String[] COL_ID = { "bid", "id" };
     public static String[] COL_STATUS = { "bstatus", "status" };
     public static String[] COL_IS_PUBLISHED = { "bis_published", "is_published" };
