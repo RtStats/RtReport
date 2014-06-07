@@ -29,9 +29,15 @@
         $.get(urlAjaxData, null, "json")
             .done(function(data, status, jqXHR){
                 if ( data.status == 200 ) {
-                	//$('#frmedit').attr('action', urlForm);
-                	//$('#frmedit_title').val(data.message.title);
-                    //$('#frmedit_summary').val(data.message.summary);
+                    console.log(data.message);
+                	$('#frmedit').attr('action', urlForm);
+                	$('#frmedit_title').val(data.message.title);
+                	$('#frmedit_avatar').val(data.message.avatar);
+                    $('#frmedit_summary').val(data.message.summary);
+                    $('#frmedit_is_published').prop('checked', data.message.is_published);
+                    $('#frmedit_status').val(data.message.status);
+                    $('#frmedit_category_id').val(data.message.cat_id);
+                    $('#frmedit_author_id').val(data.message.author_id);
                     $('#dlgEditBook').modal({});
                 } else {
                 	alert("Error while processing, plrease retry. Error code: " + data.status);
@@ -127,6 +133,43 @@
                         <div class="form-group">
                             <label for="frmedit_title">@Messages("msg.book.title")</label>
                             <input type="text" class="form-control" id="frmedit_title" name="title" placeholder="@Messages("msg.book.title")">
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox col-xs-2" style="margin-top: 5px !important">
+                                <label class="input-sm">
+                                    <input type="checkbox" id="frmedit_is_published" name="is_published" value="1"> @Messages("msg.book.is_published")
+                                </label>
+                            </div>
+                            <div class="form-group col-xs-3">
+                                <select class="form-control input-sm" name="status" id="frmedit_status">
+                                    <option value="-1">-= @Messages("msg.book.status") =-</option>
+                                    <option value="@BookBo.STATUS_NEW">@Messages("msg.book.status."+BookBo.STATUS_NEW)</option>
+                                    <option value="@BookBo.STATUS_NORMAL">@Messages("msg.book.status."+BookBo.STATUS_NORMAL)</option>
+                                    <option value="@BookBo.STATUS_INACTIVE">@Messages("msg.book.status."+BookBo.STATUS_INACTIVE)</option>
+                                    <option value="@BookBo.STATUS_FINISHED">@Messages("msg.book.status."+BookBo.STATUS_FINISHED)</option>
+                                    <option value="@BookBo.STATUS_DELETED">@Messages("msg.book.status."+BookBo.STATUS_DELETED)</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-xs-3">
+                                <select class="form-control input-sm" name="category_id" id="frmedit_category_id">
+                                    <option value="0">-= @Messages("msg.book.category") =-</option>
+                                    @for(category <- categories){
+                                        <option value="@category.getId()">@category.getTitle()</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <select class="form-control input-sm" name="author_id" id="frmedit_author_id">
+                                    <option value="0">-= @Messages("msg.book.author") =-</option>
+                                    @for(author <- authors){
+                                        <option value="@author.getId()">@author.getName()</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="frmedit_avatar">@Messages("msg.book.avatar")</label>
+                            <input type="text" class="form-control" id="frmedit_avatar" name="avatar" placeholder="@Messages("msg.book.avatar")">
                         </div>
                         <div class="form-group">
                             <label for="frmedit_summary">@Messages("msg.book.summary")</label>
