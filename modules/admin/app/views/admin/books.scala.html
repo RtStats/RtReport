@@ -199,8 +199,8 @@
                                     }">
                                         <td style="text-align: center; vertical-align: middle"><i class="fa @if(book.isPublished()){fa-check}" style="color: green"></i></td>
                                         <td style="vertical-align: middle">
-                                            <span style="font-size: x-small">[@book.getStatusText()]</span> <span style="font-weight: bold">@book.getTitle()</span>
-                                            @*<p>@book.getSummary()</p>*@
+                                            <p><span style="font-size: x-small">[@book.getStatusText()]</span> <span style="font-weight: bold">@book.getTitle()</span></p>
+                                            <p>@Messages("msg.book.num_chapters"): @book.getNumChapters()</p>
                                         </td>
                                         <td style="text-align: center; vertical-align: middle">
                                             @if(book.getCategory()!=null){@book.getCategory().getTitle()}else{-}
