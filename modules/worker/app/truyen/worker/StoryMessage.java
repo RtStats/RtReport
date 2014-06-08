@@ -1,4 +1,4 @@
-package com.litha.truyen.worker;
+package truyen.worker;
 
 import java.io.Serializable;
 

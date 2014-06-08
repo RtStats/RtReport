@@ -1,16 +1,15 @@
-package com.litha.truyen.worker.impl;
+package truyen.worker.engine;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import truyen.worker.BaseWorker;
 import jodd.jerry.Jerry;
 import jodd.jerry.JerryFunction;
 
-import com.litha.truyen.worker.BaseStoryWorker;
-
-public class TungHoanhStoryWorker extends BaseStoryWorker {
+public class TungHoanhEngine extends BaseWorker {
 
     @Override
     protected List<Map<String, Object>> extractStoryChapters(String html) {

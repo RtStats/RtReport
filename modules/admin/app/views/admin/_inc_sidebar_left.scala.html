@@ -10,5 +10,7 @@
             ><i class="fa fa-folder-open-o"></i> <span>@Messages("msg.categories")</span></a></li>
         <li @if(active=="book"||active=="books"){class="active"}><a href="@controllers.admin.routes.Book.books()"
             ><i class="fa fa-book"></i> <span>@Messages("msg.books")</span></a></li>
+        <li @if(active=="worker"||active=="workers"){class="active"}><a href="@controllers.admin.routes.Book.books()"
+            ><i class="fa fa-cogs"></i> <span>@Messages("msg.workers")</span></a></li>
     </ul>
 </nav>

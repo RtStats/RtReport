@@ -1,4 +1,4 @@
-package com.litha.truyen.worker;
+package truyen.worker;
 
 import java.util.List;
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import akka.actor.UntypedActor;
 
-public abstract class BaseStoryWorker extends UntypedActor {
+public abstract class BaseWorker extends UntypedActor {
 
     private Lock lock = new ReentrantLock();
 

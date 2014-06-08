@@ -1,4 +1,4 @@
-package com.litha.truyen.worker;
+package truyen.worker;
 
 import jodd.http.HttpBrowser;
 import jodd.http.HttpRequest;

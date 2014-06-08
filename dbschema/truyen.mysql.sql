@@ -98,3 +98,17 @@ CREATE TABLE truyen_book (
     bavatar                         VARCHAR(255),
     bsummary                        TEXT
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+DROP TABLE IF EXISTS truyen_worker;
+CREATE TABLE truyen_worker (
+    wid                             INT                         NOT NULL,
+        PRIMARY KEY (wid),
+    wbook_id                        INT                         NOT NULL,
+        INDEX (wbook_id),
+    wengine                         VARCHAR(32),
+    wurl                            VARCHAR(255),
+    wstatus                         INT                         NOT NULL DEFAULT 0,
+        INDEX (wstatus),
+    wlast_timestamp                 DATETIME,
+    wlast_status                    VARCHAR(255)
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;

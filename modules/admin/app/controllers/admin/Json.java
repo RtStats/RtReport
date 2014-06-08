@@ -11,6 +11,8 @@ import truyen.common.bo.truyen.AuthorBo;
 import truyen.common.bo.truyen.BookBo;
 import truyen.common.bo.truyen.CategoryBo;
 import truyen.common.bo.truyen.TruyenDao;
+import truyen.common.bo.worker.WorkerBo;
+import truyen.common.bo.worker.WorkerDao;
 import truyen.common.compisitions.AuthRequired;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -79,6 +81,24 @@ public class Json extends BaseController {
                 } else {
                     Map<String, Object> bookData = book.toMap();
                     return doResponse(200, bookData);
+                }
+            }
+        });
+        return promise;
+    }
+
+    /*
+     * Handles GET:/jsonWorker
+     */
+    public static Promise<Result> worker(final int id) {
+        Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            public Result apply() throws Exception {
+                WorkerBo worker = WorkerDao.getWorker(id);
+                if (worker == null) {
+                    return doResponse(404, Messages.get("error.worker.not_found"));
+                } else {
+                    Map<String, Object> workerData = worker.toMap();
+                    return doResponse(200, workerData);
                 }
             }
         });

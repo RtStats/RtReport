@@ -1,17 +1,16 @@
 package qnd;
 
+import truyen.worker.StoryMessage;
+import truyen.worker.engine.TungHoanhEngine;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
-
-import com.litha.truyen.worker.StoryMessage;
-import com.litha.truyen.worker.impl.TungHoanhStoryWorker;
 
 public class QndTungHoanh {
 
     public static void main(String[] args) throws InterruptedException {
         ActorSystem system = ActorSystem.create("MySystem");
-        ActorRef tunghoanhActor = system.actorOf(Props.create(TungHoanhStoryWorker.class),
+        ActorRef tunghoanhActor = system.actorOf(Props.create(TungHoanhEngine.class),
                 "tunghoanh");
 
         StoryMessage msg = new StoryMessage();
