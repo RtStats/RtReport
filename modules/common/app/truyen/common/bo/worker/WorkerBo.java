@@ -40,7 +40,7 @@ public class WorkerBo extends BaseBo {
     public static String[] COL_URL = { "wurl", "url" };
     public static String[] COL_STATUS = { "wstatus", "status" };
     public static String[] COL_LAST_TIMESTAME = { "wlast_timestamp", "last_timestamp" };
-    public static String[] COL_LAST_STATUS = { "last_status", "last_status" };
+    public static String[] COL_LAST_STATUS = { "wlast_status", "last_status" };
 
     public int getId() {
         Integer result = getAttribute(COL_ID[1], Integer.class);
@@ -57,7 +57,7 @@ public class WorkerBo extends BaseBo {
     }
 
     public WorkerBo setBookId(int bookId) {
-        return (WorkerBo) setAttribute(COL_ID[1], bookId);
+        return (WorkerBo) setAttribute(COL_BOOK_ID[1], bookId);
     }
 
     public BookBo getBook() {

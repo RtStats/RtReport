@@ -78,8 +78,9 @@ public class Worker extends BaseController {
                 } else {
                     Form<FormAddWorker> form = Form.form(FormAddWorker.class).bindFromRequest();
                     if (form.hasErrors()) {
-                        flash(VIEW_WORKERS, Constants.FLASH_MSG_PREFIX_ERROR
-                                + form.error("book_id").message());
+                        flash(VIEW_WORKERS,
+                                Constants.FLASH_MSG_PREFIX_ERROR
+                                        + FormUtils.joinFormErrorMessages(form));
                     } else {
                         FormAddWorker formData = form.get();
                         worker.setBook(formData.book).setEngine(formData.engine)

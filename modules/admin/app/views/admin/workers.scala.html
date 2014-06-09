@@ -31,14 +31,10 @@
             .done(function(data, status, jqXHR){
                 if ( data.status == 200 ) {
                 	$('#frmedit').attr('action', urlForm);
-                	$('#frmedit_title').val(data.message.title);
-                	$('#frmedit_avatar').val(data.message.avatar);
-                    $('#frmedit_summary').val(data.message.summary);
-                    $('#frmedit_is_published').prop('checked', data.message.is_published);
-                    $('#frmedit_status').val(data.message.status);
-                    $('#frmedit_category_id').val(data.message.cat_id);
-                    $('#frmedit_author_id').val(data.message.author_id);
-                    $('#dlgEditBook').modal({});
+                	$('#frmedit_book_id').val(data.message.book_id);
+                	$('#frmedit_engine').val(data.message.engine);
+                    $('#frmedit_url').val(data.message.url);
+                    $('#dlgEditWorker').modal({});
                 } else {
                 	alert("Error while processing, plrease retry. Error code: " + data.status);
                 }
@@ -107,63 +103,36 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="dlgEditBook" tabindex="-1" role="dialog" aria-labelledby="dlgEditBook_Title" aria-hidden="true">
+    <div class="modal fade" id="dlgEditWorker" tabindex="-1" role="dialog" aria-labelledby="dlgEditWorker_Title" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="frmedit" role="form" method="post" action="">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="dlgEditBook_Title">@Messages("msg.edit_book")</h4>
+                        <h4 class="modal-title" id="dlgEditWorker_Title">@Messages("msg.edit_worker")</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="frmedit_title">@Messages("msg.book.title")</label>
-                            <input type="text" class="form-control" id="frmedit_title" name="title" placeholder="@Messages("msg.book.title")">
-                        </div>
-                        <div class="form-group">
-                            <div class="checkbox col-xs-2" style="margin-top: 5px !important">
-                                <label class="input-sm">
-                                    <input type="checkbox" id="frmedit_is_published" name="is_published" value="1"> @Messages("msg.book.is_published")
-                                </label>
-                            </div>
-                            <div class="form-group col-xs-3">
-                                <select class="form-control input-sm" name="status" id="frmedit_status">
-                                    <option value="-1">-= @Messages("msg.book.status") =-</option>
-                                    <option value="@BookBo.STATUS_NEW">@Messages("msg.book.status."+BookBo.STATUS_NEW)</option>
-                                    <option value="@BookBo.STATUS_NORMAL">@Messages("msg.book.status."+BookBo.STATUS_NORMAL)</option>
-                                    <option value="@BookBo.STATUS_INACTIVE">@Messages("msg.book.status."+BookBo.STATUS_INACTIVE)</option>
-                                    <option value="@BookBo.STATUS_FINISHED">@Messages("msg.book.status."+BookBo.STATUS_FINISHED)</option>
-                                    <option value="@BookBo.STATUS_DELETED">@Messages("msg.book.status."+BookBo.STATUS_DELETED)</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-xs-3">
-                                <select class="form-control input-sm" name="category_id" id="frmedit_category_id">
-                                    <option value="0">-= @Messages("msg.book.category") =-</option>
-                                    @*
-                                    @for(category <- categories){
-                                        <option value="@category.getId()">@category.getTitle()</option>
+                            <div class="form-group col-xs-6">
+                                <select class="form-control" name="book_id" id="frmedit_book_id">
+                                    <option value="0">-= @Messages("msg.worker.book") =-</option>
+                                    @for(book <- books){
+                                        <option value="@book.getId()">@book.getTitle()</option>
                                     }
-                                    *@
                                 </select>
                             </div>
-                            <div class="form-group col-xs-4">
-                                <select class="form-control input-sm" name="author_id" id="frmedit_author_id">
-                                    <option value="0">-= @Messages("msg.book.author") =-</option>
-                                    @*
-                                    @for(author <- authors){
-                                        <option value="@author.getId()">@author.getName()</option>
+                            <div class="form-group col-xs-6">
+                                <select class="form-control" name="engine" id="frmedit_engine">
+                                    <option value="">-= @Messages("msg.worker.engine") =-</option>
+                                    @for(engine <- engines){
+                                        <option value="@engine">@engine</option>
                                     }
-                                    *@
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="frmedit_avatar">@Messages("msg.book.avatar")</label>
-                            <input type="text" class="form-control" id="frmedit_avatar" name="avatar" placeholder="@Messages("msg.book.avatar")">
-                        </div>
-                        <div class="form-group">
-                            <label for="frmedit_summary">@Messages("msg.book.summary")</label>
-                            <textarea rows="6" class="form-control" id="frmedit_summary" name="summary" placeholder="@Messages("msg.book.summary")"></textarea>
+                            <label for="frmedit_url">@Messages("msg.worker.url")</label>
+                            <input type="text" class="form-control" id="frmedit_url" name="url" placeholder="@Messages("msg.worker.url")">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -214,38 +183,27 @@
                         <table cellpadding="0" cellspacing="0" border="0" class="table table-condensed table-bordered datatables" id="tblWorkers">
                             <thead>
                                 <tr>
-                                    <th>&nbsp;</th>
-                                    <th style="text-align: center;">@Messages("msg.book.title")</th>
-                                    <th style="text-align: center;">@Messages("msg.book.category")</th>
-                                    <th style="text-align: center;">@Messages("msg.book.author")</th>
+                                    <th style="text-align: center;">@Messages("msg.worker.url")</th>
+                                    <th style="text-align: center;">@Messages("msg.worker.engine")</th>
                                     <th>&nbsp;</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @for(book <- books){
-                                    <tr class="@if(book.getStatus()==BookBo.STATUS_DELETED){danger}else{
-                                        @if(book.getStatus()==BookBo.STATUS_FINISHED){success}else{
-                                            @if(book.getStatus()==BookBo.STATUS_NEW){active}else{
-                                                @if(book.getStatus()==BookBo.STATUS_INACTIVE){warning}else{info}
-                                            }
-                                        }
-                                    }">
-                                        <td style="text-align: center; vertical-align: middle"><i class="fa @if(book.isPublished()){fa-check}else{fa-minus}" style="color: @if(book.isPublished()){green}else{grey}"></i></td>
+                                @for(worker <- workers){
+                                    <tr>
                                         <td style="vertical-align: middle">
-                                            <p><span style="font-size: x-small">[@book.getStatusText()]</span> <span style="font-weight: bold">@book.getTitle()</span></p>
-                                            <p>@Messages("msg.book.num_chapters"): @book.getNumChapters()</p>
+                                            <span style="font-weight: bold">@if(worker.getBook()!=null){@worker.getBook().getTitle()}else{-}</span>
+                                            <br />
+                                            @worker.getUrl()
                                         </td>
                                         <td style="text-align: center; vertical-align: middle">
-                                            @if(book.getCategory()!=null){@book.getCategory().getTitle()}else{-}
-                                        </td>
-                                        <td style="text-align: center; vertical-align: middle">
-                                            @if(book.getAuthor()!=null){@book.getAuthor().getName()}else{-}
+                                            @worker.getEngine()
                                         </td>
                                         <td style="text-align: center; vertical-align: middle" nowrap="nowrap">
                                             <a href="javascript:;"
-                                                onclick="_editBook('@controllers.admin.routes.Book.editBookSubmit(book.getId())', '@controllers.admin.routes.Json.book(book.getId())')"><i style="font-size: x-large; color: blue;" class="fa fa-edit"></i></a>
+                                                onclick="_editWorker('@controllers.admin.routes.Worker.editWorkerSubmit(worker.getId())', '@controllers.admin.routes.Json.worker(worker.getId())')"><i style="font-size: x-large; color: blue;" class="fa fa-edit"></i></a>
                                             <a href="javascript:;"
-                                                onclick="_deleteBook('@controllers.admin.routes.Book.deleteBookSubmit(book.getId())', '@controllers.admin.routes.Json.book(book.getId())', '@Messages("msg.delete_book.confirmation", book.getTitle())')"><i style="font-size: x-large; color: red;" class="fa fa-times"></i></a>
+                                                onclick="_deleteWorker('@controllers.admin.routes.Worker.deleteWorkerSubmit(worker.getId())', '@controllers.admin.routes.Json.worker(worker.getId())', '@Messages("msg.delete_worker.confirmation", worker.getId())')"><i style="font-size: x-large; color: red;" class="fa fa-times"></i></a>
                                         </td>
                                     </tr>
                                 }
