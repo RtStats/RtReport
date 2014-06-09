@@ -12,6 +12,7 @@ import truyen.common.bo.truyen.TruyenDao;
 import truyen.common.bo.worker.WorkerBo;
 import truyen.common.bo.worker.WorkerDao;
 import truyen.common.compisitions.AuthRequired;
+import truyen.common.util.FormUtils;
 import truyen.worker.WorkerRegistry;
 import controllers.common.BaseController;
 import forms.admin.FormAddWorker;
@@ -24,7 +25,7 @@ public class Worker extends BaseController {
     /*
      * Handles GET:/workers
      */
-    public static Promise<Result> books() {
+    public static Promise<Result> workers() {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
                 WorkerBo[] workers = WorkerDao.getAllWorkers();
@@ -45,8 +46,9 @@ public class Worker extends BaseController {
             public Result apply() throws Exception {
                 Form<FormAddWorker> form = Form.form(FormAddWorker.class).bindFromRequest();
                 if (form.hasErrors()) {
-                    flash(VIEW_WORKERS, Constants.FLASH_MSG_PREFIX_ERROR
-                            + form.error("book_id").message());
+                    flash(VIEW_WORKERS,
+                            Constants.FLASH_MSG_PREFIX_ERROR
+                                    + FormUtils.joinFormErrorMessages(form));
                 } else {
                     FormAddWorker formData = form.get();
                     WorkerBo worker = new WorkerBo().setBook(formData.book)

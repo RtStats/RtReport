@@ -28,3 +28,21 @@ msg.delete_book = Xoá truyện
 msg.delete_book.confirmation = Bạn có chắc là bạn muốn xoá truyện "{0}" ra khỏi hệ thống?
 msg.delete_book.done = Truyện "{0}" đã được xoá thành công.
 error.book.empty_title = Lỗi: Vui lòng nhập vào tiêu đề truyện!
+
+msg.workers = Worker
+msg.worker = Worker
+msg.add_worker = Thêm worker mới
+msg.add_worker.done = Worker "{0}" đã được thêm vào hệ thống.
+msg.edit_worker = Cập nhật thông tin worker
+msg.edit_worker.done = Worker "{0}" đã được cập nhật thành công.
+msg.delete_worker = Xoá worker
+msg.delete_worker.confirmation = Bạn có chắc là bạn muốn xoá worker "{0}" ra khỏi hệ thống?
+msg.delete_worker.done = Worker "{0}" đã được xoá thành công.
+error.worker.not_found = Lỗi: Worker "{0}" không tồn tại!
+error.worker.invalid_url = Lỗi: Url không hợp lệ!
+
+msg.worker.book = Truyện
+msg.worker.engine = Engine
+msg.worker.url = Url
+
+error.engine.not_found = Lỗi: Engine "{0}" không tồn tại trong hệ thống!

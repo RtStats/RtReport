@@ -1,0 +1,284 @@
+@(workers  : Array[truyen.common.bo.worker.WorkerBo],
+    books  : Array[truyen.common.bo.truyen.BookBo],
+    engines: Array[String]
+)
+@import truyen.common._
+@import truyen.common.bo.truyen._
+@import truyen.common.bo.worker._
+@import play.mvc._
+@import com.github.ddth.plommon.utils._
+@_layout(
+	active="workers",
+	customJs=Array("avant-1.2.1/assets/plugins/datatables/jquery.dataTables.min.js",
+	    "avant-1.2.1/assets/plugins/datatables/dataTables.bootstrap.js"),
+    customCss=Array("avant-1.2.1/assets/plugins/datatables/dataTables.css")
+){
+    <div id="page-heading">
+        <ol class="breadcrumb">
+            <li><a href="@controllers.admin.routes.Admin.index()">@Messages("msg.dashboard")</a></li>
+            <li class="active">@Messages("msg.workers")</li>
+        </ol>
+
+        <h1>@Messages("msg.workers")</h1>
+    </div>
+    
+    <script type="text/javascript">
+    function _addWorker() {
+    	$('#dlgAddWorker').modal({});
+    }
+    function _editWorker(urlForm, urlAjaxData) {
+        $.get(urlAjaxData, null, "json")
+            .done(function(data, status, jqXHR){
+                if ( data.status == 200 ) {
+                	$('#frmedit').attr('action', urlForm);
+                	$('#frmedit_title').val(data.message.title);
+                	$('#frmedit_avatar').val(data.message.avatar);
+                    $('#frmedit_summary').val(data.message.summary);
+                    $('#frmedit_is_published').prop('checked', data.message.is_published);
+                    $('#frmedit_status').val(data.message.status);
+                    $('#frmedit_category_id').val(data.message.cat_id);
+                    $('#frmedit_author_id').val(data.message.author_id);
+                    $('#dlgEditBook').modal({});
+                } else {
+                	alert("Error while processing, plrease retry. Error code: " + data.status);
+                }
+            })
+            .fail(function(data, status, jqXHR){
+                alert("Error while processing, plrease retry. Error code: " + status);
+            });
+    }
+    function _deleteWorker(urlForm, urlAjaxData, txtConfirmation) {
+    	$.get(urlAjaxData, null, "json")
+	        .done(function(data, status, jqXHR){
+	            if ( data.status == 200 ) {
+	            	$('#frmdelete').attr('action', urlForm);
+	            	$('#frmdelete_confirmation').html(txtConfirmation);
+
+	                $('#frmdelete_title').html(data.message.title);
+                    $('#frmdelete_summary').html(data.message.summary);
+	                $('#dlgDeleteBook').modal({});
+	            } else {
+	                alert("Error while processing, plrease retry. Error code: " + data.status);
+	            }
+	        })
+	        .fail(function(data, status, jqXHR){
+	            alert("Error while processing, plrease retry. Error code: " + status);
+	        });
+    }
+    </script>
+    <style type="text/css">.modal-title{text-transform:capitalize} label{font-weight:bold}</style>
+    <div class="modal fade" id="dlgAddWorker" tabindex="-1" role="dialog" aria-labelledby="dlgAddWorker_Title" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="frmadd" role="form" method="post" action="@controllers.admin.routes.Worker.addWorkerSubmit()">
+	                <div class="modal-header">
+	                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                    <h4 class="modal-title" id="dlgAddWorker_Title">@Messages("msg.add_worker")</h4>
+	                </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="form-group col-xs-6">
+	                            <select class="form-control" name="book_id" id="frmadd_book_id">
+	                                <option value="0">-= @Messages("msg.worker.book") =-</option>
+	                                @for(book <- books){
+	                                    <option value="@book.getId()">@book.getTitle()</option>
+	                                }
+	                            </select>
+	                        </div>
+	                        <div class="form-group col-xs-6">
+                                <select class="form-control" name="engine" id="frmadd_engine">
+                                    <option value="">-= @Messages("msg.worker.engine") =-</option>
+                                    @for(engine <- engines){
+                                        <option value="@engine">@engine</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="frmadd_url">@Messages("msg.worker.url")</label>
+                            <input type="text" class="form-control" id="frmadd_url" name="url" placeholder="@Messages("msg.worker.url")">
+                        </div>
+                    </div>
+	                <div class="modal-footer">
+	                    <button type="submit" class="btn btn-primary">@Messages("msg.add_worker")</button>
+	                    <button type="button" class="btn btn-default" data-dismiss="modal">@Messages("msg.cancel")</button>
+	                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dlgEditBook" tabindex="-1" role="dialog" aria-labelledby="dlgEditBook_Title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="frmedit" role="form" method="post" action="">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="dlgEditBook_Title">@Messages("msg.edit_book")</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="frmedit_title">@Messages("msg.book.title")</label>
+                            <input type="text" class="form-control" id="frmedit_title" name="title" placeholder="@Messages("msg.book.title")">
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox col-xs-2" style="margin-top: 5px !important">
+                                <label class="input-sm">
+                                    <input type="checkbox" id="frmedit_is_published" name="is_published" value="1"> @Messages("msg.book.is_published")
+                                </label>
+                            </div>
+                            <div class="form-group col-xs-3">
+                                <select class="form-control input-sm" name="status" id="frmedit_status">
+                                    <option value="-1">-= @Messages("msg.book.status") =-</option>
+                                    <option value="@BookBo.STATUS_NEW">@Messages("msg.book.status."+BookBo.STATUS_NEW)</option>
+                                    <option value="@BookBo.STATUS_NORMAL">@Messages("msg.book.status."+BookBo.STATUS_NORMAL)</option>
+                                    <option value="@BookBo.STATUS_INACTIVE">@Messages("msg.book.status."+BookBo.STATUS_INACTIVE)</option>
+                                    <option value="@BookBo.STATUS_FINISHED">@Messages("msg.book.status."+BookBo.STATUS_FINISHED)</option>
+                                    <option value="@BookBo.STATUS_DELETED">@Messages("msg.book.status."+BookBo.STATUS_DELETED)</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-xs-3">
+                                <select class="form-control input-sm" name="category_id" id="frmedit_category_id">
+                                    <option value="0">-= @Messages("msg.book.category") =-</option>
+                                    @*
+                                    @for(category <- categories){
+                                        <option value="@category.getId()">@category.getTitle()</option>
+                                    }
+                                    *@
+                                </select>
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <select class="form-control input-sm" name="author_id" id="frmedit_author_id">
+                                    <option value="0">-= @Messages("msg.book.author") =-</option>
+                                    @*
+                                    @for(author <- authors){
+                                        <option value="@author.getId()">@author.getName()</option>
+                                    }
+                                    *@
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="frmedit_avatar">@Messages("msg.book.avatar")</label>
+                            <input type="text" class="form-control" id="frmedit_avatar" name="avatar" placeholder="@Messages("msg.book.avatar")">
+                        </div>
+                        <div class="form-group">
+                            <label for="frmedit_summary">@Messages("msg.book.summary")</label>
+                            <textarea rows="6" class="form-control" id="frmedit_summary" name="summary" placeholder="@Messages("msg.book.summary")"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">@Messages("msg.update")</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">@Messages("msg.cancel")</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dlgDeleteBook" tabindex="-1" role="dialog" aria-labelledby="dlgDeleteBook_Title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="frmdelete" role="form" method="post" action="">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="dlgDeleteAuthor_Title">@Messages("msg.delete_book")</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger">
+                            <i class="fa fa-question-circle"></i> <span id="frmdelete_confirmation"></span>
+                        </div>
+                        <div id="frmdelete_title" style="font-weight: bold"></div>
+                        <div id="frmdelete_summary"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">@Messages("msg.delete")</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">@Messages("msg.cancel")</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                @_macro_displayPageFlashMessage(Controller.flash(controllers.admin.Worker.VIEW_WORKERS))
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4>@Messages("msg.workers")</h4>
+                        <div class="options">
+                            <a href="javascript:;" class="panel-collapse"><i class="fa fa-chevron-down"></i></a>
+                            <a href="javascript:_addWorker();"><i class="fa fa-plus"></i></a>
+                        </div>
+                    </div>
+                    <div class="panel-body collapse in">
+                        <table cellpadding="0" cellspacing="0" border="0" class="table table-condensed table-bordered datatables" id="tblWorkers">
+                            <thead>
+                                <tr>
+                                    <th>&nbsp;</th>
+                                    <th style="text-align: center;">@Messages("msg.book.title")</th>
+                                    <th style="text-align: center;">@Messages("msg.book.category")</th>
+                                    <th style="text-align: center;">@Messages("msg.book.author")</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for(book <- books){
+                                    <tr class="@if(book.getStatus()==BookBo.STATUS_DELETED){danger}else{
+                                        @if(book.getStatus()==BookBo.STATUS_FINISHED){success}else{
+                                            @if(book.getStatus()==BookBo.STATUS_NEW){active}else{
+                                                @if(book.getStatus()==BookBo.STATUS_INACTIVE){warning}else{info}
+                                            }
+                                        }
+                                    }">
+                                        <td style="text-align: center; vertical-align: middle"><i class="fa @if(book.isPublished()){fa-check}else{fa-minus}" style="color: @if(book.isPublished()){green}else{grey}"></i></td>
+                                        <td style="vertical-align: middle">
+                                            <p><span style="font-size: x-small">[@book.getStatusText()]</span> <span style="font-weight: bold">@book.getTitle()</span></p>
+                                            <p>@Messages("msg.book.num_chapters"): @book.getNumChapters()</p>
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle">
+                                            @if(book.getCategory()!=null){@book.getCategory().getTitle()}else{-}
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle">
+                                            @if(book.getAuthor()!=null){@book.getAuthor().getName()}else{-}
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle" nowrap="nowrap">
+                                            <a href="javascript:;"
+                                                onclick="_editBook('@controllers.admin.routes.Book.editBookSubmit(book.getId())', '@controllers.admin.routes.Json.book(book.getId())')"><i style="font-size: x-large; color: blue;" class="fa fa-edit"></i></a>
+                                            <a href="javascript:;"
+                                                onclick="_deleteBook('@controllers.admin.routes.Book.deleteBookSubmit(book.getId())', '@controllers.admin.routes.Json.book(book.getId())', '@Messages("msg.delete_book.confirmation", book.getTitle())')"><i style="font-size: x-large; color: red;" class="fa fa-times"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('.datatables').dataTable({
+                                "sDom": "<'row'<'col-xs-6'l><'col-xs-6'f>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+                                "sPaginationType": "bootstrap",
+                                "oLanguage": {
+                                    "sLengthMenu"  : "_MENU_ @Messages("msg.records_per_page")",
+                                    "sSearch"      : "",
+                                    "sEmptyTable"  : "@Messages("msg.nodata")",
+                                    "sZeroRecords" : "@Messages("msg.nodata")",
+                                    "sInfo"        : "@Messages("msg.datatables.sInfo")",
+                                    "sInfoEmpty"   : "@Messages("msg.nodata")",
+                                    "sInfoFiltered": "@Messages("msg.datatables.sInfoFiltered")",
+                                    "oPaginate"    : {
+                                        "sPrevious": "@Messages("msg.prev")",
+                                        "sNext"    : "@Messages("msg.next")",
+                                        "sFirst"   : "@Messages("msg.first")",
+                                        "sLast"    : "@Messages("msg.last")"
+                                    }
+                                }
+                            });
+                            $('.dataTables_filter input').addClass('form-control').attr('placeholder','@Messages("msg.search")');
+                            $('.dataTables_length select').addClass('form-control');
+                        });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

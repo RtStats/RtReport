@@ -7,7 +7,6 @@ import java.util.Map;
 
 import truyen.common.Constants;
 import truyen.common.bo.CounterDao;
-import truyen.common.bo.truyen.AuthorBo;
 
 import com.github.ddth.commons.utils.DPathUtils;
 import com.github.ddth.plommon.bo.jdbc.BaseMysqlDao;
@@ -105,7 +104,7 @@ public class WorkerDao extends BaseMysqlDao {
         List<Map<String, Object>> dbRows = getFromCache(CACHE_KEY, List.class);
         if (dbRows == null) {
             final String SQL = MessageFormat.format("SELECT {1} AS {2} FROM {0} ORDER BY {3} DESC",
-                    TABLE_WORKER, WorkerBo.COL_ID[0], WorkerBo.COL_ID[1], AuthorBo.COL_ID[0]);
+                    TABLE_WORKER, WorkerBo.COL_ID[0], WorkerBo.COL_ID[1], WorkerBo.COL_ID[0]);
             dbRows = select(SQL, null);
             putToCache(CACHE_KEY, dbRows);
         }
