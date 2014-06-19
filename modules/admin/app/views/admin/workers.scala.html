@@ -50,9 +50,8 @@
 	            	$('#frmdelete').attr('action', urlForm);
 	            	$('#frmdelete_confirmation').html(txtConfirmation);
 
-	                $('#frmdelete_title').html(data.message.title);
-                    $('#frmdelete_summary').html(data.message.summary);
-	                $('#dlgDeleteBook').modal({});
+	                $('#frmdelete_url').html(data.message.url);
+	                $('#dlgDeleteWorker').modal({});
 	            } else {
 	                alert("Error while processing, plrease retry. Error code: " + data.status);
 	            }
@@ -143,20 +142,19 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="dlgDeleteBook" tabindex="-1" role="dialog" aria-labelledby="dlgDeleteBook_Title" aria-hidden="true">
+    <div class="modal fade" id="dlgDeleteWorker" tabindex="-1" role="dialog" aria-labelledby="dlgDeleteWorker_Title" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="frmdelete" role="form" method="post" action="">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="dlgDeleteAuthor_Title">@Messages("msg.delete_book")</h4>
+                        <h4 class="modal-title" id="dlgDeleteWorker_Title">@Messages("msg.delete_worker")</h4>
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-danger">
                             <i class="fa fa-question-circle"></i> <span id="frmdelete_confirmation"></span>
                         </div>
-                        <div id="frmdelete_title" style="font-weight: bold"></div>
-                        <div id="frmdelete_summary"></div>
+                        <div id="frmdelete_url" style="font-weight: bold"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-danger">@Messages("msg.delete")</button>

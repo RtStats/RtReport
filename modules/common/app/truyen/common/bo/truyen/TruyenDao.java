@@ -2,6 +2,7 @@ package truyen.common.bo.truyen;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,10 +17,12 @@ public class TruyenDao extends BaseMysqlDao {
     public final static String TABLE_AUTHOR = Constants.APP_ID + "_author";
     public final static String TABLE_CATEGORY = Constants.APP_ID + "_category";
     public final static String TABLE_BOOK = Constants.APP_ID + "_book";
+    public final static String TABLE_CHAPTER = Constants.APP_ID + "_chapter";
 
     private final static AuthorBo[] EMPTY_ARR_AUTHOR_BO = new AuthorBo[0];
     private final static CategoryBo[] EMPTY_ARR_CATEGORY_BO = new CategoryBo[0];
     private final static BookBo[] EMPTY_ARR_BOOK_BO = new BookBo[0];
+    private final static ChapterBo[] EMPTY_ARR_CHAPTER_BO = new ChapterBo[0];
 
     /*----------------------------------------------------------------------*/
     private static String cacheKeyAuthor(int id) {
@@ -82,6 +85,28 @@ public class TruyenDao extends BaseMysqlDao {
         CategoryBo cat = book.getCategory();
         if (cat != null) {
             removeFromCache(cacheKeyAllBooks(cat));
+        }
+    }
+
+    /*--------------------*/
+
+    private static String cacheKeyChapter(int bookId, int chapterIndex) {
+        return Constants.CACHE_PREFIX + "_CHAPTER_" + bookId + "_" + chapterIndex;
+    }
+
+    private static String cacheKey(ChapterBo chapter) {
+        return cacheKeyChapter(chapter.getBookId(), chapter.getIndex());
+    }
+
+    private static String cacheKeyAllChapters(BookBo book) {
+        return Constants.CACHE_PREFIX + "_CHAPTERS_" + book.getId();
+    }
+
+    private static void invalidate(ChapterBo chapter) {
+        removeFromCache(cacheKey(chapter));
+        BookBo book = chapter.getBook();
+        if (book != null) {
+            removeFromCache(cacheKeyAllChapters(book));
         }
     }
 
@@ -349,14 +374,15 @@ public class TruyenDao extends BaseMysqlDao {
             book.setId((int) CounterDao.nextId(Constants.COUNTER_BOOK_ID));
         }
         final String[] COLUMNS = new String[] { BookBo.COL_ID[0], BookBo.COL_STATUS[0],
-                BookBo.COL_IS_PUBLISHED[0], BookBo.COL_NUM_CHAPTERS[0], BookBo.COL_CATEGORY_ID[0],
-                BookBo.COL_AUTHOR_ID[0], BookBo.COL_TITLE[0], BookBo.COL_SUMMARY[0],
-                BookBo.COL_AVATAR[0], BookBo.COL_TIMESTAMP_CREATE[0],
-                BookBo.COL_TIMESTAMP_UPDATE[0] };
+                BookBo.COL_IS_PUBLISHED[0], BookBo.COL_NUM_CHAPTERS[0],
+                BookBo.COL_NUM_PUBLISHES[0], BookBo.COL_CATEGORY_ID[0], BookBo.COL_AUTHOR_ID[0],
+                BookBo.COL_TITLE[0], BookBo.COL_SUMMARY[0], BookBo.COL_AVATAR[0],
+                BookBo.COL_TIMESTAMP_CREATE[0], BookBo.COL_TIMESTAMP_UPDATE[0] };
         final Object[] VALUES = new Object[] { book.getId(), book.getStatus(),
                 book.isPublished() ? Constants.INT_1 : Constants.INT_0, book.getNumChapters(),
-                book.getCategoryId(), book.getAuthorId(), book.getTitle(), book.getSummary(),
-                book.getAvatar(), book.getTimestampCreate(), book.getTimestampUpdate() };
+                book.getNumPublishes(), book.getCategoryId(), book.getAuthorId(), book.getTitle(),
+                book.getSummary(), book.getAvatar(), book.getTimestampCreate(),
+                book.getTimestampUpdate() };
         insertIgnore(TABLE_BOOK, COLUMNS, VALUES);
         invalidate(book);
         return (BookBo) book.markClean();
@@ -387,8 +413,8 @@ public class TruyenDao extends BaseMysqlDao {
         dbRow = null;
         if (dbRow == null) {
             final String[][] columns = { BookBo.COL_ID, BookBo.COL_STATUS, BookBo.COL_IS_PUBLISHED,
-                    BookBo.COL_NUM_CHAPTERS, BookBo.COL_CATEGORY_ID, BookBo.COL_AUTHOR_ID,
-                    BookBo.COL_TITLE, BookBo.COL_SUMMARY, BookBo.COL_AVATAR,
+                    BookBo.COL_NUM_CHAPTERS, BookBo.COL_NUM_PUBLISHES, BookBo.COL_CATEGORY_ID,
+                    BookBo.COL_AUTHOR_ID, BookBo.COL_TITLE, BookBo.COL_SUMMARY, BookBo.COL_AVATAR,
                     BookBo.COL_TIMESTAMP_CREATE, BookBo.COL_TIMESTAMP_UPDATE };
             final String whereClause = BookBo.COL_ID[0] + "=?";
             final Object[] paramValues = { id };
@@ -469,10 +495,12 @@ public class TruyenDao extends BaseMysqlDao {
             final String CACHE_KEY = cacheKey(book);
             final String[] COLUMNS = new String[] { BookBo.COL_STATUS[0],
                     BookBo.COL_IS_PUBLISHED[0], BookBo.COL_CATEGORY_ID[0], BookBo.COL_AUTHOR_ID[0],
-                    BookBo.COL_TITLE[0], BookBo.COL_SUMMARY[0], BookBo.COL_AVATAR[0] };
+                    BookBo.COL_TITLE[0], BookBo.COL_SUMMARY[0], BookBo.COL_AVATAR[0],
+                    BookBo.COL_NUM_CHAPTERS[0], BookBo.COL_NUM_PUBLISHES[0] };
             final Object[] VALUES = new Object[] { book.getStatus(),
                     book.isPublished() ? Constants.INT_1 : Constants.INT_0, book.getCategoryId(),
-                    book.getAuthorId(), book.getTitle(), book.getSummary(), book.getAvatar() };
+                    book.getAuthorId(), book.getTitle(), book.getSummary(), book.getAvatar(),
+                    book.getNumChapters(), book.getNumPublishes() };
             final String[] WHERE_COLUMNS = new String[] { BookBo.COL_ID[0] };
             final Object[] WHERE_VALUES = new Object[] { book.getId() };
             update(TABLE_BOOK, COLUMNS, VALUES, WHERE_COLUMNS, WHERE_VALUES);
@@ -507,4 +535,173 @@ public class TruyenDao extends BaseMysqlDao {
     }
 
     /*----------------------------------------------------------------------*/
+    /**
+     * Creates a new chapter.
+     * 
+     * @param chapter
+     * @return
+     */
+    public static ChapterBo create(final ChapterBo chapter) {
+        if (chapter.getIndex() < 1) {
+            String counterName = Constants.COUNTER_CHAPTER_ID_PREFIX + chapter.getBookId();
+            chapter.setIndex((int) CounterDao.nextId(counterName));
+        }
+        if (chapter.getTimestamp() == null) {
+            chapter.setTimestamp(new Date());
+        }
+        final String[] COLUMNS = new String[] { ChapterBo.COL_INDEX[0], ChapterBo.COL_BOOK_ID[0],
+                ChapterBo.COL_TYPE[0], ChapterBo.COL_IS_ACTIVE[0], ChapterBo.COL_TIMESTAMP[0],
+                ChapterBo.COL_TITLE[0], ChapterBo.COL_CONTENT[0] };
+        final Object[] VALUES = new Object[] { chapter.getIndex(), chapter.getBookId(),
+                chapter.getType(), chapter.isActive() ? Constants.INT_1 : Constants.INT_0,
+                chapter.getTimestamp(), chapter.getTitle(), chapter.getContent() };
+        insertIgnore(TABLE_CHAPTER, COLUMNS, VALUES);
+        invalidate(chapter);
+
+        /* update book's number of chapters */
+        BookBo book = chapter.getBook();
+        book.setNumChapters(book.getNumChapters() + 1);
+        if (chapter.isActive()) {
+            book.setNumPublishes(book.getNumPublishes() + 1);
+        }
+        book = update(book);
+
+        return (ChapterBo) chapter.markClean();
+    }
+
+    /**
+     * Deletes an existing chapter.
+     * 
+     * @param chapter
+     */
+    public static void delete(ChapterBo chapter) {
+        final String[] COLUMNS = new String[] { ChapterBo.COL_BOOK_ID[0], ChapterBo.COL_INDEX[0] };
+        final Object[] VALUES = new Object[] { chapter.getBookId(), chapter.getIndex() };
+        delete(TABLE_CHAPTER, COLUMNS, VALUES);
+        invalidate(chapter);
+    }
+
+    /**
+     * Gets a chapter by id.
+     * 
+     * @param bookId
+     * @param chapterIndex
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static ChapterBo getChapter(int bookId, int chapterIndex) {
+        final String CACHE_KEY = cacheKeyChapter(bookId, chapterIndex);
+        Map<String, Object> dbRow = getFromCache(CACHE_KEY, Map.class);
+        dbRow = null;
+        if (dbRow == null) {
+            final String[][] columns = { ChapterBo.COL_INDEX, ChapterBo.COL_BOOK_ID,
+                    ChapterBo.COL_TYPE, ChapterBo.COL_IS_ACTIVE, ChapterBo.COL_TIMESTAMP,
+                    ChapterBo.COL_TITLE, ChapterBo.COL_CONTENT };
+            final String whereClause = ChapterBo.COL_BOOK_ID[0] + "=? AND "
+                    + ChapterBo.COL_INDEX[0] + "=?";
+            final Object[] paramValues = { bookId, chapterIndex };
+            List<Map<String, Object>> dbResult = select(TABLE_CHAPTER, columns, whereClause,
+                    paramValues);
+            dbRow = dbResult != null && dbResult.size() > 0 ? dbResult.get(0) : null;
+            putToCache(CACHE_KEY, dbRow);
+        }
+        return dbRow != null ? (ChapterBo) new ChapterBo().fromMap(dbRow) : null;
+    }
+
+    /**
+     * Gets all chapter of book.
+     * 
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static ChapterBo[] getAllChaptersForBook(BookBo book) {
+        final String CACHE_KEY = cacheKeyAllChapters(book);
+        List<Map<String, Object>> dbRows = getFromCache(CACHE_KEY, List.class);
+        if (dbRows == null) {
+            final String SQL = MessageFormat.format(
+                    "SELECT {1} AS {2}, {3} AS {4} FROM {0} WHERE {5}=? ORDER BY {6} DESC",
+                    TABLE_CHAPTER, ChapterBo.COL_BOOK_ID[0], ChapterBo.COL_BOOK_ID[1],
+                    ChapterBo.COL_INDEX[0], ChapterBo.COL_INDEX[1], ChapterBo.COL_BOOK_ID[0],
+                    ChapterBo.COL_INDEX[0]);
+            dbRows = select(SQL, null);
+            putToCache(CACHE_KEY, dbRows);
+        }
+        List<ChapterBo> result = new ArrayList<ChapterBo>();
+        if (dbRows != null) {
+            for (Map<String, Object> dbRow : dbRows) {
+                int bookId = DPathUtils.getValue(dbRow, ChapterBo.COL_BOOK_ID[1], int.class);
+                int chapterIndex = DPathUtils.getValue(dbRow, ChapterBo.COL_INDEX[1], int.class);
+                ChapterBo chapter = getChapter(bookId, chapterIndex);
+                if (chapter != null) {
+                    result.add(chapter);
+                }
+            }
+        }
+        return result.toArray(EMPTY_ARR_CHAPTER_BO);
+    }
+
+    /**
+     * Counts number of new chapters.
+     * 
+     * @return
+     */
+    public static int countNewChapters() {
+        final String SQL = MessageFormat.format(
+                "SELECT COUNT(*) AS nun_chapters FROM {0} WHERE {1}=0", TABLE_CHAPTER,
+                ChapterBo.COL_IS_ACTIVE[0]);
+        List<Map<String, Object>> dbRows = select(SQL, null);
+        return dbRows != null && dbRows.size() > 0 ? DPathUtils.getValue(dbRows.get(0),
+                "nun_chapters", int.class) : 0;
+    }
+
+    /**
+     * Gets all new chapters.
+     * 
+     * @return
+     */
+    public static ChapterBo[] getNewChapters() {
+        final String SQL = MessageFormat.format(
+                "SELECT {1} AS {2}, {3} AS {4} FROM {0} WHERE {5}=0 ORDER BY {6},{7}",
+                TABLE_CHAPTER, ChapterBo.COL_BOOK_ID[0], ChapterBo.COL_BOOK_ID[1],
+                ChapterBo.COL_INDEX[0], ChapterBo.COL_INDEX[1], ChapterBo.COL_IS_ACTIVE[0],
+                ChapterBo.COL_TIMESTAMP[0], ChapterBo.COL_INDEX[0]);
+        List<Map<String, Object>> dbRows = select(SQL, null);
+        List<ChapterBo> result = new ArrayList<ChapterBo>();
+        if (dbRows != null) {
+            for (Map<String, Object> dbRow : dbRows) {
+                int bookId = DPathUtils.getValue(dbRow, ChapterBo.COL_BOOK_ID[1], int.class);
+                int chapterIndex = DPathUtils.getValue(dbRow, ChapterBo.COL_INDEX[1], int.class);
+                ChapterBo chapter = getChapter(bookId, chapterIndex);
+                if (chapter != null) {
+                    result.add(chapter);
+                }
+            }
+        }
+        return result.toArray(EMPTY_ARR_CHAPTER_BO);
+    }
+
+    /**
+     * Updates an existing chapter.
+     * 
+     * @param chapter
+     * @return
+     */
+    public static ChapterBo update(ChapterBo chapter) {
+        if (chapter.isDirty()) {
+            final String CACHE_KEY = cacheKey(chapter);
+            final String[] COLUMNS = new String[] { ChapterBo.COL_TYPE[0],
+                    ChapterBo.COL_IS_ACTIVE[0], ChapterBo.COL_TITLE[0], ChapterBo.COL_CONTENT[0] };
+            final Object[] VALUES = new Object[] { chapter.getType(),
+                    chapter.isActive() ? Constants.INT_1 : Constants.INT_0, chapter.getTitle(),
+                    chapter.getContent() };
+            final String[] WHERE_COLUMNS = new String[] { ChapterBo.COL_BOOK_ID[0],
+                    ChapterBo.COL_INDEX[0] };
+            final Object[] WHERE_VALUES = new Object[] { chapter.getBook(), chapter.getIndex() };
+            update(TABLE_CHAPTER, COLUMNS, VALUES, WHERE_COLUMNS, WHERE_VALUES);
+            Map<String, Object> dbRow = chapter.toMap();
+            putToCache(CACHE_KEY, dbRow);
+        }
+        return (ChapterBo) chapter.markClean();
+    }
+
 }

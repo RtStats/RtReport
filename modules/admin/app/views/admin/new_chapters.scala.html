@@ -1,0 +1,169 @@
+@(chapters    : Array[truyen.common.bo.truyen.ChapterBo],
+    books     : Array[truyen.common.bo.truyen.BookBo],
+    categories: Array[truyen.common.bo.truyen.CategoryBo],
+    authors   : Array[truyen.common.bo.truyen.AuthorBo]
+)
+@import truyen.common._
+@import truyen.common.bo.truyen._
+@import play.mvc._
+@import com.github.ddth.plommon.utils._
+@_layout(
+	active="new_chapters",
+	customJs=Array("avant-1.2.1/assets/plugins/datatables/jquery.dataTables.min.js",
+	    "avant-1.2.1/assets/plugins/datatables/dataTables.bootstrap.js"),
+    customCss=Array("avant-1.2.1/assets/plugins/datatables/dataTables.css")
+){
+    <div id="page-heading">
+        <ol class="breadcrumb">
+            <li><a href="@controllers.admin.routes.Admin.index()">@Messages("msg.dashboard")</a></li>
+            <li class="active">@Messages("msg.new_chapters")</li>
+        </ol>
+
+        <h1>@Messages("msg.new_chapters")</h1>
+    </div>
+    
+    <script type="text/javascript">
+    function _reviewChapter(urlForm, urlAjaxData) {
+        $.get(urlAjaxData, null, "json")
+            .done(function(data, status, jqXHR){
+                if ( data.status == 200 ) {
+                    console.log(data.message);
+                    $('#frmreview').attr('action', urlForm);
+                    $('#frmreview_title').val(data.message.title);
+                    $('#frmreview_content').val(data.message.content);
+                    $('#frmreview_is_active').prop("disabled", !data.message.can_be_active);
+                    $('#frmreview_type').val(data.message.chapter_type);
+                    //$('#frmedit_summary').val(data.message.summary);
+                    //$('#frmedit_is_published').prop('checked', data.message.is_published);
+                    //$('#frmedit_status').val(data.message.status);
+                    //$('#frmedit_category_id').val(data.message.cat_id);
+                    //$('#frmedit_author_id').val(data.message.author_id);
+                    $('#dlgReview').modal({});
+                } else {
+                    alert("Error while processing, plrease retry. Error code: " + data.status);
+                }
+            })
+            .fail(function(data, status, jqXHR){
+                alert("Error while processing, plrease retry. Error code: " + status);
+            });
+    }
+    </script>
+    <style type="text/css">.modal-title{text-transform:capitalize} .modal-lg{width: 80%} label{font-weight:bold}</style>
+    <div class="modal fade" id="dlgReview" tabindex="-1" role="dialog" aria-labelledby="dlgReview_Title" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="frmreview" role="form" method="post" action="">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="dlgReview_Title">@Messages("msg.review_chapter")</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="checkbox col-xs-1" style="margin-top: 5px !important" title="Active" data-toggle="tooltip">
+                                <label class="input-sm tooltips" data-toggle="tooltip" title="Some tooltip text!" id="frmreview_is_active_label">
+                                    <input type="checkbox" id="frmreview_is_active" name="is_active" value="1"> @Messages("msg.chapter.is_active")
+                                </label>
+                            </div>
+                            <div class="form-group col-xs-5">
+                                <select class="form-control input-sm" name="type" id="frmreview_type">
+                                    <option value="-1">-= @Messages("msg.chapter.type") =-</option>
+                                    <option value="@ChapterBo.TYPE_RAW">@Messages("msg.chapter.type."+ChapterBo.TYPE_RAW)</option>
+                                    <option value="@ChapterBo.TYPE_CONVERT">@Messages("msg.chapter.type."+ChapterBo.TYPE_CONVERT)</option>
+                                    <option value="@ChapterBo.TYPE_TRANSLATE">@Messages("msg.chapter.type."+ChapterBo.TYPE_TRANSLATE)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="frmreview_title" name="title" placeholder="@Messages("msg.chapter.title")">
+                        </div>
+                        <div class="form-group">
+                            <textarea rows="8" class="form-control" id="frmreview_content" name="content" placeholder="@Messages("msg.chapter.content")"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">@Messages("msg.update")</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">@Messages("msg.cancel")</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                @_macro_displayPageFlashMessage(Controller.flash(controllers.admin.Chapter.VIEW_NEW_CHAPTERS))
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4>@Messages("msg.new_chapters")</h4>
+                        <div class="options">
+                            <a href="javascript:;" class="panel-collapse"><i class="fa fa-chevron-down"></i></a>
+                            @*<a href="javascript:_addBook();"><i class="fa fa-plus"></i></a>*@
+                        </div>
+                    </div>
+                    <div class="panel-body collapse in">
+                        <table cellpadding="0" cellspacing="0" border="0" class="table table-condensed table-bordered datatables" id="tblNewChapters">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center;">@Messages("msg.chapter.timestamp")</th>
+                                    <th style="text-align: center;">@Messages("msg.book")</th>
+                                    <th style="text-align: center;">@Messages("msg.chapter")</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for(chapter <- chapters){
+                                    <tr>
+                                        <td style="text-align: center; vertical-align: middle">
+                                            @chapter.getTimestampStr()
+                                        </td>
+                                        <td style="text-align: left; vertical-align: middle">
+                                            @chapter.getBook().getTitle()
+                                        </td>
+                                        <td style="text-align: left; vertical-align: middle">
+                                            @chapter.getTitle()
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle">
+                                            <a href="javascript:_reviewChapter('', '@controllers.admin.routes.Json.chapter(chapter.getBookId(), chapter.getIndex())')">
+	                                            @if(chapter.canBeActive()){
+	                                                <i class="fa fa-star" style="font-size: large; color: green"></i>
+	                                            } else {
+	                                                <i class="fa fa-star-o" style="font-size: large; color: blue"></i>
+	                                            }
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('.datatables').dataTable({
+                                "sDom": "<'row'<'col-xs-6'l><'col-xs-6'f>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+                                "sPaginationType": "bootstrap",
+                                "oLanguage": {
+                                    "sLengthMenu"  : "_MENU_ @Messages("msg.records_per_page")",
+                                    "sSearch"      : "",
+                                    "sEmptyTable"  : "@Messages("msg.nodata")",
+                                    "sZeroRecords" : "@Messages("msg.nodata")",
+                                    "sInfo"        : "@Messages("msg.datatables.sInfo")",
+                                    "sInfoEmpty"   : "@Messages("msg.nodata")",
+                                    "sInfoFiltered": "@Messages("msg.datatables.sInfoFiltered")",
+                                    "oPaginate"    : {
+                                        "sPrevious": "@Messages("msg.prev")",
+                                        "sNext"    : "@Messages("msg.next")",
+                                        "sFirst"   : "@Messages("msg.first")",
+                                        "sLast"    : "@Messages("msg.last")"
+                                    }
+                                }
+                            });
+                            $('.dataTables_filter input').addClass('form-control').attr('placeholder','@Messages("msg.search")');
+                            $('.dataTables_length select').addClass('form-control');
+                        });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

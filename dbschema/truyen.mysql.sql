@@ -87,6 +87,7 @@ CREATE TABLE truyen_book (
     bis_published                   INT                         NOT NULL DEFAULT 0,
         INDEX (bis_published),
     bnum_chapters                   INT                         NOT NULL DEFAULT 0,
+    bnum_publishes                  INT                         NOT NULL DEFAULT 0,
     bcategory_id                    INT                         NOT NULL,
         INDEX (bcategory_id),
     bauthor_id                      INT                         NOT NULL,
@@ -97,6 +98,20 @@ CREATE TABLE truyen_book (
         INDEX (btimestamp_update),
     bavatar                         VARCHAR(255),
     bsummary                        TEXT
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+DROP TABLE IF EXISTS truyen_chapter;
+CREATE TABLE truyen_chapter(
+    cbook_id                        INT                         NOT NULL,
+    cindex                          INT                         NOT NULL,
+        PRIMARY KEY (cbook_id, cindex),
+    ctype                           INT                         NOT NULL DEFAULT 0,
+    cis_active                      INT                         NOT NULL DEFAULT 0,
+        INDEX (cis_active),
+    ctimestamp                      DATETIME,
+        INDEX (ctimestamp),
+    ctitle                          VARCHAR(255),
+    ccontent                        TEXT
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 DROP TABLE IF EXISTS truyen_worker;

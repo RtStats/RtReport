@@ -1,5 +1,6 @@
 @(section: String="", active: String="")
 @import truyen.common._
+@import truyen.common.bo.truyen._
 <nav id="page-leftbar" role="navigation">
     <ul class="acc-menu" id="sidebar">
         <li @if(active=="dashboard"){class="active"}><a href="@controllers.admin.routes.Admin.index()"
@@ -10,6 +11,8 @@
             ><i class="fa fa-folder-open-o"></i> <span>@Messages("msg.categories")</span></a></li>
         <li @if(active=="book"||active=="books"){class="active"}><a href="@controllers.admin.routes.Book.books()"
             ><i class="fa fa-book"></i> <span>@Messages("msg.books")</span></a></li>
+        <li @if(active=="newChapters"){class="active"}><a href="@controllers.admin.routes.Chapter.newChapters()"
+            ><i class="fa fa-file-o"></i> <span>@Messages("msg.new_chapters")</span> <span class="badge badge-indigo">@TruyenDao.countNewChapters()</span></a></li>
         <li @if(active=="worker"||active=="workers"){class="active"}><a href="@controllers.admin.routes.Worker.workers()"
             ><i class="fa fa-cogs"></i> <span>@Messages("msg.workers")</span></a></li>
     </ul>

@@ -29,6 +29,9 @@ msg.delete_book.confirmation = Are you really sure you wish to delete book "{0}"
 msg.delete_book.done = Book "{0}" has been deleted successfully.
 error.book.empty_title = Error: Empty book title!
 
+msg.new_chapters = New chapters
+msg.review_chapter = Review chapter
+
 msg.workers = Workers
 msg.worker = Worker
 msg.add_worker = Add new worker

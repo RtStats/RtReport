@@ -109,8 +109,7 @@ public class Worker extends BaseController {
                                     + Messages.get("error.worker.not_found"));
                 } else {
                     WorkerDao.delete(worker);
-                    flash(VIEW_WORKERS,
-                            Messages.get("msg.delete_worker.done", worker.getBook().getTitle()));
+                    flash(VIEW_WORKERS, Messages.get("msg.delete_worker.done", worker.getId()));
                 }
                 return redirect(controllers.admin.routes.Worker.workers().url());
             }

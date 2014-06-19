@@ -37,6 +37,7 @@ public class BookBo extends BaseBo {
     public static String[] COL_STATUS = { "bstatus", "status" };
     public static String[] COL_IS_PUBLISHED = { "bis_published", "is_published" };
     public static String[] COL_NUM_CHAPTERS = { "bnum_chapters", "num_chapters" };
+    public static String[] COL_NUM_PUBLISHES = { "bnum_publishes", "num_publishes" };
     public static String[] COL_CATEGORY_ID = { "bcategory_id", "cat_id" };
     public static String[] COL_AUTHOR_ID = { "bauthor_id", "author_id" };
     public static String[] COL_TITLE = { "btitle", "title" };
@@ -98,6 +99,15 @@ public class BookBo extends BaseBo {
 
     public BookBo setNumChapters(int numChapters) {
         return (BookBo) setAttribute(COL_NUM_CHAPTERS[1], numChapters);
+    }
+
+    public int getNumPublishes() {
+        Integer result = getAttribute(COL_NUM_PUBLISHES[1], Integer.class);
+        return result != null ? result.intValue() : 0;
+    }
+
+    public BookBo setNumPublishes(int numPublishes) {
+        return (BookBo) setAttribute(COL_NUM_PUBLISHES[1], numPublishes);
     }
 
     public int getCategoryId() {

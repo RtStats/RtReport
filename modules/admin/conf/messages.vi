@@ -29,6 +29,9 @@ msg.delete_book.confirmation = Bạn có chắc là bạn muốn xoá truyện "
 msg.delete_book.done = Truyện "{0}" đã được xoá thành công.
 error.book.empty_title = Lỗi: Vui lòng nhập vào tiêu đề truyện!
 
+msg.new_chapters = Chương mới
+msg.review_chapter = Duyệt chương
+
 msg.workers = Worker
 msg.worker = Worker
 msg.add_worker = Thêm worker mới

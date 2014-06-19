@@ -10,6 +10,7 @@ import truyen.common.Constants;
 import truyen.common.bo.truyen.AuthorBo;
 import truyen.common.bo.truyen.BookBo;
 import truyen.common.bo.truyen.CategoryBo;
+import truyen.common.bo.truyen.ChapterBo;
 import truyen.common.bo.truyen.TruyenDao;
 import truyen.common.bo.worker.WorkerBo;
 import truyen.common.bo.worker.WorkerDao;
@@ -81,6 +82,25 @@ public class Json extends BaseController {
                 } else {
                     Map<String, Object> bookData = book.toMap();
                     return doResponse(200, bookData);
+                }
+            }
+        });
+        return promise;
+    }
+
+    /*
+     * Handles GET:/jsonChapter
+     */
+    public static Promise<Result> chapter(final int bookId, final int chapterIndex) {
+        Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            public Result apply() throws Exception {
+                ChapterBo chapter = TruyenDao.getChapter(bookId, chapterIndex);
+                if (chapter == null) {
+                    return doResponse(404, Messages.get("error.chapter.not_found"));
+                } else {
+                    Map<String, Object> chapterData = chapter.toMap();
+                    chapterData.put("can_be_active", chapter.canBeActive());
+                    return doResponse(200, chapterData);
                 }
             }
         });

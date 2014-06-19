@@ -1,25 +1,20 @@
 package qnd;
 
-import truyen.worker.StoryMessage;
-import truyen.worker.engine.TungHoanhEngine;
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Props;
-
 public class QndTungHoanh {
 
     public static void main(String[] args) throws InterruptedException {
-        ActorSystem system = ActorSystem.create("MySystem");
-        ActorRef tunghoanhActor = system.actorOf(Props.create(TungHoanhEngine.class),
-                "tunghoanh");
-
-        StoryMessage msg = new StoryMessage();
-        msg.url = "http://tunghoanh.vn/than-toa-Fpaaaab.html";
-        msg.chapter = 0;
-        tunghoanhActor.tell(msg, ActorRef.noSender());
-
-        Thread.sleep(5000);
-        system.shutdown();
+        // ActorSystem system = ActorSystem.create("MySystem");
+        // ActorRef tunghoanhActor =
+        // system.actorOf(Props.create(TungHoanhEngine.class),
+        // "tunghoanh");
+        //
+        // StoryMessage msg = new StoryMessage();
+        // msg.url = "http://tunghoanh.vn/than-toa-Fpaaaab.html";
+        // msg.chapter = 0;
+        // tunghoanhActor.tell(msg, ActorRef.noSender());
+        //
+        // Thread.sleep(5000);
+        // system.shutdown();
 
         // final String url = "http://tunghoanh.vn/ma-thien-ky-fpaaaab.html";
         //

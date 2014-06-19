@@ -15,6 +15,8 @@ public class Constants {
     }
 
     public final static Integer INT_0 = new Integer(0), INT_1 = new Integer(1);
+    
+    public final static String DATETIME_FORMAT_FULL = "yyyy-MM-dd HH:mm:ss";
 
     public final static String FLASH_MSG_PREFIX_ERROR = "_E_:";
 
@@ -23,6 +25,7 @@ public class Constants {
     public final static String COUNTER_CATEGORY_ID = "category-id";
     public final static String COUNTER_AUTHOR_ID = "author-id";
     public final static String COUNTER_BOOK_ID = "book-id";
+    public final static String COUNTER_CHAPTER_ID_PREFIX = "chapter-id-";
     public final static String COUNTER_WORKER_ID = "woker-id";
 
     public final static String CONFIG_FACEBOOK_APP_ID = "facebook.app_id";

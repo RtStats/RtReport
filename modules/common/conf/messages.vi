@@ -56,6 +56,18 @@ msg.book.is_published = Xuất bản
 msg.book.num_chapters = Chương
 error.book.not_found = Lỗi: Truyện không tồn tại!
 
+msg.chapters = Chương
+msg.chapter = Chương
+msg.chapter.timestamp = Thời gian
+msg.chapter.title = Tiêu đề
+msg.chapter.content = Nội dung
+msg.chapter.type = Loại
+msg.chapter.type.0 = Bản thô
+msg.chapter.type.1 = Bản convert
+msg.chapter.type.2 = Bản dịch
+msg.chapter.is_active = Đăng lên trang web
+error.chapter.not_found = Lỗi: Chương không tồn tại!
+
 msg.nodata = Không có dữ liệu
 msg.records_per_page = dòng/trang
 msg.datatables.sInfo = Hiển thị từ _START_ đến _END_ của _TOTAL_ dòng

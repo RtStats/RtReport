@@ -56,6 +56,18 @@ msg.book.is_published = Published
 msg.book.num_chapters = Chapters
 error.book.not_found = Error: Book not found!
 
+msg.chapters = Chapters
+msg.chapter = Chapter
+msg.chapter.timestamp = Timestamp
+msg.chapter.title = Title
+msg.chapter.content = Content
+msg.chapter.type = Type
+msg.chapter.type.0 = Raw
+msg.chapter.type.1 = Convert
+msg.chapter.type.2 = Translate
+msg.chapter.is_active = Active
+error.chapter.not_found = Error: Chapter not found!
+
 msg.nodata = No data
 msg.records_per_page = records/page
 msg.datatables.sInfo = Display from _START_ to _END_ of _TOTAL_
