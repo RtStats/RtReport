@@ -4,9 +4,11 @@ msg.yes = Có
 msg.no = Không
 msg.ok = Đồng ý
 msg.cancel = Bỏ chọn
+msg.close = Đóng
 msg.reset = Xoá form
 msg.update = Cập nhật
 msg.delete = Xoá
+msg.preview = Xem trước
 
 msg.search = Tìm kiếm
 msg.prev = Trước

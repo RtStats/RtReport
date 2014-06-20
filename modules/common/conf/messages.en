@@ -4,9 +4,11 @@ msg.yes = Yes
 msg.no = No
 msg.ok = Ok
 msg.cancel = Cancel
+msg.close = Close
 msg.reset = Reset
 msg.update = Update
 msg.delete = Delete
+msg.preview = Preview
 
 msg.search = Search
 msg.prev = Prev

@@ -56,7 +56,8 @@ public class TungHoanhEngine extends BaseWorker {
         result.put(CHAPTER_TITLE, chapterMetadata.get(CHAPTER_METADATA_TITLE));
 
         String content = Utils.fetchUrl(chapterContentUrl);
-        content = content.replaceAll("<\\s*[bB]\\s*\\/?>", "\n").replaceAll("[\\n\\r]+", "\n\n");
+        content = content.replaceAll("<\\s*\\/[pP]\\s*>", "</p><br/>")
+                .replaceAll("<\\s*[bB][rR]\\s*\\/?>", "\n").replaceAll("[\\n\\r]+", "\n\n");
         Jerry doc = Jerry.jerry(content);
         content = doc.text().replaceAll("\\“", "\"").replaceAll("\\”", "\"")
                 .replaceAll("\\…", "...");

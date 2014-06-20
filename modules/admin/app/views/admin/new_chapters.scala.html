@@ -23,10 +23,16 @@
     </div>
     
     <script type="text/javascript">
+    function _previewChapter() {
+        $('#dlgPreview').modal({});
+    }
     function _reviewChapter(urlForm, urlAjaxData) {
         $.get(urlAjaxData, null, "json")
             .done(function(data, status, jqXHR){
                 if ( data.status == 200 ) {
+                    $('#frmpreview_title').html(data.message.title);
+                    $('#frmpreview_content').html(data.message.content.replace(/\n/g, '<br/>'));
+                
                     $('#frmreview').attr('action', urlForm);
                     $('#frmreview_title').val(data.message.title);
                     $('#frmreview_content').val(data.message.content);
@@ -83,10 +89,32 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-info" onclick="javascript:_previewChapter()">@Messages("msg.preview")</button>
+                        &nbsp;&nbsp;
                         <button type="submit" class="btn btn-primary">@Messages("msg.update")</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">@Messages("msg.cancel")</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="dlgPreview" tabindex="-1" role="dialog" aria-labelledby="dlgPreview_Title" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="dlgPreview_Title">@Messages("msg.preview")</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" id="frmpreview_title" style="font-weight: bold">
+                    </div>
+                    <div class="form-group" id="frmpreview_content">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@Messages("msg.close")</button>
+                </div>
             </div>
         </div>
     </div>
@@ -100,7 +128,6 @@
                         <h4>@Messages("msg.new_chapters")</h4>
                         <div class="options">
                             <a href="javascript:;" class="panel-collapse"><i class="fa fa-chevron-down"></i></a>
-                            @*<a href="javascript:_addBook();"><i class="fa fa-plus"></i></a>*@
                         </div>
                     </div>
                     <div class="panel-body collapse in">

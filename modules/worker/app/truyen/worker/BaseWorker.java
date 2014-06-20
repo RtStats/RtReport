@@ -133,8 +133,8 @@ public abstract class BaseWorker extends UntypedActor {
         String title = DPathUtils.getValue(chapterData, CHAPTER_TITLE, String.class);
         int type = DPathUtils.getValue(chapterData, CHAPTER_TYPE, int.class);
         ChapterBo chapter = new ChapterBo();
-        chapter.setActive(false).setBook(book).setContent(content).setIndex(chapterIndex)
-                .setTimestamp(new Date()).setTitle(title).setType(type);
+        chapter.setActive(false).setBook(book).setContent(content.trim()).setIndex(chapterIndex)
+                .setTimestamp(new Date()).setTitle(title.trim()).setType(type);
         chapter = TruyenDao.create(chapter);
         // book.setNumChapters(chapterIndex);
         // book = TruyenDao.update(book);
