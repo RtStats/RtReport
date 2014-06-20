@@ -27,17 +27,19 @@
         $.get(urlAjaxData, null, "json")
             .done(function(data, status, jqXHR){
                 if ( data.status == 200 ) {
-                    console.log(data.message);
                     $('#frmreview').attr('action', urlForm);
                     $('#frmreview_title').val(data.message.title);
                     $('#frmreview_content').val(data.message.content);
                     $('#frmreview_is_active').prop("disabled", !data.message.can_be_active);
+                    $('#frmreview_is_active').prop("checked", false);                    
                     $('#frmreview_type').val(data.message.chapter_type);
-                    //$('#frmedit_summary').val(data.message.summary);
-                    //$('#frmedit_is_published').prop('checked', data.message.is_published);
-                    //$('#frmedit_status').val(data.message.status);
-                    //$('#frmedit_category_id').val(data.message.cat_id);
-                    //$('#frmedit_author_id').val(data.message.author_id);
+                    if (data.message.can_be_active) {
+                        $('#frmreview_is_active_label').attr('title', '@Messages("msg.active_chapter")');
+                    } else {
+                        $('#frmreview_is_active_label').attr('title', '@Messages("msg.active_chapter.disabled")');
+                    }
+                    $('#frmreview_is_active_label').tooltip('destroy');
+                    $('#frmreview_is_active_label').tooltip({container: 'body'});
                     $('#dlgReview').modal({});
                 } else {
                     alert("Error while processing, plrease retry. Error code: " + data.status);
@@ -59,8 +61,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <div class="checkbox col-xs-1" style="margin-top: 5px !important" title="Active" data-toggle="tooltip">
-                                <label class="input-sm tooltips" data-toggle="tooltip" title="Some tooltip text!" id="frmreview_is_active_label">
+                            <div class="checkbox col-xs-1" style="margin-top: 5px !important" title="Active">
+                                <label class="input-sm tooltips" data-toggle="tooltip" title="Tooltip!" id="frmreview_is_active_label">
                                     <input type="checkbox" id="frmreview_is_active" name="is_active" value="1"> @Messages("msg.chapter.is_active")
                                 </label>
                             </div>

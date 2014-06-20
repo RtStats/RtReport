@@ -31,6 +31,8 @@ error.book.empty_title = Lỗi: Vui lòng nhập vào tiêu đề truyện!
 
 msg.new_chapters = Chương mới
 msg.review_chapter = Duyệt chương
+msg.active_chapter = Đưa chương lên trang web
+msg.active_chapter.disabled = Không thể đưa chương này lên trang web vì chương trước đó chưa đưa lên!
 
 msg.workers = Worker
 msg.worker = Worker
