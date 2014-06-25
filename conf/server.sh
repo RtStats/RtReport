@@ -79,7 +79,7 @@ usageAndExit() {
     echo "Usage: ${0##*/} <{start|stop}> [-m <JVM memory limit in mb>] [-p <web-based status port>] [-c <custom configuration file>]"
     echo "    stop : stop the server"
     echo "    start: start the server"
-    echo "       -m : JVM memory limit in mb (default 128)"
+    echo "       -m : JVM memory limit in mb (default 64)"
     echo "       -p : Port for web-based status port (default 9000)"
     echo "       -c : Custom configuration file, file is loaded under directory ./conf (default null.conf)"
     echo
