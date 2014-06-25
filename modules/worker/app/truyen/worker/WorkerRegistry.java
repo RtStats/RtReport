@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import play.Logger;
 import truyen.worker.engine.TungHoanhEngine;
 import akka.actor.ActorRef;
 
@@ -17,7 +18,9 @@ public class WorkerRegistry {
 
     public static void initRegistry() {
         ENGINES.clear();
+        Logger.info("Initializing registry...");
         ENGINES.put("TungHoanh.com", AkkaUtils.actorOf(TungHoanhEngine.class));
+        Logger.info("\tAdded engine TungHoanh.com engine");
 
         ENGINE_LIST.clear();
         ENGINE_LIST.addAll(ENGINES.keySet());
