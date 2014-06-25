@@ -13,8 +13,9 @@ import truyen.common.bo.truyen.CategoryBo;
 import truyen.common.bo.truyen.ChapterBo;
 import truyen.common.bo.truyen.TruyenDao;
 import truyen.common.compisitions.AuthRequired;
+import truyen.common.util.FormUtils;
 import controllers.common.BaseController;
-import forms.admin.FormAddBook;
+import forms.admin.FormAddChapter;
 
 @AuthRequired(userGroups = { Constants.USER_GROUP_ADMINISTRATOR, Constants.USER_GROUP_MODERATOR })
 public class Chapter extends BaseController {
@@ -39,78 +40,33 @@ public class Chapter extends BaseController {
     }
 
     /*
-     * Handles POST:/addBook
+     * Handles POST:/updateChapter
      */
-    public static Promise<Result> addBookSubmit() {
+    public static Promise<Result> updateChapterSubmit(final int bookId, final int chapterIndex) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
-                Form<FormAddBook> form = Form.form(FormAddBook.class).bindFromRequest();
-                if (form.hasErrors()) {
-                    flash(VIEW_NEW_CHAPTERS, Constants.FLASH_MSG_PREFIX_ERROR
-                            + form.error("title").message());
-                } else {
-                    FormAddBook formData = form.get();
-                    BookBo book = new BookBo().setTitle(formData.title)
-                            .setSummary(formData.summary).setAvatar(formData.avatar)
-                            .setAuthor(formData.author).setCategory(formData.category);
-                    book = TruyenDao.create(book);
-                    flash(VIEW_NEW_CHAPTERS, Messages.get("msg.add_book.done", book.getTitle()));
-                }
-                return redirect(controllers.admin.routes.Chapter.newChapters().url());
-            }
-        });
-        return promise;
-    }
-
-    /*
-     * Handles POST:/editBook
-     */
-    public static Promise<Result> editBookSubmit(final int id) {
-        Promise<Result> promise = Promise.promise(new Function0<Result>() {
-            public Result apply() throws Exception {
-                BookBo book = TruyenDao.getBook(id);
-                if (book == null) {
+                ChapterBo chapter = TruyenDao.getChapter(bookId, chapterIndex);
+                if (chapter == null) {
                     flash(VIEW_NEW_CHAPTERS,
-                            Constants.FLASH_MSG_PREFIX_ERROR + Messages.get("error.book.not_found"));
+                            Constants.FLASH_MSG_PREFIX_ERROR
+                                    + Messages.get("error.chapter.not_found"));
                 } else {
-                    Form<FormAddBook> form = Form.form(FormAddBook.class).bindFromRequest();
+                    Form<FormAddChapter> form = Form.form(FormAddChapter.class).bindFromRequest();
                     if (form.hasErrors()) {
                         flash(VIEW_NEW_CHAPTERS,
-                                Constants.FLASH_MSG_PREFIX_ERROR + form.error("title").message());
+                                Constants.FLASH_MSG_PREFIX_ERROR
+                                        + FormUtils.joinFormErrorMessages(form));
                     } else {
-                        FormAddBook formData = form.get();
-                        book.setTitle(formData.title).setSummary(formData.summary)
-                                .setAvatar(formData.avatar).setPublished(formData.isPublished)
-                                .setStatus(BookBo.parseStatusString(formData.status));
-                        book = TruyenDao.update(book);
+                        FormAddChapter formData = form.get();
+                        chapter.setTitle(formData.title).setContent(formData.content)
+                                .setType(formData.chapterType).setActive(formData.isActive);
+                        chapter = TruyenDao.update(chapter);
+                        if (chapter.isActive()) {
+                            chapter = TruyenDao.activateChapter(chapter);
+                        }
                         flash(VIEW_NEW_CHAPTERS,
-                                Messages.get("msg.edit_book.done", book.getTitle()));
+                                Messages.get("msg.edit_chapter.done", chapter.getTitle()));
                     }
-                }
-                return redirect(controllers.admin.routes.Chapter.newChapters().url());
-            }
-        });
-        return promise;
-    }
-
-    /*
-     * Handles POST:/deleteBook
-     */
-    public static Promise<Result> deleteBookSubmit(final int id) {
-        Promise<Result> promise = Promise.promise(new Function0<Result>() {
-            public Result apply() throws Exception {
-                BookBo book = TruyenDao.getBook(id);
-                if (book == null) {
-                    flash(VIEW_NEW_CHAPTERS,
-                            Constants.FLASH_MSG_PREFIX_ERROR + Messages.get("error.book.not_found"));
-                } else {
-                    if (book.getNumChapters() == 0) {
-                        TruyenDao.delete(book);
-                    } else {
-                        book.setStatus(BookBo.STATUS_DELETED);
-                        book = TruyenDao.update(book);
-                    }
-                    flash(VIEW_NEW_CHAPTERS, Messages.get("msg.delete_book.done", book.getTitle()));
                 }
                 return redirect(controllers.admin.routes.Chapter.newChapters().url());
             }

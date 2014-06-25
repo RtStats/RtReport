@@ -2,6 +2,10 @@ package truyen.common.util;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import truyen.common.bo.ConfDao;
+
+import com.ibm.icu.text.Normalizer;
+
 public class TruyenUtils {
 
     private final static char[] TRUE_CHAR_ARR = { '1', 'y', 'Y', 't', 'T' };
@@ -31,5 +35,18 @@ public class TruyenUtils {
         }
 
         return false;
+    }
+
+    public static String conf(String key) {
+        return ConfDao.getConf(key);
+    }
+
+    public static String denormalizeTCVN6909(String str) {
+        if (str == null) {
+            return "";
+        }
+        str = Normalizer.decompose(str.replace("đ", "d").replace("Đ", "D"), false);
+        str = str.replaceAll("[\u0100-\uffff]+", "");
+        return str;
     }
 }

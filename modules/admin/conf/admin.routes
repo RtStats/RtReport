@@ -23,6 +23,7 @@ POST    /editBook                       controllers.admin.Book.editBookSubmit(id
 POST    /deleteBook                     controllers.admin.Book.deleteBookSubmit(id: Integer?=0)
 
 GET     /newChapters                    controllers.admin.Chapter.newChapters()
+POST    /updateChapter                  controllers.admin.Chapter.updateChapterSubmit(bookId: Integer?=0, chapterIndex: Integer?=0)
 
 GET     /workers                        controllers.admin.Worker.workers()
 POST    /addWorker                      controllers.admin.Worker.addWorkerSubmit()

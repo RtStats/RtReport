@@ -3,6 +3,7 @@
 # ~~~~
 
 GET     /                           controllers.Application.index()
+GET     /$id<c.+>                   controllers.Application.category(id: String)
 
 -> /admin admin.Routes
 

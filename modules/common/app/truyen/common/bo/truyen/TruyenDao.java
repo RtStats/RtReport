@@ -11,6 +11,7 @@ import truyen.common.bo.CounterDao;
 
 import com.github.ddth.commons.utils.DPathUtils;
 import com.github.ddth.plommon.bo.jdbc.BaseMysqlDao;
+import com.github.ddth.plommon.bo.jdbc.ParamExpression;
 
 public class TruyenDao extends BaseMysqlDao {
 
@@ -696,7 +697,7 @@ public class TruyenDao extends BaseMysqlDao {
                     chapter.getContent() };
             final String[] WHERE_COLUMNS = new String[] { ChapterBo.COL_BOOK_ID[0],
                     ChapterBo.COL_INDEX[0] };
-            final Object[] WHERE_VALUES = new Object[] { chapter.getBook(), chapter.getIndex() };
+            final Object[] WHERE_VALUES = new Object[] { chapter.getBookId(), chapter.getIndex() };
             update(TABLE_CHAPTER, COLUMNS, VALUES, WHERE_COLUMNS, WHERE_VALUES);
             Map<String, Object> dbRow = chapter.toMap();
             putToCache(CACHE_KEY, dbRow);
@@ -704,4 +705,23 @@ public class TruyenDao extends BaseMysqlDao {
         return (ChapterBo) chapter.markClean();
     }
 
+    /**
+     * Makes a chapter active.
+     * 
+     * @param chapter
+     * @return
+     */
+    public static ChapterBo activateChapter(ChapterBo chapter) {
+        BookBo book = chapter.getBook();
+        if (book != null) {
+            final String[] COLUMNS = new String[] { BookBo.COL_NUM_PUBLISHES[0] };
+            final Object[] VALUES = new Object[] { new ParamExpression(BookBo.COL_NUM_PUBLISHES[0]
+                    + "+1") };
+            final String[] WHERE_COLUMNS = new String[] { BookBo.COL_ID[0] };
+            final Object[] WHERE_VALUES = new Object[] { book.getId() };
+            update(TABLE_BOOK, COLUMNS, VALUES, WHERE_COLUMNS, WHERE_VALUES);
+            invalidate(book);
+        }
+        return chapter;
+    }
 }

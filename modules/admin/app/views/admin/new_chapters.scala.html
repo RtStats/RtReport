@@ -153,7 +153,7 @@
                                             @chapter.getTitle()
                                         </td>
                                         <td style="text-align: center; vertical-align: middle">
-                                            <a href="javascript:_reviewChapter('', '@controllers.admin.routes.Json.chapter(chapter.getBookId(), chapter.getIndex())')">
+                                            <a href="javascript:_reviewChapter('@controllers.admin.routes.Chapter.updateChapterSubmit(chapter.getBookId(), chapter.getIndex())', '@controllers.admin.routes.Json.chapter(chapter.getBookId(), chapter.getIndex())')">
 	                                            @if(chapter.canBeActive()){
 	                                                <i class="fa fa-star" style="font-size: large; color: green"></i>
 	                                            } else {

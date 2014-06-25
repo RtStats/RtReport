@@ -34,6 +34,8 @@ msg.author.info = Thông tin
 msg.author.num_books = Truyện
 error.author.not_found = Lỗi: Tác giả không tồn tại!
 
+msg.top_list = Danh sách
+
 msg.categories = Danh mục
 msg.category = Danh mục
 msg.category.title = Tên danh mục

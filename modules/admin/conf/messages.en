@@ -33,6 +33,10 @@ msg.new_chapters = New chapters
 msg.review_chapter = Review chapter
 msg.active_chapter = Make chapter visible to public
 msg.active_chapter.disabled = Can not make this chapter active as the previous one is not active!
+error.chapter.empty_title = Error: Empty chapter title!
+error.chapter.empty_content = Error: Empty chapter content!
+
+msg.edit_chapter.done = Chapter "{0}" has been updated successfully.
 
 msg.workers = Workers
 msg.worker = Worker

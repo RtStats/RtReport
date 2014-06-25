@@ -11,6 +11,10 @@ VALUES
     ('facebook.app_id'   , 'your FB AppId')
    ,('facebook.app_scope', 'email,user_about_me,user_birthday')
    ,('facebook.login'    , 'true')
+   ,('site.name'         , 'Site name')
+   ,('site.title'        , 'Site Title')
+   ,('site.keywords'     , 'Keywords')
+   ,('site.description'  , 'Description')
    ;
 
 DROP TABLE IF EXISTS truyen_counter;

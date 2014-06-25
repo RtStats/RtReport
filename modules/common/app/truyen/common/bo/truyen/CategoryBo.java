@@ -3,6 +3,11 @@ package truyen.common.bo.truyen;
 import com.github.ddth.plommon.bo.BaseBo;
 
 public class CategoryBo extends BaseBo {
+
+    public String getUrl() {
+        return null;
+    }
+
     public static String[] COL_ID = { "cid", "id" };
     public static String[] COL_POSITION = { "cposition", "position" };
     public static String[] COL_NUM_BOOKS = { "cnum_books", "num_books" };

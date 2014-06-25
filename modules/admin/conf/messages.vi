@@ -33,6 +33,10 @@ msg.new_chapters = Chương mới
 msg.review_chapter = Duyệt chương
 msg.active_chapter = Đưa chương lên trang web
 msg.active_chapter.disabled = Không thể đưa chương này lên trang web vì chương trước đó chưa đưa lên!
+error.chapter.empty_title = Lỗi: Vui lòng nhập vào tiêu đề chương!
+error.chapter.empty_content = Lỗi: Vui lòng nhập vào nội dung chương!
+
+msg.edit_chapter.done = Chương "{0}" đã được cập nhật thành công.
 
 msg.workers = Worker
 msg.worker = Worker

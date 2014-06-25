@@ -34,6 +34,8 @@ msg.author.info = Info
 msg.author.num_books = Books
 error.author.not_found = Error: Author not found!
 
+msg.top_list = Top list
+
 msg.categories = Categories
 msg.category = Category
 msg.category.title = Title
