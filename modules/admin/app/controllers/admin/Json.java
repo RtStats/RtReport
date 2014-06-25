@@ -14,9 +14,9 @@ import truyen.common.bo.truyen.ChapterBo;
 import truyen.common.bo.truyen.TruyenDao;
 import truyen.common.bo.worker.WorkerBo;
 import truyen.common.bo.worker.WorkerDao;
-import truyen.common.compisitions.AuthRequired;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import compisitions.admin.AuthRequired;
 
 import controllers.common.BaseController;
 

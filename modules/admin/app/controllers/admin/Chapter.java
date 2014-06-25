@@ -12,8 +12,10 @@ import truyen.common.bo.truyen.BookBo;
 import truyen.common.bo.truyen.CategoryBo;
 import truyen.common.bo.truyen.ChapterBo;
 import truyen.common.bo.truyen.TruyenDao;
-import truyen.common.compisitions.AuthRequired;
 import truyen.common.util.FormUtils;
+
+import compisitions.admin.AuthRequired;
+
 import controllers.common.BaseController;
 import forms.admin.FormAddChapter;
 

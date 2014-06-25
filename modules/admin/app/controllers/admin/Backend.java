@@ -8,7 +8,9 @@ import play.mvc.Result;
 import truyen.common.Application;
 import truyen.common.bo.user.UserBo;
 import truyen.common.bo.user.UserDao;
-import truyen.common.compisitions.AuthRequired;
+
+import compisitions.admin.AuthRequired;
+
 import controllers.common.BaseController;
 import forms.admin.FormLogin;
 

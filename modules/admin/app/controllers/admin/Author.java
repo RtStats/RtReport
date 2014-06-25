@@ -9,7 +9,9 @@ import play.mvc.Result;
 import truyen.common.Constants;
 import truyen.common.bo.truyen.AuthorBo;
 import truyen.common.bo.truyen.TruyenDao;
-import truyen.common.compisitions.AuthRequired;
+
+import compisitions.admin.AuthRequired;
+
 import controllers.common.BaseController;
 import forms.admin.FormAddAuthor;
 

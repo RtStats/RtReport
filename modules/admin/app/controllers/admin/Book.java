@@ -11,7 +11,9 @@ import truyen.common.bo.truyen.AuthorBo;
 import truyen.common.bo.truyen.BookBo;
 import truyen.common.bo.truyen.CategoryBo;
 import truyen.common.bo.truyen.TruyenDao;
-import truyen.common.compisitions.AuthRequired;
+
+import compisitions.admin.AuthRequired;
+
 import controllers.common.BaseController;
 import forms.admin.FormAddBook;
 

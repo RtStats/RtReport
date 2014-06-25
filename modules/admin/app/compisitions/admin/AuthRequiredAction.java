@@ -1,4 +1,4 @@
-package truyen.common.compisitions;
+package compisitions.admin;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +19,8 @@ public class AuthRequiredAction extends Action<AuthRequired> {
             public SimpleResult apply() {
                 String urlLogin = configuration.urlLogin();
                 if (StringUtils.isEmpty(urlLogin)) {
-                    return Controller.unauthorized();
+                    String returnedUrl = ctx.request().uri();
+                    urlLogin = controllers.admin.routes.Backend.login(returnedUrl).url();
                 }
                 return redirect(urlLogin);
             }

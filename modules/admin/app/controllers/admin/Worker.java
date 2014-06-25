@@ -11,9 +11,11 @@ import truyen.common.bo.truyen.BookBo;
 import truyen.common.bo.truyen.TruyenDao;
 import truyen.common.bo.worker.WorkerBo;
 import truyen.common.bo.worker.WorkerDao;
-import truyen.common.compisitions.AuthRequired;
 import truyen.common.util.FormUtils;
 import truyen.worker.WorkerRegistry;
+
+import compisitions.admin.AuthRequired;
+
 import controllers.common.BaseController;
 import forms.admin.FormAddWorker;
 
