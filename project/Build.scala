@@ -33,6 +33,9 @@ object ApplicationBuild extends Build {
     val moduleCommon = play.Project(
         appName + "-common", appVersion, appDependencies, path = file("modules/common")
     ).settings(
+        // Disable generating scaladoc
+        sources in doc in Compile := List(),
+        
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     )
@@ -44,6 +47,9 @@ object ApplicationBuild extends Build {
     ).aggregate(
         moduleCommon
     ).settings(
+        // Disable generating scaladoc
+        sources in doc in Compile := List(),
+        
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     )
@@ -55,11 +61,17 @@ object ApplicationBuild extends Build {
     ).aggregate(
         moduleCommon, moduleWorker
     ).settings(
+        // Disable generating scaladoc
+        sources in doc in Compile := List(),
+        
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     )
 
     val main = play.Project(appName, appVersion, appDependencies, path = file(".")).settings(
+        // Disable generating scaladoc
+        sources in doc in Compile := List(),
+        
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     ).dependsOn(
