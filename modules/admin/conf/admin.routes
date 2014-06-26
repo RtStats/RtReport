@@ -3,6 +3,7 @@ GET     /index                          controllers.admin.Admin.index()
 
 GET     /login                          controllers.admin.Backend.login(returnUrl: String?=null)
 POST    /login                          controllers.admin.Backend.loginSubmit(returnUrl: String?=null)
+GET     /loginFacebook                  controllers.admin.Backend.loginFacebook(returnUrl: String?=null)
 GET     /logout                         controllers.admin.Backend.logout(returnUrl: String?=null)
 
 GET     /authors                        controllers.admin.Author.authors()
@@ -29,6 +30,10 @@ GET     /workers                        controllers.admin.Worker.workers()
 POST    /addWorker                      controllers.admin.Worker.addWorkerSubmit()
 POST    /editWorker                     controllers.admin.Worker.editWorkerSubmit(id: Integer?=0)
 POST    /deleteWorker                   controllers.admin.Worker.deleteWorkerSubmit(id: Integer?=0)
+
+GET     /siteConfig                     controllers.admin.Site.siteConfig()
+POST    /siteConfigFacebook             controllers.admin.Site.siteConfigFacebookSubmit()
+POST    /siteConfigWebsite              controllers.admin.Site.siteConfigWebsiteSubmit()
 
 GET     /jsonAuthor                     controllers.admin.Json.author(id: Integer?=0)
 GET     /jsonCategory                   controllers.admin.Json.category(id: Integer?=0)

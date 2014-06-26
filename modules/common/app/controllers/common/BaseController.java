@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import play.api.templates.Html;
+import play.i18n.Lang;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
 import play.mvc.Controller;
@@ -37,7 +38,14 @@ public class BaseController extends Controller {
         Method[] methods = clazz.getMethods();
         for (Method method : methods) {
             if (method.getName().equals("render")) {
-                return (Html) method.invoke(null, params);
+                // Lang lang = Lang.forCode("vi");
+                Lang lang = lang();
+                Object[] combinedParams = new Object[params.length + 1];
+                combinedParams[params.length] = lang;
+                for (int i = 0; i < params.length; i++) {
+                    combinedParams[i] = params[i];
+                }
+                return (Html) method.invoke(null, combinedParams);
             }
         }
         return null;

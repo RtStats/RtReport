@@ -53,5 +53,15 @@ error.worker.invalid_url = Lỗi: Url không hợp lệ!
 msg.worker.book = Truyện
 msg.worker.engine = Engine
 msg.worker.url = Url
-
 error.engine.not_found = Lỗi: Engine "{0}" không tồn tại trong hệ thống!
+
+msg.site_config = Cấu hình
+msg.site_config.done = Cấu hình đã được cập nhật thành công.
+msg.site_config.facebook = Facebook
+msg.site_config.fb_appid = App ID
+msg.site_config.fb_appscope = App Scope
+msg.site_config.website = Trang web
+msg.site_config.site_title = Tiêu đề chính
+msg.site_config.site_name = Tên trang web
+msg.site_config.site_keywords = Danh sách keyword
+msg.site_config.site_description = Mô tả trang web

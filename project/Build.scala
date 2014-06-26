@@ -22,6 +22,7 @@ object ApplicationBuild extends Build {
         "org.jodd"              %  "jodd-lagarto"           % "3.5.2",
         "com.ibm.icu"           %  "icu4j"                  % "53.1",
         "com.github.ddth"       %  "ddth-commons"           % "0.2.2.2",
+        "com.github.ddth"       % "spring-social-helper"    % "0.2.1",
         "com.github.ddth"       %% "play-module-plommon"    % "0.5.1.1",
         javaJdbc,
         cache,

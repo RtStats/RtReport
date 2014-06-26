@@ -1,5 +1,6 @@
-@(message: String=null, form: play.data.Form[forms.admin.FormLogin]=null, captcha: Boolean=false)
+@(message: String=null, form: play.data.Form[forms.admin.FormLogin]=null, captcha: Boolean=false)(implicit lang: Lang)
 @import truyen.common._
+@import truyen.common.util._
 @import play.mvc._
 @import com.github.ddth.plommon.utils._
 <!DOCTYPE html>
@@ -30,8 +31,8 @@
                         <div class="alert alert-danger">
                             <p>@flashMsg</p>
                         </div>
-                    }                   
-                }     
+                    }
+                }
                 @if(message!=null && message.equals("")){
                     <h4 class="text-center" style="margin-bottom: 25px;">@message</h4>
                 } else {
@@ -108,7 +109,7 @@
                  $.cookie('@Constants.COOKIE_FB_UID', fbUserId, { path: '/' });
                  $.cookie('@Constants.COOKIE_FB_EXPIRY', fbExpiresIn, { path: '/' });
               }
-              @* window.location.href = '@routes.Cp.loginFacebook(PlayAppUtils.queryString("url"))'; *@
+              window.location.href = '@controllers.admin.routes.Backend.loginFacebook(PlayAppUtils.queryString("url"))';
          }
          </script>
          <script type="text/javascript">

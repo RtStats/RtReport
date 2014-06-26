@@ -53,5 +53,15 @@ error.worker.invalid_url = Error: Invalid url!
 msg.worker.book = Book
 msg.worker.engine = Engine
 msg.worker.url = Url
-
 error.engine.not_found = Error: Engine "{0}" not found!
+
+msg.site_config = Site config
+msg.site_config.done = Configurations have been updated successfully.
+msg.site_config.facebook = Facebook
+msg.site_config.fb_appid = App ID
+msg.site_config.fb_appscope = App Scope
+msg.site_config.website = Website
+msg.site_config.site_title = Site title
+msg.site_config.site_name = Site name
+msg.site_config.site_keywords = Site keywords
+msg.site_config.site_description = Site description
