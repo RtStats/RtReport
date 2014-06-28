@@ -72,6 +72,10 @@ msg.chapter.type.2 = Bản dịch
 msg.chapter.is_active = Đăng lên trang web
 error.chapter.not_found = Lỗi: Chương không tồn tại!
 
+msg.latest_updates = Truyện mới cập nhật
+
+error.404 = Lỗi: Trang bạn xem không tồn tại!
+
 msg.nodata = Không có dữ liệu
 msg.records_per_page = dòng/trang
 msg.datatables.sInfo = Hiển thị từ _START_ đến _END_ của _TOTAL_ dòng

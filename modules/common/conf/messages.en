@@ -72,6 +72,10 @@ msg.chapter.type.2 = Translate
 msg.chapter.is_active = Active
 error.chapter.not_found = Error: Chapter not found!
 
+msg.latest_updates = Latest updates
+
+error.404 = Error: The page you are looking for is not found!
+
 msg.nodata = No data
 msg.records_per_page = records/page
 msg.datatables.sInfo = Display from _START_ to _END_ of _TOTAL_

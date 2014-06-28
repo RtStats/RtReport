@@ -2,9 +2,13 @@ package truyen.common.bo.truyen;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import truyen.common.Constants;
 import truyen.common.bo.CounterDao;
@@ -73,7 +77,7 @@ public class TruyenDao extends BaseMysqlDao {
     }
 
     private static String cacheKeyAllBooks() {
-        return Constants.CACHE_PREFIX + "_ALLBOOKS";
+        return Constants.CACHE_PREFIX + "_ALL_BOOKS";
     }
 
     private static String cacheKeyAllBooks(CategoryBo cat) {
@@ -382,8 +386,7 @@ public class TruyenDao extends BaseMysqlDao {
         final Object[] VALUES = new Object[] { book.getId(), book.getStatus(),
                 book.isPublished() ? Constants.INT_1 : Constants.INT_0, book.getNumChapters(),
                 book.getNumPublishes(), book.getCategoryId(), book.getAuthorId(), book.getTitle(),
-                book.getSummary(), book.getAvatar(), book.getTimestampCreate(),
-                book.getTimestampUpdate() };
+                book.getSummary(), book.getAvatar(), new Date(), new Date() };
         insertIgnore(TABLE_BOOK, COLUMNS, VALUES);
         invalidate(book);
         return (BookBo) book.markClean();
@@ -483,6 +486,26 @@ public class TruyenDao extends BaseMysqlDao {
             }
         }
         return result.toArray(EMPTY_ARR_BOOK_BO);
+    }
+
+    /**
+     * Gets last n updated books.
+     * 
+     * @param n
+     * @return
+     */
+    public static BookBo[] getLatestUpdatedBooks(int n) {
+        BookBo[] allBooks = getAllBooks();
+        Arrays.sort(allBooks, new Comparator<BookBo>() {
+            @Override
+            public int compare(BookBo book1, BookBo book2) {
+                Date date1 = book1.getTimestampUpdate();
+                Date date2 = book2.getTimestampUpdate();
+                return date2.compareTo(date1);
+            }
+        });
+        ArrayUtils.subarray(allBooks, 0, n);
+        return allBooks;
     }
 
     /**
@@ -714,9 +737,10 @@ public class TruyenDao extends BaseMysqlDao {
     public static ChapterBo activateChapter(ChapterBo chapter) {
         BookBo book = chapter.getBook();
         if (book != null) {
-            final String[] COLUMNS = new String[] { BookBo.COL_NUM_PUBLISHES[0] };
-            final Object[] VALUES = new Object[] { new ParamExpression(BookBo.COL_NUM_PUBLISHES[0]
-                    + "+1") };
+            final String[] COLUMNS = new String[] { BookBo.COL_TIMESTAMP_UPDATE[0],
+                    BookBo.COL_NUM_PUBLISHES[0] };
+            final Object[] VALUES = new Object[] { new Date(),
+                    new ParamExpression(BookBo.COL_NUM_PUBLISHES[0] + "+1") };
             final String[] WHERE_COLUMNS = new String[] { BookBo.COL_ID[0] };
             final Object[] WHERE_VALUES = new Object[] { book.getId() };
             update(TABLE_BOOK, COLUMNS, VALUES, WHERE_COLUMNS, WHERE_VALUES);

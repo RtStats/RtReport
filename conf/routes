@@ -3,7 +3,10 @@
 # ~~~~
 
 GET     /                           controllers.Application.index()
-GET     /$id<c.+>                   controllers.Application.category(id: String)
+GET     /$id<a[0-9]+-.+>            controllers.Application.author(id: String)
+GET     /$id<b[0-9]+-[0-9]+-.+>     controllers.Application.chapter(id: String)
+GET     /$id<b[0-9]+-.+>            controllers.Application.book(id: String)
+GET     /$id<c[0-9]+-.+>            controllers.Application.category(id: String)
 
 -> /admin admin.Routes
 

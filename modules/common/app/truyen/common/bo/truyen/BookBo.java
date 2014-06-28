@@ -101,6 +101,10 @@ public class BookBo extends BaseBo {
         return (BookBo) setAttribute(COL_NUM_CHAPTERS[1], numChapters);
     }
 
+    public ChapterBo getLatestPublishedChapter() {
+        return TruyenDao.getChapter(getId(), getNumPublishes());
+    }
+
     public int getNumPublishes() {
         Integer result = getAttribute(COL_NUM_PUBLISHES[1], Integer.class);
         return result != null ? result.intValue() : 0;

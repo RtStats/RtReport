@@ -5,6 +5,8 @@ import java.util.concurrent.TimeUnit;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
+import play.api.mvc.EssentialFilter;
+import play.filters.gzip.GzipFilter;
 import truyen.worker.ControllerWorker;
 import truyen.worker.WorkerRegistry;
 import akka.actor.Cancellable;
@@ -12,6 +14,16 @@ import akka.actor.Cancellable;
 import com.github.ddth.plommon.utils.AkkaUtils;
 
 public class Global extends GlobalSettings {
+
+    /*
+     * Enable Gzip response
+     * 
+     * @see play.GlobalSettings#filters()
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends EssentialFilter> Class<T>[] filters() {
+        return new Class[] { GzipFilter.class };
+    }
 
     private Cancellable controllerWorker;
 

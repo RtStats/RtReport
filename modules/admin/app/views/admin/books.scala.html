@@ -9,7 +9,8 @@
 @_layout(
 	active="books",
 	customJs=Array("avant-1.2.1/assets/plugins/datatables/jquery.dataTables.min.js",
-	    "avant-1.2.1/assets/plugins/datatables/dataTables.bootstrap.js"),
+	    "avant-1.2.1/assets/plugins/datatables/dataTables.bootstrap.js",
+	    "javascripts/bootstrap3-typeahead.min.js"),
     customCss=Array("avant-1.2.1/assets/plugins/datatables/dataTables.css")
 ){
     <div id="page-heading">
@@ -77,7 +78,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="frmadd_title">@Messages("msg.book.title")</label>
-                            <input type="text" class="form-control" id="frmadd_title" name="title" placeholder="@Messages("msg.book.title")">
+                            <input type="text" class="form-control" id="frmadd_title" name="title" placeholder="@Messages("msg.book.title")" autocomplete="off">
                         </div>
                         <div class="form-group">
                              @*
@@ -132,7 +133,7 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="frmedit_title">@Messages("msg.book.title")</label>
-                            <input type="text" class="form-control" id="frmedit_title" name="title" placeholder="@Messages("msg.book.title")">
+                            <input type="text" class="form-control" id="frmedit_title" name="title" placeholder="@Messages("msg.book.title")" autocomplete="off">
                         </div>
                         <div class="form-group">
                             <div class="checkbox col-xs-2" style="margin-top: 5px !important">
@@ -284,6 +285,10 @@
                             });
                             $('.dataTables_filter input').addClass('form-control').attr('placeholder','@Messages("msg.search")');
                             $('.dataTables_length select').addClass('form-control');
+                            
+                            var typeahead_source = [@for(book<-books){"@book.getTitle()",}];
+                            $('#frmadd_title').typeahead({source:typeahead_source,items:5});
+                            $('#frmedit_title').typeahead({source:typeahead_source,items:5});
                         });
                         </script>
                     </div>

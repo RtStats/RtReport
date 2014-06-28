@@ -1,4 +1,4 @@
-@()(content: Html)
+@()(content: Html)(implicit lang: Lang)
 @import truyen.common.util._
 @import truyen.common.bo.truyen._
 @import utils._
@@ -19,11 +19,13 @@
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("font-awesome-4.1.0/css/font-awesome.min.css")">
     <style>
     body {
-        margin-top: 30px;
+        margin-top: 70px;
     }
+    @*
     .navbar-nav > li > a {padding-top:5px !important; padding-bottom:5px !important;}
     .navbar-header > .navbar-brand {padding-top:5px !important; padding-bottom:5px !important; max-height:32px !important;}
     .navbar {min-height:32px !important; max-height:32px !important; margin-bottom: 5px !important;}
+    *@
     </style>
 </head>
 
@@ -44,7 +46,7 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-list"></i> @Messages("msg.top_list") <i class="fa fa-caret-down"></i></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-list-ul"></i> @Messages("msg.top_list") <i class="fa fa-caret-down"></i></a>
 
 			              <ul class="dropdown-menu">
 			                <li><a href="all-templates"><i class="fa fa-globe fa-fw"></i> All Templates</a></li>
@@ -87,14 +89,21 @@
     </nav>
 
     <div class="container">
-
         <div class="row">
-            <div class="col-lg-12">
-                <h1>A better Bootstrap starter template.</h1>
-                <p>Complete with pre-defined file paths that you won't have to change!</p>
+            <div class="col-md-2 hidden-xs hidden-sm">
+                <p>Right column</p>
+            </div>
+            <div class="col-md-8 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        @content
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 hidden-xs hidden-sm">
+                <p>Right column</p>
             </div>
         </div>
-
     </div>
     <!-- /.container -->
 

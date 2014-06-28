@@ -9,7 +9,7 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern><![CDATA[application.%d{yyyy-MM-dd}.log]]></fileNamePattern>
+            <fileNamePattern><![CDATA[${app.home}/logs/application.%d{yyyy-MM-dd}.log]]></fileNamePattern>
 
             <!-- keep 7 days' worth of history -->
             <maxHistory>7</maxHistory>

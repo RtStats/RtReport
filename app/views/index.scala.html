@@ -1,3 +1,37 @@
-@()
+@()(implicit lang: Lang)
+@import truyen.common.bo.truyen._
+@import utils._
+@_printRow(book: BookBo) = {
+    @defining(book.getLatestPublishedChapter){ chapter =>
+	    <tr class="hidden-xs">
+	        <td><a href="@UrlUtils.url(book)">@book.getTitle()</a></td>
+	        <td>@if(chapter!=null){<a href="@UrlUtils.url(chapter)">@chapter.getTitle()</a>}else{&nbsp;}</td>
+	    </tr>
+	    <tr class="visible-xs">
+            <td colspan="2">
+                <strong><a href="@UrlUtils.url(book)">@book.getTitle()</a></strong>
+                @if(chapter!=null){<br/><a href="@UrlUtils.url(chapter)">@chapter.getTitle()</a>}else{&nbsp;}
+            </td>
+        </tr>
+    }
+}
 @_layout(){
+<div class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">@Messages("msg.latest_updates")</h3></div>
+    <table class="table table-bordered table-condensed">
+        @*
+        <thead>
+            <tr>
+                <th>@Messages("msg.book")</th>
+                <th>@Messages("msg.chapter")</th>
+            </tr>
+        </thead>
+        *@
+        <tbody>
+	        @for(book <- TruyenDao.getLatestUpdatedBooks(20)){
+	            @_printRow(book)
+	        }
+        </tbody>
+    </table>
+</div>
 }
