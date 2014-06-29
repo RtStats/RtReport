@@ -23,7 +23,7 @@ object ApplicationBuild extends Build {
         "com.ibm.icu"           %  "icu4j"                  % "53.1",
         "com.github.ddth"       %  "ddth-commons"           % "0.2.2.2",
         "com.github.ddth"       % "spring-social-helper"    % "0.2.1",
-        "com.github.ddth"       %% "play-module-plommon"    % "0.5.1.1",
+        "com.github.ddth"       %% "play-module-plommon"    % "0.5.1.2",
         javaJdbc,
         cache,
         filters
@@ -36,6 +36,9 @@ object ApplicationBuild extends Build {
     ).settings(
         // Disable generating scaladoc
         sources in doc in Compile := List(),
+        
+        // Custom Maven repository
+        resolvers += "Sonatype OSS repository" at "https://oss.sonatype.org/content/repositories/releases/",
         
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
@@ -51,6 +54,9 @@ object ApplicationBuild extends Build {
         // Disable generating scaladoc
         sources in doc in Compile := List(),
         
+        // Custom Maven repository
+        resolvers += "Sonatype OSS repository" at "https://oss.sonatype.org/content/repositories/releases/",
+        
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     )
@@ -65,6 +71,9 @@ object ApplicationBuild extends Build {
         // Disable generating scaladoc
         sources in doc in Compile := List(),
         
+        // Custom Maven repository
+        resolvers += "Sonatype OSS repository" at "https://oss.sonatype.org/content/repositories/releases/",
+        
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     )
@@ -72,6 +81,9 @@ object ApplicationBuild extends Build {
     val main = play.Project(appName, appVersion, appDependencies, path = file(".")).settings(
         // Disable generating scaladoc
         sources in doc in Compile := List(),
+        
+        // Custom Maven repository
+        resolvers += "Sonatype OSS repository" at "https://oss.sonatype.org/content/repositories/releases/",
         
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
