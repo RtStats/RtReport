@@ -24,10 +24,10 @@ public class TruyenDao extends BaseMysqlDao {
     public final static String TABLE_BOOK = Constants.APP_ID + "_book";
     public final static String TABLE_CHAPTER = Constants.APP_ID + "_chapter";
 
-    private final static AuthorBo[] EMPTY_ARR_AUTHOR_BO = new AuthorBo[0];
-    private final static CategoryBo[] EMPTY_ARR_CATEGORY_BO = new CategoryBo[0];
-    private final static BookBo[] EMPTY_ARR_BOOK_BO = new BookBo[0];
-    private final static ChapterBo[] EMPTY_ARR_CHAPTER_BO = new ChapterBo[0];
+    public final static AuthorBo[] EMPTY_ARR_AUTHOR_BO = new AuthorBo[0];
+    public final static CategoryBo[] EMPTY_ARR_CATEGORY_BO = new CategoryBo[0];
+    public final static BookBo[] EMPTY_ARR_BOOK_BO = new BookBo[0];
+    public final static ChapterBo[] EMPTY_ARR_CHAPTER_BO = new ChapterBo[0];
 
     /*----------------------------------------------------------------------*/
     private static String cacheKeyAuthor(int id) {
@@ -81,15 +81,25 @@ public class TruyenDao extends BaseMysqlDao {
     }
 
     private static String cacheKeyAllBooks(CategoryBo cat) {
-        return Constants.CACHE_PREFIX + "_BOOKS_" + cat.getId();
+        return Constants.CACHE_PREFIX + "_BOOKS_CAT_" + cat.getId();
+    }
+
+    private static String cacheKeyAllBooks(AuthorBo author) {
+        return Constants.CACHE_PREFIX + "_BOOKS_AUTHOR_" + author.getId();
     }
 
     private static void invalidate(BookBo book) {
         removeFromCache(cacheKey(book));
         removeFromCache(cacheKeyAllBooks());
+
         CategoryBo cat = book.getCategory();
         if (cat != null) {
             removeFromCache(cacheKeyAllBooks(cat));
+        }
+
+        AuthorBo author = book.getAuthor();
+        if (author != null) {
+            removeFromCache(cacheKeyAllBooks(author));
         }
     }
 
@@ -218,6 +228,38 @@ public class TruyenDao extends BaseMysqlDao {
         return (AuthorBo) author.markClean();
     }
 
+    /**
+     * Increases number of books of author by 1.
+     * 
+     * @param author
+     * @return
+     */
+    public static AuthorBo incNumBooks(AuthorBo author) {
+        final String[] COLUMNS = new String[] { AuthorBo.COL_NUM_BOOKS[0] };
+        final Object[] VALUES = new Object[] { new ParamExpression(AuthorBo.COL_NUM_BOOKS[0] + "+1") };
+        final String[] WHERE_COLUMNS = new String[] { AuthorBo.COL_ID[0] };
+        final Object[] WHERE_VALUES = new Object[] { author.getId() };
+        update(TABLE_AUTHOR, COLUMNS, VALUES, WHERE_COLUMNS, WHERE_VALUES);
+        invalidate(author);
+        return getAuthor(author.getId());
+    }
+
+    /**
+     * Decreases number of books of author by 1.
+     * 
+     * @param author
+     * @return
+     */
+    public static AuthorBo decNumBooks(AuthorBo author) {
+        final String[] COLUMNS = new String[] { AuthorBo.COL_NUM_BOOKS[0] };
+        final Object[] VALUES = new Object[] { new ParamExpression(AuthorBo.COL_NUM_BOOKS[0] + "-1") };
+        final String[] WHERE_COLUMNS = new String[] { AuthorBo.COL_ID[0] };
+        final Object[] WHERE_VALUES = new Object[] { author.getId() };
+        update(TABLE_AUTHOR, COLUMNS, VALUES, WHERE_COLUMNS, WHERE_VALUES);
+        invalidate(author);
+        return getAuthor(author.getId());
+    }
+
     /*----------------------------------------------------------------------*/
     /**
      * Creates a new category.
@@ -286,7 +328,7 @@ public class TruyenDao extends BaseMysqlDao {
         final String CACHE_KEY = cacheKeyAllCategories();
         List<Map<String, Object>> dbRows = getFromCache(CACHE_KEY, List.class);
         if (dbRows == null) {
-            final String SQL = MessageFormat.format("SELECT {1} AS {2} FROM {0} ORDER BY {3} DESC",
+            final String SQL = MessageFormat.format("SELECT {1} AS {2} FROM {0} ORDER BY {3}",
                     TABLE_CATEGORY, CategoryBo.COL_ID[0], CategoryBo.COL_ID[1],
                     CategoryBo.COL_POSITION[0]);
             dbRows = select(SQL, null);
@@ -328,7 +370,43 @@ public class TruyenDao extends BaseMysqlDao {
     }
 
     /**
+     * Increases number of books in category by 1.
+     * 
+     * @param category
+     * @return
+     */
+    public static CategoryBo incNumBooks(CategoryBo category) {
+        final String[] COLUMNS = new String[] { CategoryBo.COL_NUM_BOOKS[0] };
+        final Object[] VALUES = new Object[] { new ParamExpression(CategoryBo.COL_NUM_BOOKS[0]
+                + "+1") };
+        final String[] WHERE_COLUMNS = new String[] { CategoryBo.COL_ID[0] };
+        final Object[] WHERE_VALUES = new Object[] { category.getId() };
+        update(TABLE_CATEGORY, COLUMNS, VALUES, WHERE_COLUMNS, WHERE_VALUES);
+        invalidate(category);
+        return getCategory(category.getId());
+    }
+
+    /**
+     * Decreases number of books in category by 1.
+     * 
+     * @param category
+     * @return
+     */
+    public static CategoryBo decNumBooks(CategoryBo category) {
+        final String[] COLUMNS = new String[] { CategoryBo.COL_NUM_BOOKS[0] };
+        final Object[] VALUES = new Object[] { new ParamExpression(CategoryBo.COL_NUM_BOOKS[0]
+                + "-1") };
+        final String[] WHERE_COLUMNS = new String[] { CategoryBo.COL_ID[0] };
+        final Object[] WHERE_VALUES = new Object[] { category.getId() };
+        update(TABLE_CATEGORY, COLUMNS, VALUES, WHERE_COLUMNS, WHERE_VALUES);
+        invalidate(category);
+        return getCategory(category.getId());
+    }
+
+    /**
      * Moves a category up the list.
+     * 
+     * Note: categories are ordered ASC by "position" column.
      * 
      * @param cat
      */
@@ -337,7 +415,7 @@ public class TruyenDao extends BaseMysqlDao {
         for (int i = 1; i < allCats.length; i++) {
             if (allCats[i].getId() == cat.getId()) {
                 int temp = allCats[i].getPosition();
-                allCats[i].setPosition(temp + 1);
+                allCats[i].setPosition(temp - 1);
                 allCats[i - 1].setPosition(temp);
                 TruyenDao.update(allCats[i]);
                 TruyenDao.update(allCats[i - 1]);
@@ -350,6 +428,8 @@ public class TruyenDao extends BaseMysqlDao {
     /**
      * Moves a category down the list.
      * 
+     * Note: categories are ordered ASC by "position" column
+     * 
      * @param cat
      */
     public static void moveDown(CategoryBo cat) {
@@ -357,7 +437,7 @@ public class TruyenDao extends BaseMysqlDao {
         for (int i = 0, n = allCats.length - 1; i < n; i++) {
             if (allCats[i].getId() == cat.getId()) {
                 int temp = allCats[i].getPosition();
-                allCats[i].setPosition(temp - 1);
+                allCats[i].setPosition(temp + 1);
                 allCats[i + 1].setPosition(temp);
                 TruyenDao.update(allCats[i]);
                 TruyenDao.update(allCats[i + 1]);
@@ -389,6 +469,17 @@ public class TruyenDao extends BaseMysqlDao {
                 book.getSummary(), book.getAvatar(), new Date(), new Date() };
         insertIgnore(TABLE_BOOK, COLUMNS, VALUES);
         invalidate(book);
+
+        CategoryBo cat = book.getCategory();
+        if (cat != null) {
+            incNumBooks(cat);
+        }
+
+        AuthorBo author = book.getAuthor();
+        if (author != null) {
+            incNumBooks(author);
+        }
+
         return (BookBo) book.markClean();
     }
 
@@ -402,6 +493,16 @@ public class TruyenDao extends BaseMysqlDao {
         final Object[] VALUES = new Object[] { book.getId() };
         delete(TABLE_BOOK, COLUMNS, VALUES);
         invalidate(book);
+
+        CategoryBo cat = book.getCategory();
+        if (cat != null) {
+            decNumBooks(cat);
+        }
+
+        AuthorBo author = book.getAuthor();
+        if (author != null) {
+            decNumBooks(author);
+        }
     }
 
     /**

@@ -181,7 +181,9 @@
                         $(document).ready(function() {
                             $('.datatables').dataTable({
                                 "sDom": "<'row'<'col-xs-6'l><'col-xs-6'f>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
-                                "sPaginationType": "bootstrap",
+                                //"sPaginationType": "bootstrap",
+                                "bPaginate"        : false,
+                                "bSort"            : false, 
                                 "oLanguage": {
                                     "sLengthMenu"  : "_MENU_ @Messages("msg.records_per_page")",
                                     "sSearch"      : "",

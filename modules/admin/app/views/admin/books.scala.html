@@ -243,8 +243,9 @@
                                     }">
                                         <td style="text-align: center; vertical-align: middle"><i class="fa @if(book.isPublished()){fa-check}else{fa-minus}" style="color: @if(book.isPublished()){green}else{grey}"></i></td>
                                         <td style="vertical-align: middle">
-                                            <p><span style="font-size: x-small">[@book.getStatusText()]</span> <span style="font-weight: bold">@book.getTitle()</span></p>
-                                            <p>@Messages("msg.book.num_chapters"): @book.getNumChapters()</p>
+                                            <span style="font-size: x-small">[@book.getStatusText()]</span> <span style="font-weight: bold">@book.getTitle()</span>
+                                            <br/>
+                                            <span style="font-size: small">@Messages("msg.book.num_chapters"): @book.getNumPublishes() / @book.getNumChapters()</span>
                                         </td>
                                         <td style="text-align: center; vertical-align: middle">
                                             @if(book.getCategory()!=null){@book.getCategory().getTitle()}else{-}

@@ -1,5 +1,11 @@
 package controllers.admin;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
 import play.api.templates.Html;
 import play.data.Form;
 import play.i18n.Messages;
@@ -30,11 +36,28 @@ public class Chapter extends BaseController {
     public static Promise<Result> newChapters() {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
-                ChapterBo[] newChapters = TruyenDao.getNewChapters();
+                List<ChapterBo> newChapters = new ArrayList<ChapterBo>();
+                ChapterBo[] allNewChapters = TruyenDao.getNewChapters();
+                Map<Integer, AtomicLong> bookNewChapMappings = new HashMap<Integer, AtomicLong>();
+                for (ChapterBo chapter : allNewChapters) {
+                    Integer bookId = chapter.getBookId();
+                    AtomicLong numNewChapters = bookNewChapMappings.get(bookId);
+                    if (numNewChapters == null) {
+                        numNewChapters = new AtomicLong();
+                        bookNewChapMappings.put(bookId, numNewChapters);
+                    }
+                    numNewChapters.incrementAndGet();
+                    if (numNewChapters.get() < 10) {
+                        newChapters.add(chapter);
+                    }
+                }
+
                 AuthorBo[] authors = TruyenDao.getAllAuthors();
                 CategoryBo[] categories = TruyenDao.getAllCategories();
                 BookBo[] books = TruyenDao.getAllBooks();
-                Html html = render(VIEW_NEW_CHAPTERS, newChapters, books, categories, authors);
+                Html html = render(VIEW_NEW_CHAPTERS,
+                        newChapters.toArray(TruyenDao.EMPTY_ARR_CHAPTER_BO), books, categories,
+                        authors);
                 return ok(html);
             }
         });

@@ -57,4 +57,9 @@ public class Global extends GlobalSettings {
 
         super.onStop(app);
     }
+
+    // @Override
+    // public Action<?> onRequest(Request request, Method method) {
+    // return super.onRequest(request, method);
+    // }
 }
