@@ -515,7 +515,6 @@ public class TruyenDao extends BaseMysqlDao {
     public static BookBo getBook(int id) {
         final String CACHE_KEY = cacheKeyBook(id);
         Map<String, Object> dbRow = getFromCache(CACHE_KEY, Map.class);
-        dbRow = null;
         if (dbRow == null) {
             final String[][] columns = { BookBo.COL_ID, BookBo.COL_STATUS, BookBo.COL_IS_PUBLISHED,
                     BookBo.COL_NUM_CHAPTERS, BookBo.COL_NUM_PUBLISHES, BookBo.COL_CATEGORY_ID,
@@ -717,7 +716,6 @@ public class TruyenDao extends BaseMysqlDao {
     public static ChapterBo getChapter(int bookId, int chapterIndex) {
         final String CACHE_KEY = cacheKeyChapter(bookId, chapterIndex);
         Map<String, Object> dbRow = getFromCache(CACHE_KEY, Map.class);
-        dbRow = null;
         if (dbRow == null) {
             final String[][] columns = { ChapterBo.COL_INDEX, ChapterBo.COL_BOOK_ID,
                     ChapterBo.COL_TYPE, ChapterBo.COL_IS_ACTIVE, ChapterBo.COL_TIMESTAMP,

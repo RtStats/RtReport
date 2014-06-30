@@ -40,6 +40,7 @@ public class Author extends BaseController {
     public static Promise<Result> addAuthorSubmit() {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
+                String suffix = "";
                 Form<FormAddAuthor> form = Form.form(FormAddAuthor.class).bindFromRequest();
                 if (form.hasErrors()) {
                     flash(VIEW_AUTHORS, Constants.FLASH_MSG_PREFIX_ERROR
@@ -49,8 +50,9 @@ public class Author extends BaseController {
                     AuthorBo author = new AuthorBo().setName(formData.name).setInfo(formData.info);
                     author = TruyenDao.create(author);
                     flash(VIEW_AUTHORS, Messages.get("msg.add_author.done", author.getName()));
+                    suffix = "#_" + author.getId();
                 }
-                return redirect(controllers.admin.routes.Author.authors().url());
+                return redirect(controllers.admin.routes.Author.authors().url() + suffix);
             }
         });
         return promise;
@@ -62,6 +64,7 @@ public class Author extends BaseController {
     public static Promise<Result> editAuthorSubmit(final int id) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
+                String suffix = "";
                 AuthorBo author = TruyenDao.getAuthor(id);
                 if (author == null) {
                     flash(VIEW_AUTHORS,
@@ -77,9 +80,10 @@ public class Author extends BaseController {
                         author.setName(formData.name).setInfo(formData.info);
                         author = TruyenDao.update(author);
                         flash(VIEW_AUTHORS, Messages.get("msg.edit_author.done", author.getName()));
+                        suffix = "#_" + author.getId();
                     }
                 }
-                return redirect(controllers.admin.routes.Author.authors().url());
+                return redirect(controllers.admin.routes.Author.authors().url() + suffix);
             }
         });
         return promise;

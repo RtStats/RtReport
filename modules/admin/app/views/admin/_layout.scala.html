@@ -150,6 +150,31 @@
         </footer>
     </div>
     
+    @if(PlayAppUtils.queryString("debug")!=null) {
+	    @defining(com.github.ddth.plommon.bo.BaseDao.getProfiling()){profilingData =>
+	        <div class="panel panel-danger" style="font-size: x-small">
+                <div class="panel-heading" style="font-size: x-small; height: auto">SQL Debug</div>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>SQL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+	                    @for(record <- profilingData){
+	                        <tr>
+	                            <td align="center">@record.execTime</td>
+	                            <td>@record.command</td>
+	                        </tr>
+			            }
+		            </tbody>
+                </table>
+            </div>
+	    }
+	}
+    
+    
     @* <script type='text/javascript' src='@controllers.admin.routes.Assets.at("avant-1.2.1/assets/js/jqueryui-1.10.3.min.js")'></script> *@
     <script type='text/javascript' src='@controllers.admin.routes.Assets.at("avant-1.2.1/assets/js/bootstrap.min.js")'></script> 
     <script type='text/javascript' src='@controllers.admin.routes.Assets.at("avant-1.2.1/assets/js/enquire.js")'></script> 

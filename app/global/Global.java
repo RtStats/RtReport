@@ -1,5 +1,6 @@
 package global;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 import play.Application;
@@ -7,10 +8,13 @@ import play.GlobalSettings;
 import play.Logger;
 import play.api.mvc.EssentialFilter;
 import play.filters.gzip.GzipFilter;
+import play.mvc.Action;
+import play.mvc.Http.Request;
 import truyen.worker.ControllerWorker;
 import truyen.worker.WorkerRegistry;
 import akka.actor.Cancellable;
 
+import com.github.ddth.plommon.bo.BaseDao;
 import com.github.ddth.plommon.utils.AkkaUtils;
 
 public class Global extends GlobalSettings {
@@ -58,8 +62,9 @@ public class Global extends GlobalSettings {
         super.onStop(app);
     }
 
-    // @Override
-    // public Action<?> onRequest(Request request, Method method) {
-    // return super.onRequest(request, method);
-    // }
+    @Override
+    public Action<?> onRequest(Request request, Method method) {
+        BaseDao.startProfiling();
+        return super.onRequest(request, method);
+    }
 }

@@ -2,6 +2,7 @@
 @import truyen.common.util._
 @import truyen.common.bo.truyen._
 @import utils._
+@import com.github.ddth.plommon.utils._
 <!DOCTYPE html>
 <html>
 <head>
@@ -106,6 +107,30 @@
         </div>
     </div>
     <!-- /.container -->
+    
+    @if(PlayAppUtils.queryString("debug")!=null) {
+        @defining(com.github.ddth.plommon.bo.BaseDao.getProfiling()){profilingData =>
+            <div class="panel panel-danger" style="font-size: x-small">
+                <div class="panel-heading" style="font-size: x-small; height: auto">SQL Debug</div>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>SQL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(record <- profilingData){
+                            <tr>
+                                <td align="center">@record.execTime</td>
+                                <td>@record.command</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
 
     <script src="@routes.Assets.at("bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
 </body>
