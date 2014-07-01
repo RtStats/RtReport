@@ -9,7 +9,7 @@ import play.data.validation.ValidationError;
 import play.i18n.Messages;
 
 public class FormAddAuthor {
-    public String name, info, datatables;
+    public String name, info;
 
     public List<ValidationError> validate() {
         List<ValidationError> errors = new ArrayList<ValidationError>();

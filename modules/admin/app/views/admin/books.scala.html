@@ -240,7 +240,7 @@
                                                 @if(book.getStatus()==BookBo.STATUS_INACTIVE){warning}else{info}
                                             }
                                         }
-                                    }">
+                                    }" name="@book.getId()" id="@book.getId()">
                                         <td style="text-align: center; vertical-align: middle"><i class="fa @if(book.isPublished()){fa-check}else{fa-minus}" style="color: @if(book.isPublished()){green}else{grey}"></i></td>
                                         <td style="vertical-align: middle">
                                             <span style="font-size: x-small">[@book.getStatusText()]</span> <span style="font-weight: bold">@book.getTitle()</span>
@@ -268,6 +268,11 @@
                             $('.datatables').dataTable({
                                 "sDom": "<'row'<'col-xs-6'l><'col-xs-6'f>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
                                 "sPaginationType": "bootstrap",
+                                "bPaginate"      : false,
+                                "bProcessing"    : true,
+                                "bStateSave"     : true,
+                                "bSort"          : true,
+                                "aoColumns"      : [{"bSortable":false},{"bSortable":true},{"bSortable":true},{"bSortable":true},{"bSortable":false}],
                                 "oLanguage": {
                                     "sLengthMenu"  : "_MENU_ @Messages("msg.records_per_page")",
                                     "sSearch"      : "",
@@ -290,6 +295,12 @@
                             var typeahead_source = [@for(book<-books){"@book.getTitle()",}];
                             $('#frmadd_title').typeahead({source:typeahead_source,items:5});
                             $('#frmedit_title').typeahead({source:typeahead_source,items:5});
+                            
+                            if ( document.location.hash ) {
+                                $(document.body).animate({
+                                    'scrollTop': $(document.location.hash).offset().top - 50
+                                }, 500);
+                            }
                         });
                         </script>
                     </div>

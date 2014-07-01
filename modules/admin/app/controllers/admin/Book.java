@@ -68,6 +68,7 @@ public class Book extends BaseController {
     public static Promise<Result> editBookSubmit(final int id) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
+                String suffix = "";
                 BookBo book = TruyenDao.getBook(id);
                 if (book == null) {
                     flash(VIEW_BOOKS,
@@ -84,9 +85,10 @@ public class Book extends BaseController {
                                 .setStatus(BookBo.parseStatusString(formData.status));
                         book = TruyenDao.update(book);
                         flash(VIEW_BOOKS, Messages.get("msg.edit_book.done", book.getTitle()));
+                        suffix = "#_" + book.getId();
                     }
                 }
-                return redirect(controllers.admin.routes.Book.books().url());
+                return redirect(controllers.admin.routes.Book.books().url() + suffix);
             }
         });
         return promise;

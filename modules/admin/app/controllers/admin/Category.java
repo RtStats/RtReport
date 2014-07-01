@@ -9,9 +9,7 @@ import play.mvc.Result;
 import truyen.common.Constants;
 import truyen.common.bo.truyen.CategoryBo;
 import truyen.common.bo.truyen.TruyenDao;
-
 import compisitions.admin.AuthRequired;
-
 import controllers.common.BaseController;
 import forms.admin.FormAddCategory;
 
@@ -40,6 +38,7 @@ public class Category extends BaseController {
     public static Promise<Result> moveUpCategory(final int id) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
+                String suffix = "";
                 CategoryBo category = TruyenDao.getCategory(id);
                 if (category == null) {
                     flash(VIEW_CATEGORIES,
@@ -49,8 +48,9 @@ public class Category extends BaseController {
                     TruyenDao.moveUp(category);
                     flash(VIEW_CATEGORIES,
                             Messages.get("msg.edit_category.done", category.getTitle()));
+                    suffix = "#_" + category.getId();
                 }
-                return redirect(controllers.admin.routes.Category.categories().url());
+                return redirect(controllers.admin.routes.Category.categories().url() + suffix);
             }
         });
         return promise;
@@ -62,6 +62,7 @@ public class Category extends BaseController {
     public static Promise<Result> moveDownCategory(final int id) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
+                String suffix = "";
                 CategoryBo category = TruyenDao.getCategory(id);
                 if (category == null) {
                     flash(VIEW_CATEGORIES,
@@ -71,8 +72,9 @@ public class Category extends BaseController {
                     TruyenDao.moveDown(category);
                     flash(VIEW_CATEGORIES,
                             Messages.get("msg.edit_category.done", category.getTitle()));
+                    suffix = "#_" + category.getId();
                 }
-                return redirect(controllers.admin.routes.Category.categories().url());
+                return redirect(controllers.admin.routes.Category.categories().url() + suffix);
             }
         });
         return promise;
@@ -109,6 +111,7 @@ public class Category extends BaseController {
     public static Promise<Result> editCategorySubmit(final int id) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
+                String suffix = "";
                 CategoryBo category = TruyenDao.getCategory(id);
                 if (category == null) {
                     flash(VIEW_CATEGORIES,
@@ -125,9 +128,10 @@ public class Category extends BaseController {
                         category = TruyenDao.update(category);
                         flash(VIEW_CATEGORIES,
                                 Messages.get("msg.edit_category.done", category.getTitle()));
+                        suffix = "#_" + category.getId();
                     }
                 }
-                return redirect(controllers.admin.routes.Category.categories().url());
+                return redirect(controllers.admin.routes.Category.categories().url() + suffix);
             }
         });
         return promise;

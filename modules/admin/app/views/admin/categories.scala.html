@@ -157,14 +157,13 @@
                             </thead>
                             <tbody>
                                 @for(category <- categories){
-                                    <tr>
+                                    <tr name="_@category.getId()" id="_@category.getId()">
                                         <td style="text-align: center; vertical-align: middle" nowrap="nowrap">
                                             <a href="@controllers.admin.routes.Category.moveUpCategory(category.getId())"><i style="font-size: x-large;" class="fa fa-arrow-up"></i></a>
                                             <a href="@controllers.admin.routes.Category.moveDownCategory(category.getId())"><i style="font-size: x-large;" class="fa fa-arrow-down"></i></a>
                                         </td>
                                         <td style="vertical-align: middle">
-                                            <b>@category.getTitle()</b>
-                                            <p>@category.getSummary()</p>
+                                            <b>@category.getTitle()</b><p>@category.getSummary()</p>
                                         </td>
                                         <td style="text-align: center; vertical-align: middle">@category.getNumBooks()</td>
                                         <td style="text-align: center; vertical-align: middle" nowrap="nowrap">
@@ -185,6 +184,7 @@
                                 "bPaginate"      : false,
                                 "bSort"          : false,
                                 "bFilter"        : false,
+                                "bStateSave"     : false,
                                 "oLanguage": {
                                     "sLengthMenu"  : "_MENU_ @Messages("msg.records_per_page")",
                                     "sSearch"      : "",
@@ -207,6 +207,12 @@
                             var typeahead_source = [@for(category<-categories){"@category.getTitle()",}];
                             $('#frmadd_title').typeahead({source:typeahead_source,items:5});
                             $('#frmedit_title').typeahead({source:typeahead_source,items:5});
+                            
+                            if ( document.location.hash ) {
+	                            $(document.body).animate({
+	                                'scrollTop': $(document.location.hash).offset().top - 50
+	                            }, 500);
+                            }
                         });
                         </script>
                     </div>

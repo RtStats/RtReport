@@ -21,16 +21,12 @@
     
     <script type="text/javascript">
     function _addAuthor() {
-        var dtOpts = {s:$('.dataTables_filter input').val()};
-        $('#frmadd_datatables').val(JSON.stringify(dtOpts));
     	$('#dlgAddAuthor').modal({});
     }
     function _editAuthor(urlForm, urlAjaxData) {
         $.get(urlAjaxData, null, "json")
             .done(function(data, status, jqXHR){
                 if ( data.status == 200 ) {
-                	var dtOpts = {s:$('.dataTables_filter input').val()};
-                    $('#frmedit_datatables').val(JSON.stringify(dtOpts));
                 	$('#frmedit').attr('action', urlForm);
                 	$('#frmedit_name').val(data.message.name);
                     $('#frmedit_info').val(data.message.info);
@@ -66,7 +62,6 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="frmadd" role="form" method="post" action="@controllers.admin.routes.Author.addAuthorSubmit()">
-                    <input type="hidden" name="datatables" id="frmadd_datatables" />
 	                <div class="modal-header">
 	                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 	                    <h4 class="modal-title" id="dlgAddAuthor_Title">@Messages("msg.add_author")</h4>
@@ -93,7 +88,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="frmedit" role="form" method="post" action="">
-                    <input type="hidden" name="datatables" id="frmedit_datatables" />
+
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="dlgEditAuthor_Title">@Messages("msg.edit_author")</h4>
@@ -163,9 +158,9 @@
                             </thead>
                             <tbody>
                                 @for(author <- authors){
-                                    <tr>
+                                    <tr name="_@author.getId()" id="_@author.getId()">
                                         <td style="vertical-align: middle">
-                                            <b>@author.getName()</b><a name="_@author.getId()"></a><p>@author.getInfo()</p>
+                                            <b>@author.getName()</b><p>@author.getInfo()</p>
                                         </td>
                                         <td style="text-align: center; vertical-align: middle">@author.getNumBooks()</td>
                                         <td style="text-align: center; vertical-align: middle" nowrap="nowrap">
@@ -184,7 +179,10 @@
                                 "sDom": "<'row'<'col-xs-6'l><'col-xs-6'f>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
                                 "sPaginationType": "bootstrap",
                                 "bPaginate"      : false,
-                                //"bSort"        : false,
+                                "bProcessing"    : true,
+                                "bStateSave"     : true,
+                                "bSort"          : true,
+                                "aoColumns"      : [{"bSortable":true},{"bSortable":true},{"bSortable":false}],
                                 "oLanguage": {
                                     "sLengthMenu"  : "_MENU_ @Messages("msg.records_per_page")",
                                     "sSearch"      : "",
@@ -203,16 +201,16 @@
                             });
                             $('.dataTables_filter input').addClass('form-control').attr('placeholder','@Messages("msg.search")');
                             $('.dataTables_length select').addClass('form-control');
-                            @defining(PlayAppUtils.queryString("_dts")){_dts =>
-                                @if(!StringUtils.isBlank(_dts)){
-                                    $('.dataTables_filter input').val('@_dts');
-                                    $('.dataTables_filter input').trigger('keyup.DT');                                
-                                }
-                            }
                             
                             var typeahead_source = [@for(author<-authors){"@author.getName()",}];
                             $('#frmadd_name').typeahead({source:typeahead_source,items:5});
                             $('#frmedit_name').typeahead({source:typeahead_source,items:5});
+                            
+                            if ( document.location.hash ) {
+                                $(document.body).animate({
+                                    'scrollTop': $(document.location.hash).offset().top - 50
+                                }, 500);
+                            }
                         });
                         </script>
                     </div>
