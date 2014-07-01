@@ -31,7 +31,6 @@
                 if ( data.status == 200 ) {
                 	var dtOpts = {s:$('.dataTables_filter input').val()};
                     $('#frmedit_datatables').val(JSON.stringify(dtOpts));
-                    console.log($('#frmedit_datatables').val());
                 	$('#frmedit').attr('action', urlForm);
                 	$('#frmedit_name').val(data.message.name);
                     $('#frmedit_info').val(data.message.info);
