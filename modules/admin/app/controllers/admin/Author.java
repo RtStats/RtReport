@@ -1,5 +1,9 @@
 package controllers.admin;
 
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+
 import play.api.templates.Html;
 import play.data.Form;
 import play.i18n.Messages;
@@ -10,6 +14,8 @@ import truyen.common.Constants;
 import truyen.common.bo.truyen.AuthorBo;
 import truyen.common.bo.truyen.TruyenDao;
 
+import com.github.ddth.commons.utils.DPathUtils;
+import com.github.ddth.commons.utils.SerializationUtils;
 import compisitions.admin.AuthRequired;
 
 import controllers.common.BaseController;
@@ -39,9 +45,11 @@ public class Author extends BaseController {
      */
     public static Promise<Result> addAuthorSubmit() {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            @SuppressWarnings("unchecked")
             public Result apply() throws Exception {
                 String suffix = "";
                 Form<FormAddAuthor> form = Form.form(FormAddAuthor.class).bindFromRequest();
+                Map<String, Object> dtOps = null;
                 if (form.hasErrors()) {
                     flash(VIEW_AUTHORS, Constants.FLASH_MSG_PREFIX_ERROR
                             + form.error("name").message());
@@ -51,6 +59,16 @@ public class Author extends BaseController {
                     author = TruyenDao.create(author);
                     flash(VIEW_AUTHORS, Messages.get("msg.add_author.done", author.getName()));
                     suffix = "#_" + author.getId();
+
+                    try {
+                        dtOps = SerializationUtils.fromJsonString(formData.datatables, Map.class);
+                    } catch (Exception e) {
+                        dtOps = null;
+                    }
+                }
+                String dtSearch = DPathUtils.getValue(dtOps, "s", String.class);
+                if (!StringUtils.isBlank(dtSearch)) {
+                    suffix = "?_dts=" + dtSearch + suffix;
                 }
                 return redirect(controllers.admin.routes.Author.authors().url() + suffix);
             }
@@ -63,9 +81,11 @@ public class Author extends BaseController {
      */
     public static Promise<Result> editAuthorSubmit(final int id) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            @SuppressWarnings("unchecked")
             public Result apply() throws Exception {
                 String suffix = "";
                 AuthorBo author = TruyenDao.getAuthor(id);
+                Map<String, Object> dtOps = null;
                 if (author == null) {
                     flash(VIEW_AUTHORS,
                             Constants.FLASH_MSG_PREFIX_ERROR
@@ -81,7 +101,19 @@ public class Author extends BaseController {
                         author = TruyenDao.update(author);
                         flash(VIEW_AUTHORS, Messages.get("msg.edit_author.done", author.getName()));
                         suffix = "#_" + author.getId();
+
+                        try {
+                            dtOps = SerializationUtils.fromJsonString(formData.datatables,
+                                    Map.class);
+                        } catch (Exception e) {
+                            dtOps = null;
+                        }
                     }
+                }
+
+                String dtSearch = DPathUtils.getValue(dtOps, "s", String.class);
+                if (!StringUtils.isBlank(dtSearch)) {
+                    suffix = "?_dts=" + dtSearch + suffix;
                 }
                 return redirect(controllers.admin.routes.Author.authors().url() + suffix);
             }
