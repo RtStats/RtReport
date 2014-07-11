@@ -1,11 +1,11 @@
-package truyen.common.bo.user;
+package bo.common.user;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import truyen.common.Constants;
-import truyen.common.bo.CounterDao;
+import vngup.rtreports.common.Constants;
+import bo.common.CounterDao;
 
 import com.github.ddth.commons.utils.DPathUtils;
 import com.github.ddth.plommon.bo.jdbc.BaseMysqlDao;

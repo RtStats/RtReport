@@ -1,4 +1,4 @@
-package truyen.common.bo;
+package bo.common;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -8,7 +8,7 @@ import java.util.Map;
 
 import play.Logger;
 import play.db.DB;
-import truyen.common.Constants;
+import vngup.rtreports.common.Constants;
 
 import com.github.ddth.commons.utils.DPathUtils;
 import com.github.ddth.plommon.bo.jdbc.BaseMysqlDao;

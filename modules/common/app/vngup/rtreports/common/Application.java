@@ -1,8 +1,8 @@
-package truyen.common;
+package vngup.rtreports.common;
 
-import truyen.common.bo.ConfDao;
-import truyen.common.bo.user.UserBo;
-import truyen.common.bo.user.UserDao;
+import bo.common.ConfDao;
+import bo.common.user.UserBo;
+import bo.common.user.UserDao;
 
 import com.github.ddth.commons.utils.IdGenerator;
 import com.github.ddth.plommon.utils.SessionUtils;

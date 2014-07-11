@@ -1,6 +1,6 @@
-package truyen.common.util;
+package utils.common;
 
-import truyen.common.bo.user.UserBo;
+import bo.common.user.UserBo;
 
 import com.github.ddth.commons.utils.HashUtils;
 

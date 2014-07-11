@@ -1,16 +1,16 @@
-package truyen.common.compisitions;
+package compisitions.common;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import bo.common.user.UserBo;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
 import play.mvc.Action;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.SimpleResult;
-import truyen.common.Application;
-import truyen.common.bo.user.UserBo;
+import vngup.rtreports.common.Application;
 
 public class AuthRequiredAction extends Action<AuthRequired> {
 

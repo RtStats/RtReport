@@ -1,4 +1,4 @@
-package truyen.common.util;
+package utils.common;
 
 import java.util.List;
 

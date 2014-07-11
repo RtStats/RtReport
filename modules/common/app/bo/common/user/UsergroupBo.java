@@ -1,4 +1,4 @@
-package truyen.common.bo.user;
+package bo.common.user;
 
 import com.github.ddth.plommon.bo.BaseBo;
 

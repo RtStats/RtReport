@@ -1,4 +1,4 @@
-package truyen.common;
+package vngup.rtreports.common;
 
 import com.github.ddth.commons.utils.HashUtils;
 import com.github.ddth.plommon.utils.PlayAppUtils;
