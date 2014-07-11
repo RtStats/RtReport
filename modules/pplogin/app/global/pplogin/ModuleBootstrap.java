@@ -35,7 +35,7 @@ public class ModuleBootstrap extends AbstractModuleBootstrap {
     }
 
     private void _registerMenu() {
-        String url = controllers.pplogin.routes.PpLoginController.dashboard().url();
+        String url = controllers.pplogin.routes.ModuleController.dashboard().url();
         MenuItem menuBarItem = new MenuItem(MODULE_ID, "Passport Login", url);
         Registry.addMenuBarItem(menuBarItem);
     }

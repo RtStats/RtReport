@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import play.api.templates.Html;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
 import play.libs.Json;
@@ -19,68 +18,20 @@ import com.github.ddth.tsc.ICounterFactory;
 
 import controllers.common.BaseController;
 
-public class PpLoginController extends BaseController {
-
-    private final static String SECTION = "pplogin.";
-    public final static String VIEW_DASHBOARD = SECTION + "dashboard";
+public class JsonController extends BaseController {
 
     private final static long LAGGING = 5 * 1000;
-    private final static long DURATION_FULL = 24 * 1000;
-    private final static long DURATION_SHORT = 2 * 1000;
-
-    /*
-     * Handles GET:/dashboard
-     */
-    public static Promise<Result> dashboard() {
-        Promise<Result> promise = Promise.promise(new Function0<Result>() {
-            public Result apply() throws Exception {
-                long timestampEnd = System.currentTimeMillis() - LAGGING;
-                timestampEnd = timestampEnd - timestampEnd % 1000;
-                long timestampStart = timestampEnd - DURATION_FULL;
-
-                ICounterFactory counterFactory = ModuleBootstrap.getCounterFactory();
-
-                ICounter cLoginTotal = counterFactory.getCounter("login_total");
-                DataPoint[] dpTotal = cLoginTotal.getSeries(timestampStart, timestampEnd,
-                        ICounter.STEPS_1_SEC, DataPoint.Type.SUM);
-
-                ICounter cLoginSuccessful = counterFactory.getCounter("login_successful");
-                DataPoint[] dpSuccessful = cLoginSuccessful.getSeries(timestampStart, timestampEnd,
-                        ICounter.STEPS_1_SEC, DataPoint.Type.SUM);
-
-                ICounter cLoginFailed = counterFactory.getCounter("login_failed");
-                DataPoint[] dpFailed = cLoginFailed.getSeries(timestampStart, timestampEnd,
-                        ICounter.STEPS_1_SEC, DataPoint.Type.SUM);
-
-                int numPoints = dpTotal.length;
-                long[] xTimestamp = new long[numPoints];
-                long[] xTotal = new long[numPoints];
-                long[] xFailed = new long[numPoints];
-                long[] xSuccessful = new long[numPoints];
-
-                for (int i = 0; i < numPoints; i++) {
-                    xTimestamp[i] = dpTotal[i].timestamp();
-                    xTotal[i] = dpTotal[i].value();
-                    xFailed[i] = dpFailed[i].value();
-                    xSuccessful[i] = dpSuccessful[i].value();
-                }
-
-                Html html = render(VIEW_DASHBOARD, xTimestamp, xTotal, xSuccessful, xFailed);
-                return ok(html);
-            }
-        });
-        return promise;
-    }
+    private final static long DURATION = 24 * 1000;
 
     /*
      * Handles GET:/jsonLoginSummary
      */
-    public static Promise<Result> jsonLoginSummary() {
+    public static Promise<Result> jsonLoginSummaryRt() {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
                 long timestampEnd = System.currentTimeMillis() - LAGGING;
                 timestampEnd = timestampEnd - timestampEnd % 1000;
-                long timestampStart = timestampEnd - DURATION_FULL;
+                long timestampStart = timestampEnd - DURATION;
 
                 List<Object> result = new ArrayList<Object>();
 

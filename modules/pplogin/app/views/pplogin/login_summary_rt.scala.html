@@ -3,12 +3,13 @@
 @import play.mvc._
 @import vngup.rtreports.common._
 @_layout(
-	active   = "dashboard",
+	active   = "login-summary-rt",
 	customJs = Array("highcharts-3.0.9/js/highcharts.js")
 ){
 <div id="page-heading">
     <ol class="breadcrumb">
         <li><a href="@controllers.pplogin.routes.ModuleController.dashboard()">@Messages("msg.dashboard")</a></li>
+        <li class="active">@Messages("msg.login_summary_rt")</li>
     </ol>
     @*<h1>@Messages("msg.dashboard")</h1>*@
 </div>

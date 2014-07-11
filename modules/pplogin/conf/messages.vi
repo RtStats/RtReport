@@ -1,0 +1,38 @@
+msg.or = hoặc
+msg.and = và
+msg.yes = Có
+msg.no = Không
+msg.ok = Đồng ý
+msg.cancel = Bỏ chọn
+msg.close = Đóng
+msg.reset = Xoá form
+msg.update = Cập nhật
+msg.delete = Xoá
+msg.preview = Xem trước
+
+msg.search = Tìm kiếm
+msg.prev = Trước
+msg.next = Kế tiếp
+msg.first = Đầu
+msg.last = Cuối
+
+msg.signin = Đăng nhập
+msg.signin.info = Vui lòng đăng nhập
+msg.signup = Đăng ký
+msg.signout = Đăng xuất
+msg.signin.facebook = Đăng nhập với tài khoản Facebook
+error.signin.facebook = Lỗi: Tài khoản Facebook của bạn chưa được đăng ký với hệ thống!
+error.signin.failed = Lỗi: Email và/hoặc Mật mã không khớp!
+
+msg.user.email = Email
+msg.user.password = Mật mã
+
+error.404 = Lỗi: Trang bạn xem không tồn tại!
+
+msg.nodata = Không có dữ liệu
+msg.records_per_page = dòng/trang
+msg.datatables.sInfo = Hiển thị từ _START_ đến _END_ của _TOTAL_ dòng
+msg.datatables.sInfoFiltered = (lọc từ tổng cộng _MAX_ dòng)
+
+msg.dashboard = Dashboard
+msg.login_summary_rt = Rt - Login Summary
