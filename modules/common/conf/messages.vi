@@ -27,56 +27,11 @@ error.signin.failed = Lỗi: Email và/hoặc Mật mã không khớp!
 msg.user.email = Email
 msg.user.password = Mật mã
 
-msg.authors = Tác giả
-msg.author = Tác giả
-msg.author.name = Tên
-msg.author.info = Thông tin
-msg.author.num_books = Truyện
-error.author.not_found = Lỗi: Tác giả không tồn tại!
-
-msg.top_list = Danh sách
-
-msg.categories = Danh mục
-msg.category = Danh mục
-msg.category.title = Tên danh mục
-msg.category.summary = Giới thiệu tóm tắt
-msg.category.num_books = Truyện
-error.category.not_found = Lỗi: Danh mục không tồn tại!
-
-msg.books = Truyện
-msg.book = Truyện
-msg.book.title = Tựa đề
-msg.book.summary = Giới thiệu
-msg.book.avatar = Hình bìa
-msg.book.category = Danh mục
-msg.book.author = Tác giả
-msg.book.status = Trạng thái
-msg.book.status.0 = Mới
-msg.book.status.1 = B.Thường
-msg.book.status.2 = Ra chậm
-msg.book.status.3 = Hết
-msg.book.status.255 = Xoá
-msg.book.is_published = Xuất bản
-msg.book.num_chapters = Chương
-error.book.not_found = Lỗi: Truyện không tồn tại!
-
-msg.chapters = Chương
-msg.chapter = Chương
-msg.chapter.timestamp = Thời gian
-msg.chapter.title = Tiêu đề
-msg.chapter.content = Nội dung
-msg.chapter.type = Loại
-msg.chapter.type.0 = Bản thô
-msg.chapter.type.1 = Bản convert
-msg.chapter.type.2 = Bản dịch
-msg.chapter.is_active = Đăng lên trang web
-error.chapter.not_found = Lỗi: Chương không tồn tại!
-
-msg.latest_updates = Truyện mới cập nhật
-
 error.404 = Lỗi: Trang bạn xem không tồn tại!
 
 msg.nodata = Không có dữ liệu
 msg.records_per_page = dòng/trang
 msg.datatables.sInfo = Hiển thị từ _START_ đến _END_ của _TOTAL_ dòng
 msg.datatables.sInfoFiltered = (lọc từ tổng cộng _MAX_ dòng)
+
+msg.dashboard = Dashboard

@@ -10,10 +10,15 @@ object ApplicationBuild extends Build {
 	)
 	
     val conf            = ConfigFactory.parseFile(new File("conf/application.conf")).resolve()
-    val appName         = "Truyen"
+    val appName         = "vngup-rtreports"
     val appVersion      = conf.getString("app.version")
-
-    val appDependencies = Seq(
+    
+    var _javaVersion = "1.6"
+    
+    val appDependenciesBase = Seq(
+        javaJdbc,
+        cache,
+        filters,
         "org.slf4j"             %  "log4j-over-slf4j"       % "1.7.7",
         "mysql"                 %  "mysql-connector-java"   % "5.1.29",
         "com.google.guava"      %  "guava"                  % "16.0.1",
@@ -22,34 +27,15 @@ object ApplicationBuild extends Build {
         "org.jodd"              %  "jodd-lagarto"           % "3.5.2",
         "com.ibm.icu"           %  "icu4j"                  % "53.1",
         "com.github.ddth"       %  "ddth-commons"           % "0.2.2.2",
-        "com.github.ddth"       % "spring-social-helper"    % "0.2.1",
-        "com.github.ddth"       %% "play-module-plommon"    % "0.5.1.2",
-        javaJdbc,
-        cache,
-        filters
+        "com.github.ddth"       %  "spring-social-helper"   % "0.2.1",
+        "com.github.ddth"       %  "ddth-tsc"               % "0.4.0.4",
+        "com.github.ddth"       %  "ddth-tsc-cassandra"     % "0.4.0.4",
+        "com.github.ddth"       %  "ddth-tsc-redis"         % "0.4.0.4",
+        "com.github.ddth"       %% "play-module-plommon"    % "0.5.1.2"
     )
-    
-    var _javaVersion = "1.6"
-    
+
     val moduleCommon = play.Project(
-        appName + "-common", appVersion, appDependencies, path = file("modules/common")
-    ).settings(
-        // Disable generating scaladoc
-        sources in doc in Compile := List(),
-        
-        // Custom Maven repository
-        resolvers += "Sonatype OSS repository" at "https://oss.sonatype.org/content/repositories/releases/",
-        
-        // Force compilation in java 1.6
-        javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
-    )
-      
-    val moduleWorker = play.Project(
-        appName + "-worker", appVersion, appDependencies, path = file("modules/worker")
-    ).dependsOn(
-        moduleCommon
-    ).aggregate(
-        moduleCommon
+        appName + "-common", appVersion, appDependenciesBase, path = file("modules/common")
     ).settings(
         // Disable generating scaladoc
         sources in doc in Compile := List(),
@@ -61,12 +47,13 @@ object ApplicationBuild extends Build {
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     )
     
-    val moduleAdmin = play.Project(
-        appName + "-admin", appVersion, appDependencies, path = file("modules/admin")
+    val appDepsPplogin = appDependenciesBase
+    val modulePplogin = play.Project(
+        appName + "-pplogin", appVersion, appDepsPplogin, path = file("modules/pplogin")
     ).dependsOn(
-        moduleCommon, moduleWorker
+        moduleCommon
     ).aggregate(
-        moduleCommon, moduleWorker
+        moduleCommon
     ).settings(
         // Disable generating scaladoc
         sources in doc in Compile := List(),
@@ -78,7 +65,7 @@ object ApplicationBuild extends Build {
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     )
 
-    val main = play.Project(appName, appVersion, appDependencies, path = file(".")).settings(
+    val main = play.Project(appName, appVersion, appDependenciesBase, path = file(".")).settings(
         // Disable generating scaladoc
         sources in doc in Compile := List(),
         
@@ -88,8 +75,8 @@ object ApplicationBuild extends Build {
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     ).dependsOn(
-        moduleCommon, moduleWorker, moduleAdmin
+        moduleCommon, modulePplogin
     ).aggregate(
-        moduleCommon, moduleWorker, moduleAdmin
+        moduleCommon, modulePplogin
     )
 }

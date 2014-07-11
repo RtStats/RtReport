@@ -61,7 +61,7 @@ doStart() {
         fi
     fi
     
-    RUN_CMD=($APP_HOME/bin/$APP_NAME -Dapp.home=$APP_HOME -Djava.awt.headless=true -Dconfig.file=$APP_HOME/conf/$APP_CONF -Dhttp.port=$APP_PORT -Dhttp.address=0.0.0.0 -Djava.net.preferIPv4Stack=true -J-server -mem $APP_MEM)
+    RUN_CMD=($APP_HOME/bin/$APP_NAME -Dapp.home=$APP_HOME -Djava.awt.headless=true -Dconfig.file=$APP_HOME/conf/$APP_CONF -Dlogger.file=$APP_HOME/conf/prod-application-logger.xml -Dhttp.port=$APP_PORT -Dhttp.address=0.0.0.0 -Djava.net.preferIPv4Stack=true -J-server -mem $APP_MEM)
 
     "${RUN_CMD[@]}" &
     disown $!

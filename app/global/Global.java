@@ -1,26 +1,29 @@
 package global;
 
+import global.common.Registry;
+
 import java.lang.reflect.Method;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import play.Application;
+import play.Configuration;
 import play.GlobalSettings;
 import play.Logger;
 import play.api.mvc.EssentialFilter;
 import play.filters.gzip.GzipFilter;
 import play.mvc.Action;
 import play.mvc.Http.Request;
-import truyen.worker.ControllerWorker;
-import truyen.worker.WorkerRegistry;
-import akka.actor.Cancellable;
+import vngup.rtreports.common.module.IModuleBootstrap;
 
 import com.github.ddth.plommon.bo.BaseDao;
 import com.github.ddth.plommon.utils.AkkaUtils;
+import com.github.ddth.plommon.utils.PlayAppUtils;
 
 public class Global extends GlobalSettings {
 
     /*
-     * Enable Gzip response
+     * Enable Gzip response.
      * 
      * @see play.GlobalSettings#filters()
      */
@@ -29,32 +32,26 @@ public class Global extends GlobalSettings {
         return new Class[] { GzipFilter.class };
     }
 
-    private Cancellable controllerWorker;
-
     @Override
     public void onStart(Application app) {
         super.onStart(app);
-        WorkerRegistry.initRegistry();
-        controllerWorker = AkkaUtils.schedule(ControllerWorker.class, 5, TimeUnit.SECONDS, 5,
-                TimeUnit.SECONDS, "");
+        try {
+            _init();
+        } catch (Exception e) {
+            Logger.error(e.getMessage(), e);
+            _destroy();
+            if (e instanceof RuntimeException) {
+                throw (RuntimeException) e;
+            } else {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
     public void onStop(Application app) {
         try {
-            WorkerRegistry.destroyRegistry();
-        } catch (Exception e) {
-            Logger.error(e.getMessage(), e);
-        }
-
-        try {
-            controllerWorker.cancel();
-        } catch (Exception e) {
-            Logger.error(e.getMessage(), e);
-        }
-
-        try {
-            AkkaUtils.actorSystem().shutdown();
+            _destroy();
         } catch (Exception e) {
             Logger.error(e.getMessage(), e);
         }
@@ -66,5 +63,52 @@ public class Global extends GlobalSettings {
     public Action<?> onRequest(Request request, Method method) {
         BaseDao.startProfiling();
         return super.onRequest(request, method);
+    }
+
+    private void _init() throws Exception {
+        Registry.init();
+
+        _initModules();
+    }
+
+    private void _destroy() {
+        try {
+            AkkaUtils.actorSystem().shutdown();
+        } catch (Exception e) {
+            Logger.error(e.getMessage(), e);
+        }
+
+        try {
+            Registry.destroy();
+        } catch (Exception e) {
+            Logger.error(e.getMessage(), e);
+        }
+    }
+
+    private void _initModules() throws Exception {
+        Configuration temp = PlayAppUtils.appConfig("application.modules");
+        Map<String, Object> moduleBootstraps = PlayAppUtils.appConfigMap(temp);
+        for (Entry<String, Object> entry : moduleBootstraps.entrySet()) {
+            String moduleName = entry.getKey();
+            String bootstrapClazz = entry.getValue().toString();
+            try {
+                __initModule(moduleName, bootstrapClazz);
+            } catch (Exception e) {
+                Logger.warn(e.getMessage(), e);
+            }
+        }
+    }
+
+    private void __initModule(String moduleName, String bootstrapClazz) throws Exception {
+        Logger.info("Boostraping module [" + moduleName + "] with bootstrap clazz ["
+                + bootstrapClazz + "]...");
+        Class<?> cl = Class.forName(bootstrapClazz);
+        if (!IModuleBootstrap.class.isAssignableFrom(cl)) {
+            throw new Exception(cl.getName() + " is not of type ["
+                    + IModuleBootstrap.class.getName() + "]!");
+        }
+        IModuleBootstrap bootstrap = (IModuleBootstrap) cl.newInstance();
+        Registry.registerModule(moduleName, bootstrap);
+        bootstrap.init();
     }
 }

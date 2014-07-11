@@ -16,7 +16,8 @@ public class UrlUtils {
         name = name.toLowerCase();
 
         String strId = "a" + author.getId() + "-" + name;
-        return controllers.routes.Application.author(strId).url();
+        return strId;
+        // return controllers.routes.Application.author(strId).url();
     }
 
     public static String url(BookBo book) {
@@ -27,7 +28,8 @@ public class UrlUtils {
         title = title.toLowerCase();
 
         String strId = "b" + book.getId() + "-" + title;
-        return controllers.routes.Application.book(strId).url();
+        return strId;
+        // return controllers.routes.Application.book(strId).url();
     }
 
     public static String url(ChapterBo chapter) {
@@ -40,7 +42,8 @@ public class UrlUtils {
         BookBo book = chapter.getBook();
 
         String strId = "b" + book.getId() + "-" + chapter.getIndex() + "-" + title;
-        return controllers.routes.Application.book(strId).url();
+        return strId;
+        // return controllers.routes.Application.book(strId).url();
     }
 
     public static String url(CategoryBo cat) {
@@ -51,6 +54,7 @@ public class UrlUtils {
         title = title.toLowerCase();
 
         String strId = "c" + cat.getId() + "-" + title;
-        return controllers.routes.Application.category(strId).url();
+        return strId;
+        // return controllers.routes.Application.category(strId).url();
     }
 }

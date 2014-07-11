@@ -3,12 +3,8 @@
 # ~~~~
 
 GET     /                           controllers.Application.index()
-GET     /$id<a[0-9]+-.+>            controllers.Application.author(id: String)
-GET     /$id<b[0-9]+-[0-9]+-.+>     controllers.Application.chapter(id: String)
-GET     /$id<b[0-9]+-.+>            controllers.Application.book(id: String)
-GET     /$id<c[0-9]+-.+>            controllers.Application.category(id: String)
 
--> /admin admin.Routes
+-> /pplogin pplogin.Routes
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
