@@ -17,6 +17,7 @@ public class ModuleController extends BaseController {
     private final static String SECTION = "pplogin.";
     public final static String VIEW_DASHBOARD = SECTION + "dashboard";
     public final static String VIEW_LOGIN_SUMMARY_RT = SECTION + "login_summary_rt";
+    public final static String VIEW_LOGIN_ACTIONID_RT = SECTION + "login_actionid_rt";
 
     private final static long LAGGING = 5 * 1000;
     private final static long DURATION = 24 * 1000;
@@ -103,6 +104,19 @@ public class ModuleController extends BaseController {
                 }
 
                 Html html = render(VIEW_LOGIN_SUMMARY_RT, xTimestamp, xTotal, xSuccessful, xFailed);
+                return ok(html);
+            }
+        });
+        return promise;
+    }
+
+    /*
+     * Handles GET:/loginActionIdRt
+     */
+    public static Promise<Result> loginActionIdRt() {
+        Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            public Result apply() throws Exception {
+                Html html = render(VIEW_LOGIN_ACTIONID_RT);
                 return ok(html);
             }
         });

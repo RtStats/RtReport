@@ -24,7 +24,7 @@ public class JsonController extends BaseController {
     private final static long DURATION = 24 * 1000;
 
     /*
-     * Handles GET:/jsonLoginSummary
+     * Handles GET:/jsonLoginSummaryRt
      */
     public static Promise<Result> jsonLoginSummaryRt() {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
@@ -74,6 +74,70 @@ public class JsonController extends BaseController {
                 seriFailed.put("data", dataFailed);
                 for (DataPoint dp : dpFailed) {
                     dataFailed.add(new long[] { dp.timestamp(), dp.value() });
+                }
+
+                return ok(Json.toJson(result));
+            }
+        });
+        return promise;
+    }
+
+    private final static int[] ACTION_ID_LIST = { 1, 0, 2, 1000, 1001, 2005, 3, 4, 5 };
+
+    private static String actionIdToStr(int actionId) {
+        switch (actionId) {
+        case 0:
+            return "Error";
+        case 1:
+            return "Ok";
+        case 2:
+            return "Failed";
+        case 1000:
+            return "InvalidAccount";
+        case 1001:
+            return "InvalidPassword";
+        case 2005:
+            return "WrongPassword";
+        case 3:
+            return "Banned";
+        case 4:
+            return "NoAccount";
+        case 5:
+            return "InvalidParam";
+        default:
+            return "_" + actionId;
+        }
+    }
+
+    /*
+     * Handles GET:/jsonLoginActionIdRt
+     */
+    public static Promise<Result> jsonLoginActionIdRt() {
+        Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            public Result apply() throws Exception {
+                long timestampEnd = System.currentTimeMillis() - LAGGING;
+                timestampEnd = timestampEnd - timestampEnd % 1000;
+                long timestampStart = timestampEnd - DURATION;
+
+                List<Object> result = new ArrayList<Object>();
+
+                ICounterFactory counterFactory = ModuleBootstrap.getCounterFactory();
+
+                for (int actionId : ACTION_ID_LIST) {
+                    String counterName = "login_action_" + actionId;
+                    ICounter counter = counterFactory.getCounter(counterName);
+                    DataPoint[] dpTotal = counter.getSeries(timestampStart, timestampEnd,
+                            ICounter.STEPS_1_SEC, DataPoint.Type.SUM);
+                    Map<String, Object> seriTotal = new HashMap<String, Object>();
+                    result.add(seriTotal);
+                    String _temp = actionIdToStr(actionId);
+                    seriTotal.put("id", _temp);
+                    seriTotal.put("name", _temp);
+                    List<long[]> dataTotal = new ArrayList<long[]>();
+                    seriTotal.put("data", dataTotal);
+                    for (DataPoint dp : dpTotal) {
+                        dataTotal.add(new long[] { dp.timestamp(), dp.value() });
+                    }
                 }
 
                 return ok(Json.toJson(result));

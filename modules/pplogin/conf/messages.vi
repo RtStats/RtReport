@@ -36,3 +36,4 @@ msg.datatables.sInfoFiltered = (lọc từ tổng cộng _MAX_ dòng)
 
 msg.dashboard = Dashboard
 msg.login_summary_rt = Rt - Login Summary
+msg.login_actionid_rt = Rt - Login by ActionId
