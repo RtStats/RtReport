@@ -45,7 +45,7 @@ public class ModuleBootstrap extends AbstractModuleBootstrap {
     }
 
     private void _initCounterFactory() {
-        String configKey = Play.isProd() ? "dev.redis_settings" : "prod.redis_settings";
+        String configKey = Play.isProd() ? "prod.redis_settings" : "dev.redis_settings";
         Config config = moduleConfig.getConfig(configKey);
         counterFactory = new RedisCounterFactory();
         String redisHost = config.getString("host");
