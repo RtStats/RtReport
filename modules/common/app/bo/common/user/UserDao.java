@@ -99,6 +99,9 @@ public class UserDao extends BaseMysqlDao {
      */
     @SuppressWarnings("unchecked")
     public static UsergroupBo getUsergroup(int id) {
+        if (true) {
+            return null;
+        }
         final String CACHE_KEY = cacheKeyUsergroup(id);
         Map<String, Object> dbRow = getFromCache(CACHE_KEY, Map.class);
         if (dbRow == null) {
@@ -121,6 +124,9 @@ public class UserDao extends BaseMysqlDao {
      */
     @SuppressWarnings("unchecked")
     public static UsergroupBo[] getAllUsergroups() {
+        if (true) {
+            return null;
+        }
         final String CACHE_KEY = cacheKeyAllUsergroups();
         List<Map<String, Object>> dbRows = getFromCache(CACHE_KEY, List.class);
         if (dbRows == null) {
@@ -206,6 +212,9 @@ public class UserDao extends BaseMysqlDao {
      */
     @SuppressWarnings("unchecked")
     public static UserBo getUserByEmail(String email) {
+        if (true) {
+            return null;
+        }
         final String CACHE_KEY = cacheKeyUserEmail(email);
         Map<String, Object> dbRow = getFromCache(CACHE_KEY, Map.class);
         if (dbRow == null) {
@@ -233,6 +242,9 @@ public class UserDao extends BaseMysqlDao {
      */
     @SuppressWarnings("unchecked")
     public static UserBo getUser(int id) {
+        if (true) {
+            return null;
+        }
         final String CACHE_KEY = cacheKeyUser(id);
         Map<String, Object> dbRow = getFromCache(CACHE_KEY, Map.class);
         if (dbRow == null) {

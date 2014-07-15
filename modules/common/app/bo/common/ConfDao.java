@@ -39,6 +39,9 @@ public class ConfDao extends BaseMysqlDao {
      * @return
      */
     public static void createOrUpdateConf(String confKey, String confValue) {
+        if (true) {
+            return;
+        }
         Connection conn = DB.getConnection(false);
         try {
             try {
@@ -115,6 +118,9 @@ public class ConfDao extends BaseMysqlDao {
      * @param confKey
      */
     public static void deleteConf(String confKey) {
+        if (true) {
+            return;
+        }
         final String[] COLUMNS = new String[] { "conf_key" };
         final Object[] VALUES = new Object[] { confKey };
         delete(TABLE_CONFIG, COLUMNS, VALUES);
@@ -129,6 +135,9 @@ public class ConfDao extends BaseMysqlDao {
      */
     @SuppressWarnings("unchecked")
     public static String getConf(String confKey) {
+        if (true) {
+            return null;
+        }
         final String CACHE_KEY = cacheKey(confKey);
         Map<String, Object> dbRow = getFromCache(CACHE_KEY, Map.class);
         if (dbRow == null) {
