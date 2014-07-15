@@ -15,12 +15,16 @@ _basedir=$(pwd -L)
 popd > /dev/null
 
 APP_HOME=$_basedir/..
-APP_NAME=truyen
+APP_NAME=vngup-rtreports
 APP_PID=$APP_HOME/$APP_NAME.pid
 
-APP_PORT=9000
-APP_MEM=64
-APP_CONF=application.conf
+DEFAULT_APP_PORT=9000
+DEFAULT_APP_MEM=256
+DEFAULT_APP_CONF=application.conf
+
+APP_PORT=$DEFAULT_APP_PORT
+APP_MEM=$DEFAULT_APP_MEM
+APP_CONF=$DEFAULT_APP_CONF
 
 isRunning() {
     local PID=$(cat "$1" 2>/dev/null) || return 1
@@ -79,9 +83,9 @@ usageAndExit() {
     echo "Usage: ${0##*/} <{start|stop}> [-m <JVM memory limit in mb>] [-p <web-based status port>] [-c <custom configuration file>]"
     echo "    stop : stop the server"
     echo "    start: start the server"
-    echo "       -m : JVM memory limit in mb (default 64)"
-    echo "       -p : Port for web-based status port (default 9000)"
-    echo "       -c : Custom configuration file, file is loaded under directory ./conf (default null.conf)"
+    echo "       -m : JVM memory limit in mb (default $DEFAULT_APP_MEM)"
+    echo "       -p : Port for web-based status port (default $DEFAULT_APP_PORT)"
+    echo "       -c : Custom configuration file, file is loaded under directory ./conf (default $DEFAULT_APP_CONF)"
     echo
     echo "Example: start server 64mb memory limit, with custom configuration file"
     echo "    ${0##*/} start -m 64 -c abc.conf"
