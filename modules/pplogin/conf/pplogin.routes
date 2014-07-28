@@ -4,8 +4,11 @@ GET     /dashboard                      controllers.pplogin.ModuleController.das
 GET     /loginSummaryRt                 controllers.pplogin.ModuleController.loginSummaryRt()
 GET     /jsonLoginSummaryRt             controllers.pplogin.JsonController.jsonLoginSummaryRt()
 
-GET     /loginActionIdRt                 controllers.pplogin.ModuleController.loginActionIdRt()
-GET     /jsonLoginActionIdRt             controllers.pplogin.JsonController.jsonLoginActionIdRt()
+GET     /loginActionIdRt                controllers.pplogin.ModuleController.loginActionIdRt()
+GET     /jsonLoginActionIdRt            controllers.pplogin.JsonController.jsonLoginActionIdRt()
+
+GET     /loginSummary                 	controllers.pplogin.ModuleController.loginSummary()
+GET     /jsonLoginSummary             	controllers.pplogin.JsonController.jsonLoginSummary()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                   controllers.pplogin.Assets.at(path="/public", file)

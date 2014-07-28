@@ -963,7 +963,7 @@
 
                 html += '<select class="minuteselect">';
 
-                for (i = 0; i < 60; i += this.timePickerIncrement) {
+                for (i = 0; i < 10; i += this.timePickerIncrement) {
                     var num = i;
                     if (num < 10)
                         num = '0' + num;

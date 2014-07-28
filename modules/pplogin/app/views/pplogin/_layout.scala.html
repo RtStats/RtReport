@@ -30,11 +30,26 @@
     <link rel='stylesheet' type='text/css' href='@controllers.pplogin.routes.Assets.at("avant-1.2.1/assets/plugins/codeprettifier/prettify.css")' />
     <link rel='stylesheet' type='text/css' href='@controllers.pplogin.routes.Assets.at("avant-1.2.1/assets/plugins/form-toggle/toggles.css")' />
     @for(css <- customCss){<link rel="stylesheet" href="@controllers.pplogin.routes.Assets.at(css)" />}
-    @*
     <style type="text/css">
     label {font-weight: bold;}
+    
+    .loading_img {
+    	display:    none;
+    	position:   fixed;
+    	z-index:    1000;
+    	top:        0;
+    	left:       0;
+    	height:     100%;
+    	width:      100%;
+    	background: rgba(255, 255, 255, .8) url('@controllers.pplogin.routes.Assets.at("images/loading.gif")') 50% 50% no-repeat;
+	}
+	body.loading {
+    	overflow: hidden;   
+	}
+	body.loading .loading_img {
+    	display: block;
+	}
     </style>
-    *@
     <script type='text/javascript' src='@controllers.pplogin.routes.Assets.at("avant-1.2.1/assets/js/jquery-1.10.2.min.js")'></script>
 </head>
 
@@ -187,10 +202,17 @@
     $(document).ready(function() {
         $('.popovers').popover({container: 'body', trigger: 'hover', placement: 'top'}); //bootstrap's popover
         $('.tooltips').tooltip(); //bootstrap's tooltip
+        
+        $body = $("body");
+        $(document).on({
+        	ajaxStart: function() { $body.addClass("loading");   },
+            ajaxStop: function() { $body.removeClass("loading"); }    
+        });
     });
     function _go(url) {
         document.location.href = url;
     }
     </script>
+    <div class="loading_img"></div>
 </body>
 </html>
