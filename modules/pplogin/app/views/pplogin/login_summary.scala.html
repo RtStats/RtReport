@@ -97,13 +97,11 @@ function _loadData() {
 }
     
 $(document).ready(function(){
-	$('#reporttime').daterangepicker({
-        timePicker: true,
-        timePickerIncrement: 60,
-        format: 'DD/MM/YYYY h:mm a'
-      }, function(start, end, label) {
-        console.log(start.toISOString(), end.toISOString(), label);
-      });
+	$body = $("body");
+    $(document).on({
+    	ajaxStart: function() { $body.addClass("loading");    },
+        ajaxStop : function() { $body.removeClass("loading"); }    
+    });
 	
     Highcharts.setOptions({
         global: {
@@ -175,16 +173,15 @@ $(document).ready(function(){
             enabled: true
         }
     });
-});
-$(document).ready(function() {
-    $('#reporttime').daterangepicker({
-      timePicker: true,
-      timePickerIncrement: 30,
-      format: 'MM/DD/YYYY h:mm A'
+    
+    $('#reporttime').daterangepicker({	
+        timePicker: true,
+        timePickerIncrement: 60,
+        format: 'MM/DD/YYYY h:mm A'
     }, function(start, end, label) {
-      console.log(start.toISOString(), end.toISOString(), label);
+    	console.log(start.toISOString(), end.toISOString(), label);
     });
- });
+});
 </script>   
  
 
