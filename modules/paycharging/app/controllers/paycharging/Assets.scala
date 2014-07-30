@@ -1,0 +1,2 @@
+package controllers.paycharging
+object Assets extends controllers.AssetsBuilder

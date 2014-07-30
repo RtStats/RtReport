@@ -1,0 +1,190 @@
+@(xTimestamp: Array[Long], xVND: Array[Long], xXu: Array[Long], xTransaction: Array[Long])(implicit lang: Lang)
+@import com.github.ddth.plommon.utils._
+@import play.mvc._
+@import vngup.rtreports.common._
+@_layout(
+	active   = "dashboard",
+	customJs = Array("highcharts-3.0.9/js/highcharts.js")
+){
+<div id="page-heading">
+    <ol class="breadcrumb">
+        <li><a href="@controllers.paycharging.routes.ModuleController.dashboard()">@Messages("msg.dashboard")</a></li>
+    </ol>
+</div>
+    
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            @defining(Controller.flash(controllers.paycharging.ModuleController.VIEW_DASHBOARD)){flashMsg =>
+                @if(flashMsg!=null && !flashMsg.equals("")){
+                    <div class="alert alert-info alert-dismissable">
+                        <i class="fa fa-info-circle"></i> @flashMsg
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="col-md-12">
+	        <div class="panel panel-warning">
+		        <div class="panel-heading"><h3 class="panel-title">@Messages("msg.charging.vnd")</h3></div>
+		        <div class="panel-body">
+		            <div class="container" style="width: 100%">
+		                <div id="_highcharts_vnd" style="width: 100%"></div>
+		            </div>
+		        </div>
+		    </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading"><h3 class="panel-title">@Messages("msg.charging.xu")</h3></div>
+                <div class="panel-body">
+                    <div class="container" style="width: 100%">
+                        <div id="_highcharts_xu" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h3 class="panel-title">@Messages("msg.charging.transaction")</h3></div>
+                <div class="panel-body">
+                    <div class="container" style="width: 100%">
+                        <div id="_highcharts_tranx" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<script type="text/javascript">
+var CHART_VND;
+var CHART_XU;
+var CHART_TRANX;
+var DATA_VND;
+var DATA_XU;
+var DATA_TRANX;
+
+$(document).ready(function(){
+    Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
+    
+    DATA_VND = [{
+        id  : 'VND',
+        name: 'VND',
+        data: [@defining(xTimestamp.length){n => @for(i <- 0 to (n-1)){[@xTimestamp(i),@xVND(i)],}}]
+    }];
+    DATA_XU = [{
+        id  : 'Xu',
+        name: 'Xu',
+        data: [@defining(xTimestamp.length){n => @for(i <- 0 to (n-1)){[@xTimestamp(i),@xXu(i)],}}]
+    }];
+    DATA_TRANX = [{
+        id  : 'Tranx',
+        name: 'Tranx',
+        data: [@defining(xTimestamp.length){n => @for(i <- 0 to (n-1)){[@xTimestamp(i),@xTransaction(i)],}}]
+    }];
+    OPT_XAXIS = {
+            type: 'datetime',
+            minTickInterval: 0.5,
+            dateTimeLabelFormats: {
+                millisecond: '%H:%M:%S.%L',
+                second: '%H:%M:%S',
+                minute: '%H:%M',
+                hour: '%H:%M',
+                day: '%d-%m',
+                week: '%e. %b',
+                month: '%b \'%y',
+                year: '%Y'
+            }
+        };
+    OPT_YAXIS = {
+            title          : {text: 'VND'},
+            minTickInterval: 1,
+            min            : 0
+        };
+    OPT_CHART_SPLINE = {
+                lineWidth: 2,
+                marker: {
+                    enabled: false
+                },
+            };
+    OPT_CHART_COLUMN = {
+                //pointPadding: 2,
+                //borderWidth : 2,
+                //groupPadding: 2,
+                shadow      : true
+            };
+    
+    CHART_VND = new Highcharts.Chart({
+        chart: {
+            renderTo: '_highcharts_vnd',
+            type    : 'column',
+        },
+        title: { text: null, style: {display: 'none'} },
+        plotOptions: { column: OPT_CHART_COLUMN },
+        xAxis: OPT_XAXIS,
+        yAxis: OPT_YAXIS,
+        series: DATA_VND,
+        colors: ['#ffd700'],
+        tooltip: {
+            formatter: function() {
+                return '<b>'+ this.series.name + ': '
+                    + Highcharts.numberFormat(this.y, 0) + '</b><br/>'
+                    + '<small>' + Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x) +'</small>';
+            }
+        }
+    });
+    CHART_XU = new Highcharts.Chart({
+        chart: {
+            renderTo: '_highcharts_xu',
+            type    : 'column',
+        },
+        title: { text: null, style: {display: 'none'} },
+        plotOptions: { column: OPT_CHART_COLUMN },
+        xAxis: OPT_XAXIS,
+        yAxis: OPT_YAXIS,
+        series: DATA_XU,
+        colors: ['#009010'],
+        tooltip: {
+            formatter: function() {
+                return '<b>'+ this.series.name + ': '
+                    + Highcharts.numberFormat(this.y, 0) + '</b><br/>'
+                    + '<small>' + Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x) +'</small>';
+            }
+        }
+    });
+    CHART_TRANX = new Highcharts.Chart({
+        chart: {
+            renderTo: '_highcharts_tranx',
+            type    : 'spline',
+        },
+        plotOptions: { spline: OPT_CHART_SPLINE },
+        title: { text: null, style: {display: 'none'} },
+        xAxis: OPT_XAXIS,
+        yAxis: OPT_YAXIS,
+        series: DATA_TRANX,
+        colors: ['#0000f0'],
+        tooltip: {
+            formatter: function() {
+                return '<b>'+ this.series.name + ': '
+                    + Highcharts.numberFormat(this.y, 0) + '</b><br/>'
+                    + '<small>' + Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x) +'</small>';
+            }
+        }
+    });
+});
+</script>   
+}

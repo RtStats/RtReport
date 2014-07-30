@@ -1,0 +1,14 @@
+GET     /                               controllers.common.BaseController.redirectTo(url="/paycharging/dashboard")
+GET     /dashboard                      controllers.paycharging.ModuleController.dashboard()
+
+GET     /loginSummaryRt                 controllers.paycharging.ModuleController.loginSummaryRt()
+GET     /jsonLoginSummaryRt             controllers.paycharging.JsonController.jsonLoginSummaryRt()
+
+GET     /loginActionIdRt                controllers.paycharging.ModuleController.loginActionIdRt()
+GET     /jsonLoginActionIdRt            controllers.paycharging.JsonController.jsonLoginActionIdRt()
+
+GET     /loginSummary                 	controllers.paycharging.ModuleController.loginSummary()
+GET     /jsonLoginSummary             	controllers.paycharging.JsonController.jsonLoginSummary()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                   controllers.paycharging.Assets.at(path="/public", file)

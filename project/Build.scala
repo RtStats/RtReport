@@ -13,7 +13,7 @@ object ApplicationBuild extends Build {
     val appName         = "vngup-rtreports"
     val appVersion      = conf.getString("app.version")
     
-    var _javaVersion = "1.6"
+    val _javaVersion = "1.6"
     
     val appDependenciesBase = Seq(
         javaJdbc,
@@ -28,9 +28,9 @@ object ApplicationBuild extends Build {
         "com.ibm.icu"           %  "icu4j"                  % "53.1",
         "com.github.ddth"       %  "ddth-commons"           % "0.2.2.2",
         "com.github.ddth"       %  "spring-social-helper"   % "0.2.1",
-        "com.github.ddth"       %  "ddth-tsc"               % "0.4.0.4",
-        "com.github.ddth"       %  "ddth-tsc-cassandra"     % "0.4.0.4",
-        "com.github.ddth"       %  "ddth-tsc-redis"         % "0.4.0.4",
+        "com.github.ddth"       %  "ddth-tsc"               % "0.4.2",
+        "com.github.ddth"       %  "ddth-tsc-cassandra"     % "0.4.2",
+        "com.github.ddth"       %  "ddth-tsc-redis"         % "0.4.2",
         "com.github.ddth"       %% "play-module-plommon"    % "0.5.1.2"
     )
 
@@ -64,6 +64,24 @@ object ApplicationBuild extends Build {
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     )
+    
+    val appDepsPayCharging = appDependenciesBase
+    val modulePayCharging = play.Project(
+        appName + "-paycharging", appVersion, appDepsPplogin, path = file("modules/paycharging")
+    ).dependsOn(
+        moduleCommon
+    ).aggregate(
+        moduleCommon
+    ).settings(
+        // Disable generating scaladoc
+        sources in doc in Compile := List(),
+        
+        // Custom Maven repository
+        resolvers += "Sonatype OSS repository" at "https://oss.sonatype.org/content/repositories/releases/",
+        
+        // Force compilation in java 1.6
+        javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
+    )
 
     val main = play.Project(appName, appVersion, appDependenciesBase, path = file(".")).settings(
         // Disable generating scaladoc
@@ -75,8 +93,8 @@ object ApplicationBuild extends Build {
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     ).dependsOn(
-        moduleCommon, modulePplogin
+        moduleCommon, modulePplogin, modulePayCharging
     ).aggregate(
-        moduleCommon, modulePplogin
+        moduleCommon, modulePplogin, modulePayCharging
     )
 }
