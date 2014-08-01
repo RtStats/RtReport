@@ -1,16 +1,20 @@
 package global.common;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import play.Logger;
 import play.Play;
+import utils.common.SiteUtils;
 import vngup.rtreports.common.MenuItem;
 import vngup.rtreports.common.MenuItemComparator;
 import vngup.rtreports.common.module.IModuleBootstrap;
+import bo.common.SiteDao;
 
 public class Registry {
 
@@ -58,7 +62,18 @@ public class Registry {
     }
 
     public static MenuItem[] getMenuBarItems() {
-        return menuBarItemArr != null ? menuBarItemArr : MenuItem.EMPTY_ARRAY;
+        String siteName = SiteUtils.extractSiteName();
+        Map<String, Object> siteConfig = SiteDao.siteConfig(siteName);
+
+        List<MenuItem> result = new ArrayList<MenuItem>();
+        if (menuBarItemArr != null) {
+            for (MenuItem menuItem : menuBarItemArr) {
+                if (SiteUtils.isModuleVisible(menuItem.id, siteConfig)) {
+                    result.add(menuItem);
+                }
+            }
+        }
+        return result.toArray(MenuItem.EMPTY_ARRAY);
     }
 
     /**
