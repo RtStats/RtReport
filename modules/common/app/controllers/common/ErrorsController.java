@@ -10,27 +10,9 @@ import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import compisitions.common.SiteCheck;
+public class ErrorsController extends Controller {
 
-@SiteCheck
-public class BaseController extends Controller {
-
-    /**
-     * Redirects to a url.
-     * 
-     * @param url
-     * @return
-     */
-    public static Promise<Result> redirectTo(final String url) {
-        Promise<Result> promise = Promise.promise(new Function0<Result>() {
-            public Result apply() throws Exception {
-                return redirect(url);
-            }
-        });
-        return promise;
-    }
-
-    protected static Html render(String view, Object... params) throws InstantiationException,
+    private static Html render(String view, Object... params) throws InstantiationException,
             IllegalAccessException, ClassNotFoundException, SecurityException,
             NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
         String clazzName = "views.html." + view;
@@ -50,5 +32,29 @@ public class BaseController extends Controller {
             }
         }
         return null;
+    }
+
+    public static Promise<Result> error404() {
+        Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            public Result apply() throws Exception {
+                return ok("Page not found!");
+                // Html html = render(VIEW_DASHBOARD, xTimestamp, xVND, xXu,
+                // xTransaction);
+                // return ok(html);
+            }
+        });
+        return promise;
+    }
+
+    public static Promise<Result> error403() {
+        Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            public Result apply() throws Exception {
+                return ok("Access denied!");
+                // Html html = render(VIEW_DASHBOARD, xTimestamp, xVND, xXu,
+                // xTransaction);
+                // return ok(html);
+            }
+        });
+        return promise;
     }
 }

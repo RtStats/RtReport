@@ -31,7 +31,7 @@ object ApplicationBuild extends Build {
         "com.github.ddth"       %  "ddth-tsc"               % "0.4.2",
         "com.github.ddth"       %  "ddth-tsc-cassandra"     % "0.4.2",
         "com.github.ddth"       %  "ddth-tsc-redis"         % "0.4.2",
-        "com.github.ddth"       %% "play-module-plommon"    % "0.5.1.2"
+        "com.github.ddth"       %% "play-module-plommon"    % "0.5.1.5"
     )
 
     val moduleCommon = play.Project(

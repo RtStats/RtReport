@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import play.Logger;
+import play.Play;
 import vngup.rtreports.common.MenuItem;
 import vngup.rtreports.common.MenuItemComparator;
 import vngup.rtreports.common.module.IModuleBootstrap;
@@ -17,6 +18,10 @@ public class Registry {
 
     private final static Map<String, MenuItem> menuBarRegistry = new HashMap<String, MenuItem>();
     private static MenuItem[] menuBarItemArr;
+
+    public static String datasourceName() {
+        return Play.isProd() ? "prod" : "dev";
+    }
 
     public static void init() {
         menuBarRegistry.clear();

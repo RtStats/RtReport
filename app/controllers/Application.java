@@ -1,8 +1,12 @@
 package controllers;
 
+import java.util.Map;
+
 import play.libs.F.Function0;
 import play.libs.F.Promise;
 import play.mvc.Result;
+import utils.Utils;
+import bo.common.SiteDao;
 import controllers.common.BaseController;
 
 public class Application extends BaseController {
@@ -22,4 +26,17 @@ public class Application extends BaseController {
         return promise;
     }
 
+    /*
+     * Handles GET:/qnd
+     */
+    public static Promise<Result> qnd() {
+        Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            public Result apply() throws Exception {
+                String site = Utils.getSiteName();
+                Map<String, Object> siteConfig = SiteDao.siteConfig(site);
+                return ok(siteConfig != null ? siteConfig.toString() : "null");
+            }
+        });
+        return promise;
+    }
 }

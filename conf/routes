@@ -3,7 +3,9 @@
 # ~~~~
 
 GET     /                           controllers.Application.index()
+GET     /qnd                        controllers.Application.qnd()
 
+-> /common      common.Routes
 -> /pplogin     pplogin.Routes
 -> /paycharging paycharging.Routes
 
