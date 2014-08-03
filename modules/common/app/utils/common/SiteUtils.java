@@ -1,7 +1,5 @@
 package utils.common;
 
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,9 +7,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import play.mvc.Http.Request;
-import bo.common.SiteDao;
 
-import com.github.ddth.commons.utils.DPathUtils;
 import com.github.ddth.plommon.utils.PlayAppUtils;
 
 public class SiteUtils {
@@ -67,14 +63,5 @@ public class SiteUtils {
         String host = PlayAppUtils.siteDomain();
         Matcher matcher = PATTERN.matcher(host);
         return matcher.find() ? matcher.group(1) : "";
-    }
-
-    @SuppressWarnings("unchecked")
-    public static boolean isModuleVisible(String moduleName, Map<String, Object> siteConfig) {
-        List<String> moduleList = DPathUtils.getValue(siteConfig, SiteDao.CONF_MODULES, List.class);
-        if (moduleList == null || moduleList.size() == 0) {
-            return false;
-        }
-        return moduleList.contains("*") || moduleList.contains(moduleName);
     }
 }

@@ -14,7 +14,9 @@ import utils.common.SiteUtils;
 import vngup.rtreports.common.MenuItem;
 import vngup.rtreports.common.MenuItemComparator;
 import vngup.rtreports.common.module.IModuleBootstrap;
-import bo.common.SiteDao;
+import bo.common.auth.IAuthenticationService;
+import bo.common.site.SiteBo;
+import bo.common.site.SiteDao;
 
 public class Registry {
 
@@ -22,6 +24,8 @@ public class Registry {
 
     private final static Map<String, MenuItem> menuBarRegistry = new HashMap<String, MenuItem>();
     private static MenuItem[] menuBarItemArr;
+
+    private static IAuthenticationService authenticationService;
 
     public static String datasourceName() {
         return Play.isProd() ? "prod" : "dev";
@@ -45,6 +49,14 @@ public class Registry {
         }
     }
 
+    public static IAuthenticationService getAuthenticationService() {
+        return authenticationService;
+    }
+
+    public static void registerAuthenticationService(IAuthenticationService authenticationService) {
+        Registry.authenticationService = authenticationService;
+    }
+
     public static void addMenuBarItem(MenuItem menuItem) {
         menuBarRegistry.put(menuItem.id, menuItem);
         menuBarItemArr = menuBarRegistry.values().toArray(MenuItem.EMPTY_ARRAY);
@@ -63,12 +75,11 @@ public class Registry {
 
     public static MenuItem[] getMenuBarItems() {
         String siteName = SiteUtils.extractSiteName();
-        Map<String, Object> siteConfig = SiteDao.siteConfig(siteName);
-
+        SiteBo site = SiteDao.getSite(siteName);
         List<MenuItem> result = new ArrayList<MenuItem>();
         if (menuBarItemArr != null) {
             for (MenuItem menuItem : menuBarItemArr) {
-                if (SiteUtils.isModuleVisible(menuItem.id, siteConfig)) {
+                if (site != null && site.isModuleVisible(menuItem.id)) {
                     result.add(menuItem);
                 }
             }

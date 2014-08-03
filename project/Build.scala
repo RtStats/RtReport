@@ -34,8 +34,12 @@ object ApplicationBuild extends Build {
         "com.github.ddth"       %% "play-module-plommon"    % "0.5.1.5"
     )
 
+    val appDepsCommon = appDependenciesBase ++ Seq(
+        "org.springframework.security" % "spring-security-core" % "3.2.4.RELEASE",
+        "org.springframework.security" % "spring-security-ldap" % "3.2.4.RELEASE"
+    )
     val moduleCommon = play.Project(
-        appName + "-common", appVersion, appDependenciesBase, path = file("modules/common")
+        appName + "-common", appVersion, appDepsCommon, path = file("modules/common")
     ).settings(
         // Disable generating scaladoc
         sources in doc in Compile := List(),

@@ -1,5 +1,6 @@
 package utils.common;
 
+import global.common.Registry;
 import bo.common.user.UserBo;
 
 import com.github.ddth.commons.utils.HashUtils;
@@ -25,7 +26,6 @@ public class AuthUtils {
         if (user == null) {
             return false;
         }
-        String encryptedPassword = encryptPassword(user, password);
-        return user.getPassword().equals(encryptedPassword);
+        return Registry.getAuthenticationService().authenticate(user, password);
     }
 }

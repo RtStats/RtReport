@@ -8,3 +8,14 @@ CREATE TABLE config_site (
  ) WITH COMPACT STORAGE;
 INSERT INTO config_site (id, key, value) VALUES ('localhost', 'modules', '["*"]');
 INSERT INTO config_site (id, key, value) VALUES ('fv-rtreports', 'modules', '["paycharging"]');
+
+CREATE TABLE config_user (
+    id                  text,
+    key                 text,
+    value               text,
+    PRIMARY KEY(id,key)
+ ) WITH COMPACT STORAGE;
+INSERT INTO config_user (id, key, value) VALUES ('thanhnb', 'email', '"thanhnb@vng.com.vn"');
+INSERT INTO config_user (id, key, value) VALUES ('thanhnb', 'groups', '["superadmin"]');
+INSERT INTO config_user (id, key, value) VALUES ('thanhnb', 'sites', '["*"]');
+INSERT INTO config_user (id, key, value) VALUES ('thanhnb', 'modules', '["*"]');

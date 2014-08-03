@@ -18,13 +18,15 @@ msg.last = Cuối
 
 msg.signin = Đăng nhập
 msg.signin.info = Vui lòng đăng nhập
+msg.signin.facebook = Đăng nhập với tài khoản Facebook
+msg.signin.ad = Đăng nhập với tài khoản email công ty! Vui lòng liên hệ team dự án để được cấp quyền đăng nhập.
 msg.signup = Đăng ký
 msg.signout = Đăng xuất
-msg.signin.facebook = Đăng nhập với tài khoản Facebook
 error.signin.facebook = Lỗi: Tài khoản Facebook của bạn chưa được đăng ký với hệ thống!
-error.signin.failed = Lỗi: Email và/hoặc Mật mã không khớp!
+error.signin.failed = Đăng nhập không thành công! Sai mật mã hoặc tài khoản của bạn chưa được đăng ký với hệ thống.
 
 msg.user.email = Email
+msg.user.username = Tên đăng nhập
 msg.user.password = Mật mã
 
 error.404 = Lỗi: Trang bạn xem không tồn tại!

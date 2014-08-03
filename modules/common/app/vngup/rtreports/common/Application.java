@@ -1,6 +1,5 @@
 package vngup.rtreports.common;
 
-import bo.common.ConfDao;
 import bo.common.user.UserBo;
 import bo.common.user.UserDao;
 
@@ -17,33 +16,33 @@ public class Application {
      * @return
      */
     public static UserBo currentUser() {
-        Object userId = SessionUtils.getSession(Constants.SESSION_USER_ID, true);
-        UserBo user = userId != null ? UserDao.getUser(Integer.parseInt(userId.toString())) : null;
+        Object username = SessionUtils.getSession(Constants.SESSION_USER, true);
+        UserBo user = username != null ? UserDao.getUser(username.toString()) : null;
         return user;
     }
 
     public static void logout() {
-        SessionUtils.removeSession(Constants.SESSION_USER_ID);
+        SessionUtils.removeSession(Constants.SESSION_USER);
     }
 
     public static void login(UserBo user) {
-        login(user.getId());
+        login(user.getUsername());
     }
 
-    private static void login(int userId) {
-        SessionUtils.setSession(Constants.SESSION_USER_ID, userId, 7 * 24 * 3600);
+    private static void login(String username) {
+        SessionUtils.setSession(Constants.SESSION_USER, username, 24 * 3600);
     }
 
-    public static String appConfig(String key) {
-        try {
-            return ConfDao.getConf(key);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static boolean appConfigAsBoolean(String key) {
-        return ConfDao.getConfAsBoolean(key);
-    }
+    // public static String appConfig(String key) {
+    // try {
+    // return ConfDao.getConf(key);
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // throw new RuntimeException(e);
+    // }
+    // }
+    //
+    // public static boolean appConfigAsBoolean(String key) {
+    // return ConfDao.getConfAsBoolean(key);
+    // }
 }

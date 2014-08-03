@@ -15,6 +15,7 @@ import play.filters.gzip.GzipFilter;
 import play.mvc.Action;
 import play.mvc.Http.Request;
 import vngup.rtreports.common.module.IModuleBootstrap;
+import bo.common.auth.IAuthenticationService;
 
 import com.github.ddth.plommon.bo.BaseDao;
 import com.github.ddth.plommon.utils.AkkaUtils;
@@ -68,6 +69,8 @@ public class Global extends GlobalSettings {
     private void _init() throws Exception {
         Registry.init();
 
+        _initAuthenticationService();
+
         _initModules();
     }
 
@@ -83,6 +86,14 @@ public class Global extends GlobalSettings {
         } catch (Exception e) {
             Logger.error(e.getMessage(), e);
         }
+    }
+
+    private void _initAuthenticationService() throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException {
+        String clazz = PlayAppUtils.appConfigString("application.auth_service");
+        IAuthenticationService authService = (IAuthenticationService) Class.forName(clazz)
+                .newInstance();
+        Registry.registerAuthenticationService(authService);
     }
 
     private void _initModules() throws Exception {

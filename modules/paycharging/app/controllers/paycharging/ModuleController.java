@@ -16,9 +16,9 @@ import com.github.ddth.tsc.DataPoint;
 import com.github.ddth.tsc.ICounter;
 import com.github.ddth.tsc.ICounterFactory;
 
-import controllers.common.BaseController;
+import controllers.common.AuthRequiredController;
 
-public class ModuleController extends BaseController {
+public class ModuleController extends AuthRequiredController {
 
     private final static String SECTION = "paycharging.";
     public final static String VIEW_DASHBOARD = SECTION + "dashboard";

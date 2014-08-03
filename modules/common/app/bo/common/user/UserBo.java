@@ -1,69 +1,73 @@
 package bo.common.user;
 
-import java.util.Date;
+import java.util.List;
+
+import vngup.rtreports.common.Constants;
 
 import com.github.ddth.plommon.bo.BaseBo;
 
 public class UserBo extends BaseBo {
-    /* virtual db columns */
-    public final static String[] COL_ID = { "uid", "user_id" };
-    public final static String[] COL_EMAIL = { "uemail", "user_email" };
-    public final static String[] COL_DISPLAY_NAME = { "display_name", "display_name" };
-    public final static String[] COL_PASSWORD = { "upassword", "user_password" };
-    public final static String[] COL_GROUP_ID = { "group_id", "group_id" };
-    public final static String[] COL_TIMESTAMP_CREATE = { "timestamp_create", "timestamp_create" };
 
-    public UsergroupBo getGroup() {
-        return UserDao.getUsergroup(getGroupId());
+    public final static String COL_USERNAME = "username";
+    public final static String COL_EMAIL = "email";
+    public final static String COL_PASSWORD = "password";
+    public final static String COL_GROUPS = "groups";
+    public final static String COL_SITES = "sites";
+    public final static String COL_MODULES = "modules";
+
+    public String getId() {
+        return getUsername();
     }
 
-    public int getId() {
-        Integer result = getAttribute(COL_ID[1], Integer.class);
-        return result != null ? result.intValue() : 0;
-    }
-
-    public UserBo setId(int id) {
-        return (UserBo) setAttribute(COL_ID[1], id);
-    }
-
-    public String getPassword() {
-        return getAttribute(COL_PASSWORD[1], String.class);
-    }
-
-    public UserBo setPassword(String password) {
-        return (UserBo) setAttribute(COL_PASSWORD[1], password);
+    public String getUsername() {
+        return getAttribute(COL_USERNAME, String.class);
     }
 
     public String getEmail() {
-        return getAttribute(COL_EMAIL[1], String.class);
+        return getAttribute(COL_EMAIL, String.class);
     }
 
-    public UserBo setEmail(String email) {
-        return (UserBo) setAttribute(COL_EMAIL[1], email);
+    public String getPassword() {
+        return getAttribute(COL_PASSWORD, String.class);
     }
 
-    public String getDisplayName() {
-        return getAttribute(COL_DISPLAY_NAME[1], String.class);
+    @SuppressWarnings("unchecked")
+    public List<String> getGroups() {
+        return getAttribute(COL_GROUPS, List.class);
     }
 
-    public UserBo setDisplayName(String displayName) {
-        return (UserBo) setAttribute(COL_DISPLAY_NAME[1], displayName);
+    @SuppressWarnings("unchecked")
+    public List<String> getSites() {
+        return getAttribute(COL_SITES, List.class);
     }
 
-    public int getGroupId() {
-        Integer result = getAttribute(COL_GROUP_ID[1], Integer.class);
-        return result != null ? result.intValue() : 0;
+    @SuppressWarnings("unchecked")
+    public List<String> getModules() {
+        return getAttribute(COL_MODULES, List.class);
     }
 
-    public UserBo setGroupId(int groupId) {
-        return (UserBo) setAttribute(COL_GROUP_ID[1], groupId);
+    public boolean isInGroup(String groupName) {
+        List<String> groupList = getGroups();
+        return groupList != null && groupList.contains(groupName);
     }
 
-    public Date getTimestampCreate() {
-        return getAttribute(COL_TIMESTAMP_CREATE[1], Date.class);
+    public boolean isSuperAdmin() {
+        return isInGroup(Constants.USERGROUP_SUPERADMIN);
     }
 
-    public UserBo setTimestampCreate(Date timestamp) {
-        return (UserBo) setAttribute(COL_TIMESTAMP_CREATE[1], timestamp);
+    public boolean canAccessSite(String siteName) {
+        if (isSuperAdmin()) {
+            return true;
+        }
+        List<String> siteList = getSites();
+        return siteList != null && siteList.contains(siteList);
+    }
+
+    public boolean canAccessModule(String moduleName) {
+        if (isSuperAdmin()) {
+            return true;
+        }
+        List<String> moduleList = getModules();
+        return moduleList != null && moduleList.contains(moduleName);
     }
 }

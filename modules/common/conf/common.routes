@@ -1,5 +1,7 @@
-GET     /404                            controllers.common.ErrorsController.error404()
-GET     /403                            controllers.common.ErrorsController.error403()
+GET     /404                            controllers.common.CommonController.error404()
+GET     /403                            controllers.common.CommonController.error403()
+GET     /login                          controllers.common.CommonController.login(returnUrl: String?=null)
+POST    /login                          controllers.common.CommonController.loginSubmit(returnUrl: String?=null)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                   controllers.common.Assets.at(path="/public", file)
