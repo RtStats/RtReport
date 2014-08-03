@@ -17,5 +17,3 @@ CREATE TABLE config_user (
  ) WITH COMPACT STORAGE;
 INSERT INTO config_user (id, key, value) VALUES ('thanhnb', 'email', '"thanhnb@vng.com.vn"');
 INSERT INTO config_user (id, key, value) VALUES ('thanhnb', 'groups', '["superadmin"]');
-INSERT INTO config_user (id, key, value) VALUES ('thanhnb', 'sites', '["*"]');
-INSERT INTO config_user (id, key, value) VALUES ('thanhnb', 'modules', '["*"]');
