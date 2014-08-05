@@ -1,0 +1,43 @@
+@(implicit lang: Lang)
+@import global.common._
+@import play.mvc._
+@import com.github.ddth.plommon.utils._
+@import vngup.rtreports.common._
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>404 | @PlayAppUtils.appConfigString("app.name")</title>   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="@PlayAppUtils.appConfigString("app.name")" />
+
+    <link rel="stylesheet" href="@controllers.common.routes.Assets.at("bootstrap/css/bootstrap.min.css")" />
+    <link rel="stylesheet" href="@controllers.common.routes.Assets.at("font-awesome-4.1.0/css/font-awesome.min.css")" />
+    <script type='text/javascript' src='@controllers.common.routes.Assets.at("bootstrap/js/jquery.min.js")'></script>
+    <script type='text/javascript' src='@controllers.common.routes.Assets.at("bootstrap/js/bootstrap.min.js")'></script>
+</head>
+
+<body class="">
+    <div class="container">
+        <div style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">      
+	        <div class="panel panel-warning">
+	            <div class="panel-heading">
+	                <h3 class="panel-title">Page not found!</h3>
+	            </div>            
+			    <div class="panel-body">
+			        <h3>Available modules:</h3>
+			        <ul>
+			            @for(menuItem <- Registry.getMenuBarItems()){
+			                <li>
+			                    <a href="@menuItem.url">@menuItem.title</a>
+			                    <br/><small>@menuItem.description</small>
+			                </li>
+			            }
+			        </ul>
+			    </div>
+			</div>
+        </div>
+    </div>
+</body>
+</html>

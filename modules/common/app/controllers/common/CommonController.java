@@ -14,14 +14,14 @@ public class CommonController extends BaseController {
 
     private final static String SECTION = "common.";
     public final static String VIEW_LOGIN = SECTION + "login";
+    public final static String VIEW_EROR_404 = SECTION + "error_404";
+    public final static String VIEW_EROR_403 = SECTION + "error_403";
 
     public static Promise<Result> error404() {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
-                return ok("Page not found!");
-                // Html html = render(VIEW_DASHBOARD, xTimestamp, xVND, xXu,
-                // xTransaction);
-                // return ok(html);
+                Html html = render(VIEW_EROR_404);
+                return ok(html);
             }
         });
         return promise;
@@ -30,10 +30,8 @@ public class CommonController extends BaseController {
     public static Promise<Result> error403() {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
-                return ok("Access denied!");
-                // Html html = render(VIEW_DASHBOARD, xTimestamp, xVND, xXu,
-                // xTransaction);
-                // return ok(html);
+                Html html = render(VIEW_EROR_403);
+                return ok(html);
             }
         });
         return promise;

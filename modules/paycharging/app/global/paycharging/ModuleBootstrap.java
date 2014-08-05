@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
 import play.Play;
+import play.i18n.Lang;
+import play.i18n.Messages;
 import vngup.rtreports.common.MenuItem;
 import vngup.rtreports.common.module.AbstractModuleBootstrap;
 
@@ -17,11 +19,6 @@ import com.typesafe.config.Config;
 import controllers.paycharging.ModuleController;
 
 public class ModuleBootstrap extends AbstractModuleBootstrap {
-
-    // /*
-    // * TODO: hardcode for product FV!!!
-    // */
-    // public final static String PRODUCT_ID = "9K";
 
     public final static String MODULE_ID = "paycharging";
 
@@ -51,9 +48,11 @@ public class ModuleBootstrap extends AbstractModuleBootstrap {
     }
 
     private void _registerMenu() {
+        Lang lang = Lang.forCode("vi");
         String url = controllers.paycharging.routes.ModuleController.dashboard(
                 ModuleController.PERIOD_HOUR).url();
-        MenuItem menuBarItem = new MenuItem(MODULE_ID, "PayCharging", url);
+        MenuItem menuBarItem = new MenuItem(MODULE_ID, Messages.get(lang, "msg.paycharging.title"),
+                url, Messages.get(lang, "msg.paycharging.desc"));
         Registry.addMenuBarItem(menuBarItem);
     }
 

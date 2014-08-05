@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
 import play.Play;
+import play.i18n.Messages;
 import vngup.rtreports.common.MenuItem;
 import vngup.rtreports.common.module.AbstractModuleBootstrap;
 
@@ -45,7 +46,8 @@ public class ModuleBootstrap extends AbstractModuleBootstrap {
 
     private void _registerMenu() {
         String url = controllers.pplogin.routes.ModuleController.dashboard().url();
-        MenuItem menuBarItem = new MenuItem(MODULE_ID, "Passport Login", url);
+        MenuItem menuBarItem = new MenuItem(MODULE_ID, Messages.get("msg.pplogin.title"), url,
+                Messages.get("msg.pplogin.desc"));
         Registry.addMenuBarItem(menuBarItem);
     }
 
