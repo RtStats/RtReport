@@ -14,12 +14,14 @@ import com.github.ddth.tsc.cassandra.CassandraCounterFactory;
 import com.github.ddth.tsc.redis.RedisCounterFactory;
 import com.typesafe.config.Config;
 
+import controllers.paycharging.ModuleController;
+
 public class ModuleBootstrap extends AbstractModuleBootstrap {
 
-    /*
-     * TODO: hardcode for product FV!!!
-     */
-    public final static String PRODUCT_ID = "FV";
+    // /*
+    // * TODO: hardcode for product FV!!!
+    // */
+    // public final static String PRODUCT_ID = "9K";
 
     public final static String MODULE_ID = "paycharging";
 
@@ -49,7 +51,8 @@ public class ModuleBootstrap extends AbstractModuleBootstrap {
     }
 
     private void _registerMenu() {
-        String url = controllers.paycharging.routes.ModuleController.dashboard().url();
+        String url = controllers.paycharging.routes.ModuleController.dashboard(
+                ModuleController.PERIOD_HOUR).url();
         MenuItem menuBarItem = new MenuItem(MODULE_ID, "PayCharging", url);
         Registry.addMenuBarItem(menuBarItem);
     }

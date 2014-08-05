@@ -1,4 +1,4 @@
-@(xTimestamp: Array[Long], xVND: Array[Long], xXu: Array[Long], xTransaction: Array[Long])(implicit lang: Lang)
+@(period: Integer, xTimestamp: Array[Long], xVND: Array[Long], xXu: Array[Long], xTransaction: Array[Long])(implicit lang: Lang)
 @import com.github.ddth.plommon.utils._
 @import play.mvc._
 @import vngup.rtreports.common._
@@ -8,7 +8,22 @@
 ){
 <div id="page-heading">
     <ol class="breadcrumb">
-        <li><a href="@controllers.paycharging.routes.ModuleController.dashboard()">@Messages("msg.dashboard")</a></li>
+        <li><a href="@controllers.paycharging.routes.ModuleController.dashboard(0)">@Messages("msg.dashboard")</a></li>
+        @if(period==0){
+            <li class="active">@Messages("msg.period.0")</li>
+        } else {
+            <li><a href="@controllers.paycharging.routes.ModuleController.dashboard(0)">@Messages("msg.period.0")</a></li>
+        }
+        @if(period==1){
+            <li class="active">@Messages("msg.period.1")</li>
+        } else {
+            <li><a href="@controllers.paycharging.routes.ModuleController.dashboard(1)">@Messages("msg.period.1")</a></li>
+        }
+        @if(period==2){
+            <li class="active">@Messages("msg.period.2")</li>
+        } else {
+            <li><a href="@controllers.paycharging.routes.ModuleController.dashboard(2)">@Messages("msg.period.2")</a></li>
+        }
     </ol>
 </div>
     
@@ -97,8 +112,10 @@ $(document).ready(function(){
         data: [@defining(xTimestamp.length){n => @for(i <- 0 to (n-1)){[@xTimestamp(i),@xTransaction(i)],}}]
     }];
     OPT_XAXIS = {
-            type: 'datetime',
-            minTickInterval: 0.5,
+            type             : 'datetime',
+            @* minTickInterval  : 0.5, *@
+            tickPixelInterval: 50,
+            @*  @if(xTimestamp.length <= 24){tickInterval:1,} *@
             dateTimeLabelFormats: {
                 millisecond: '%H:%M:%S.%L',
                 second: '%H:%M:%S',
@@ -109,11 +126,6 @@ $(document).ready(function(){
                 month: '%b \'%y',
                 year: '%Y'
             }
-        };
-    OPT_YAXIS = {
-            title          : {text: 'VND'},
-            minTickInterval: 1,
-            min            : 0
         };
     OPT_CHART_SPLINE = {
                 lineWidth: 2,
@@ -136,7 +148,11 @@ $(document).ready(function(){
         title: { text: null, style: {display: 'none'} },
         plotOptions: { column: OPT_CHART_COLUMN },
         xAxis: OPT_XAXIS,
-        yAxis: OPT_YAXIS,
+        yAxis: {
+            title          : {text: 'VND'},
+            minTickInterval: 1,
+            min            : 0
+        },
         series: DATA_VND,
         colors: ['#ffd700'],
         tooltip: {
@@ -155,7 +171,11 @@ $(document).ready(function(){
         title: { text: null, style: {display: 'none'} },
         plotOptions: { column: OPT_CHART_COLUMN },
         xAxis: OPT_XAXIS,
-        yAxis: OPT_YAXIS,
+        yAxis: {
+            title          : {text: 'XU'},
+            minTickInterval: 1,
+            min            : 0
+        },
         series: DATA_XU,
         colors: ['#009010'],
         tooltip: {
@@ -174,7 +194,11 @@ $(document).ready(function(){
         plotOptions: { spline: OPT_CHART_SPLINE },
         title: { text: null, style: {display: 'none'} },
         xAxis: OPT_XAXIS,
-        yAxis: OPT_YAXIS,
+        yAxis: {
+            title          : {text: 'Tranx'},
+            minTickInterval: 1,
+            min            : 0
+        },
         series: DATA_TRANX,
         colors: ['#0000f0'],
         tooltip: {

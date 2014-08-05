@@ -2,16 +2,16 @@ package controllers.paycharging;
 
 import global.paycharging.ModuleBootstrap;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import play.api.templates.Html;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
 import play.mvc.Result;
+import utils.common.SiteUtils;
+import bo.common.site.SiteBo;
+import bo.common.site.SiteDao;
 
-import com.github.ddth.commons.utils.DateFormatUtils;
 import com.github.ddth.tsc.DataPoint;
 import com.github.ddth.tsc.ICounter;
 import com.github.ddth.tsc.ICounterFactory;
@@ -27,39 +27,56 @@ public class ModuleController extends AuthRequiredController {
 
     public final static String VIEW_LOGIN_SUMMARY = SECTION + "login_summary";
 
-    private final static long LAGGING = 5 * 1000;
-    private final static long DURATION = 24 * 1000;
+    public final static int PERIOD_HOUR = 0;
+    public final static int PERIOD_DAY = 1;
+    public final static int PERIOD_WEEK = 2;
+    public final static int PERIOD_MONTH = 3;
+    private final static int LAGGING = 15 * 1000;
 
     /*
      * Handles GET:/dashboard
      */
-    public static Promise<Result> dashboard() {
+    public static Promise<Result> dashboard(final int period) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
-                final long DURATION = 60 * 60 * 1000; // last 60 mins
-                final int STEPS = ICounter.STEPS_1_MIN;
+                final String siteName = SiteUtils.extractSiteName();
+                final SiteBo site = SiteDao.getSite(siteName);
+                final String PRODUCT_ID = site.getProduct();
+                long DURATION = 60 * 60 * 1000; // last 60 mins
+                int STEPS = ICounter.STEPS_1_MIN;
+                final Calendar now = Calendar.getInstance();
+                now.add(Calendar.MILLISECOND, -LAGGING);
+                long timestampEnd = now.getTimeInMillis();
+                now.set(Calendar.MILLISECOND, 0);
+                now.set(Calendar.SECOND, 0);
+                ICounterFactory counterFactory = ModuleBootstrap.getCassandraCounterFactory();
 
-                long timestampEnd = System.currentTimeMillis() - LAGGING;
-                timestampEnd = timestampEnd - timestampEnd % (60 * 1000);
-                long timestampStart = timestampEnd - DURATION;
+                if (period == PERIOD_WEEK) {
+                    DURATION = 7 * 24 * 60 * 60 * 1000; // last 7 days
+                    STEPS = ICounter.STEPS_1_HOUR * 24;
+                    now.set(Calendar.MINUTE, 0);
+                    now.set(Calendar.HOUR_OF_DAY, 0);
+                } else if (period == PERIOD_DAY) {
+                    DURATION = 24 * 60 * 60 * 1000;// last 24 hours
+                    STEPS = ICounter.STEPS_1_HOUR;
+                    now.set(Calendar.MINUTE, 0);
+                }
+                long timestampStart = now.getTimeInMillis() - DURATION + STEPS * 1000;
 
-                ICounterFactory counterFactory = ModuleBootstrap.getRedisCounterFactory();
                 DataPoint[] dpVND, dpXu, dpTransaction;
                 {
-                    ICounter counter = counterFactory.getCounter("pc_product_vnd_"
-                            + ModuleBootstrap.PRODUCT_ID);
+                    ICounter counter = counterFactory.getCounter("pc_product_vnd_" + PRODUCT_ID);
                     dpVND = counter.getSeries(timestampStart, timestampEnd, STEPS,
                             DataPoint.Type.SUM);
                 }
                 {
-                    ICounter counter = counterFactory.getCounter("pc_product_xu_"
-                            + ModuleBootstrap.PRODUCT_ID);
+                    ICounter counter = counterFactory.getCounter("pc_product_xu_" + PRODUCT_ID);
                     dpXu = counter.getSeries(timestampStart, timestampEnd, STEPS,
                             DataPoint.Type.SUM);
                 }
                 {
                     ICounter counter = counterFactory.getCounter("pc_product_transaction_"
-                            + ModuleBootstrap.PRODUCT_ID);
+                            + PRODUCT_ID);
                     dpTransaction = counter.getSeries(timestampStart, timestampEnd, STEPS,
                             DataPoint.Type.SUM);
                 }
@@ -77,121 +94,7 @@ public class ModuleController extends AuthRequiredController {
                     xTransaction[i] = dpTransaction[i].value();
                 }
 
-                Html html = render(VIEW_DASHBOARD, xTimestamp, xVND, xXu, xTransaction);
-                return ok(html);
-            }
-        });
-        return promise;
-    }
-
-    /*
-     * Handles GET:/loginSummaryRt
-     */
-    public static Promise<Result> loginSummaryRt() {
-        Promise<Result> promise = Promise.promise(new Function0<Result>() {
-            public Result apply() throws Exception {
-                long timestampEnd = System.currentTimeMillis() - LAGGING;
-                timestampEnd = timestampEnd - timestampEnd % 1000;
-                long timestampStart = timestampEnd - DURATION;
-
-                ICounterFactory counterFactory = ModuleBootstrap.getRedisCounterFactory();
-
-                ICounter cLoginTotal = counterFactory.getCounter("login_total");
-                DataPoint[] dpTotal = cLoginTotal.getSeries(timestampStart, timestampEnd,
-                        ICounter.STEPS_1_SEC, DataPoint.Type.SUM);
-
-                ICounter cLoginSuccessful = counterFactory.getCounter("login_successful");
-                DataPoint[] dpSuccessful = cLoginSuccessful.getSeries(timestampStart, timestampEnd,
-                        ICounter.STEPS_1_SEC, DataPoint.Type.SUM);
-
-                ICounter cLoginFailed = counterFactory.getCounter("login_failed");
-                DataPoint[] dpFailed = cLoginFailed.getSeries(timestampStart, timestampEnd,
-                        ICounter.STEPS_1_SEC, DataPoint.Type.SUM);
-
-                int numPoints = dpTotal.length;
-                long[] xTimestamp = new long[numPoints];
-                long[] xTotal = new long[numPoints];
-                long[] xFailed = new long[numPoints];
-                long[] xSuccessful = new long[numPoints];
-
-                for (int i = 0; i < numPoints; i++) {
-                    xTimestamp[i] = dpTotal[i].timestamp();
-                    xTotal[i] = dpTotal[i].value();
-                    xFailed[i] = dpFailed[i].value();
-                    xSuccessful[i] = dpSuccessful[i].value();
-                }
-
-                Html html = render(VIEW_LOGIN_SUMMARY_RT, xTimestamp, xTotal, xSuccessful, xFailed);
-                return ok(html);
-            }
-        });
-        return promise;
-    }
-
-    /*
-     * Handles GET:/loginSummary
-     */
-    public static Promise<Result> loginSummary() {
-        Promise<Result> promise = Promise.promise(new Function0<Result>() {
-            public Result apply() throws Exception {
-                Calendar cal = Calendar.getInstance();
-                Date toDate = cal.getTime();
-
-                cal.add(Calendar.HOUR, -1);
-
-                Date fromDate = cal.getTime();
-                final String dateFormat = "MM/dd/yyyy hh:00 a";
-                SimpleDateFormat df = new SimpleDateFormat(dateFormat);
-                Date dfFromDate = df.parse(df.format(fromDate));
-                Date dfToDate = df.parse(df.format(toDate));
-
-                long timestampEnd = dfToDate.getTime();
-                long timestampStart = dfFromDate.getTime();
-
-                ICounterFactory counterFactory = ModuleBootstrap.getCassandraCounterFactory();
-
-                ICounter cLoginTotal = counterFactory.getCounter("login_total");
-                DataPoint[] dpTotal = cLoginTotal.getSeries(timestampStart, timestampEnd,
-                        ICounter.STEPS_1_MIN, DataPoint.Type.SUM);
-
-                ICounter cLoginSuccessful = counterFactory.getCounter("login_successful");
-                DataPoint[] dpSuccessful = cLoginSuccessful.getSeries(timestampStart, timestampEnd,
-                        ICounter.STEPS_1_MIN, DataPoint.Type.SUM);
-
-                ICounter cLoginFailed = counterFactory.getCounter("login_failed");
-                DataPoint[] dpFailed = cLoginFailed.getSeries(timestampStart, timestampEnd,
-                        ICounter.STEPS_1_MIN, DataPoint.Type.SUM);
-
-                int numPoints = dpTotal.length;
-                long[] xTimestamp = new long[numPoints];
-                long[] xTotal = new long[numPoints];
-                long[] xFailed = new long[numPoints];
-                long[] xSuccessful = new long[numPoints];
-
-                for (int i = 0; i < numPoints; i++) {
-                    xTimestamp[i] = dpTotal[i].timestamp();
-                    xTotal[i] = dpTotal[i].value();
-                    xFailed[i] = dpFailed[i].value();
-                    xSuccessful[i] = dpSuccessful[i].value();
-                }
-
-                String fromDateStr = DateFormatUtils.toString(dfFromDate, dateFormat);
-                String toDateStr = DateFormatUtils.toString(dfToDate, dateFormat);
-                Html html = render(VIEW_LOGIN_SUMMARY, fromDateStr, toDateStr, xTimestamp, xTotal,
-                        xSuccessful, xFailed);
-                return ok(html);
-            }
-        });
-        return promise;
-    }
-
-    /*
-     * Handles GET:/loginActionIdRt
-     */
-    public static Promise<Result> loginActionIdRt() {
-        Promise<Result> promise = Promise.promise(new Function0<Result>() {
-            public Result apply() throws Exception {
-                Html html = render(VIEW_LOGIN_ACTIONID_RT);
+                Html html = render(VIEW_DASHBOARD, period, xTimestamp, xVND, xXu, xTransaction);
                 return ok(html);
             }
         });

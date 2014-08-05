@@ -8,6 +8,7 @@ CREATE TABLE config_site (
  ) WITH COMPACT STORAGE;
 INSERT INTO config_site (id, key, value) VALUES ('localhost', 'modules', '["*"]');
 INSERT INTO config_site (id, key, value) VALUES ('fv-rtreports', 'modules', '["paycharging"]');
+INSERT INTO config_site (id, key, value) VALUES ('fv-rtreports', 'product', '"FV"');
 
 CREATE TABLE config_user (
     id                  text,

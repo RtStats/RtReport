@@ -25,3 +25,7 @@ msg.dashboard = Dashboard
 msg.charging.vnd = Tiền Nạp: VND
 msg.charging.xu = Tiền Nạp: XU
 msg.charging.transaction = Tiền Nạp: Transaction
+
+msg.period.0 = 60 phút
+msg.period.1 = 24 giờ
+msg.period.2 = 07 ngày
