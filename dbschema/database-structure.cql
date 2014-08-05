@@ -9,6 +9,7 @@ CREATE TABLE config_site (
 INSERT INTO config_site (id, key, value) VALUES ('localhost', 'modules', '["*"]');
 INSERT INTO config_site (id, key, value) VALUES ('fv-rtreports', 'modules', '["paycharging"]');
 INSERT INTO config_site (id, key, value) VALUES ('fv-rtreports', 'product', '"FV"');
+INSERT INTO config_site (id, key, value) VALUES ('fv-rtreports', 'paycharging-products', '["FV"]');
 
 CREATE TABLE config_user (
     id                  text,

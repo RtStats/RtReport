@@ -22,6 +22,8 @@ msg.datatables.sInfo = Hiển thị từ _START_ đến _END_ của _TOTAL_ dòn
 msg.datatables.sInfoFiltered = (lọc từ tổng cộng _MAX_ dòng)
 
 msg.dashboard = Dashboard
+msg.dateCompare = So sánh theo ngày
+
 msg.charging.vnd = Tiền Nạp: VND
 msg.charging.xu = Tiền Nạp: XU
 msg.charging.transaction = Tiền Nạp: Transaction

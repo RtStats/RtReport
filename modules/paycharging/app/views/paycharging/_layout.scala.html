@@ -199,7 +199,7 @@
     <script type='text/javascript' src='@controllers.paycharging.routes.Assets.at("avant-1.2.1/assets/plugins/form-toggle/toggle.min.js")'></script> 
     <script type='text/javascript' src='@controllers.paycharging.routes.Assets.at("avant-1.2.1/assets/js/placeholdr.js")'></script> 
     <script type='text/javascript' src='@controllers.paycharging.routes.Assets.at("avant-1.2.1/assets/js/application.js")'></script> 
-    @for(js <- customJs){<script type="text/javascript" src="@controllers.paycharging.routes.Assets.at( js)"></script>}
+    @for(js <- customJs){<script type="text/javascript" src="@controllers.paycharging.routes.Assets.at(js)"></script>}
     <script type="text/javascript">
     $(document).ready(function() {
         $('.popovers').popover({container: 'body', trigger: 'hover', placement: 'top'}); //bootstrap's popover

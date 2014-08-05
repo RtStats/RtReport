@@ -3,6 +3,7 @@ package controllers.paycharging;
 import global.paycharging.ModuleBootstrap;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import play.api.templates.Html;
 import play.libs.F.Function0;
@@ -12,6 +13,7 @@ import utils.common.SiteUtils;
 import bo.common.site.SiteBo;
 import bo.common.site.SiteDao;
 
+import com.github.ddth.commons.utils.DateFormatUtils;
 import com.github.ddth.tsc.DataPoint;
 import com.github.ddth.tsc.ICounter;
 import com.github.ddth.tsc.ICounterFactory;
@@ -22,10 +24,7 @@ public class ModuleController extends AuthRequiredController {
 
     private final static String SECTION = "paycharging.";
     public final static String VIEW_DASHBOARD = SECTION + "dashboard";
-    public final static String VIEW_LOGIN_SUMMARY_RT = SECTION + "login_summary_rt";
-    public final static String VIEW_LOGIN_ACTIONID_RT = SECTION + "login_actionid_rt";
-
-    public final static String VIEW_LOGIN_SUMMARY = SECTION + "login_summary";
+    public final static String VIEW_DATE_COMPARE = SECTION + "date_compare";
 
     public final static int PERIOD_HOUR = 0;
     public final static int PERIOD_DAY = 1;
@@ -39,6 +38,12 @@ public class ModuleController extends AuthRequiredController {
     public static Promise<Result> dashboard(final int period) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
+                if (true) {
+                    String url = controllers.paycharging.routes.ModuleController.dateCompare(null,
+                            null).url();
+                    return redirect(url);
+                }
+
                 final String siteName = SiteUtils.extractSiteName();
                 final SiteBo site = SiteDao.getSite(siteName);
                 final String PRODUCT_ID = site.getProduct();
@@ -95,6 +100,107 @@ public class ModuleController extends AuthRequiredController {
                 }
 
                 Html html = render(VIEW_DASHBOARD, period, xTimestamp, xVND, xXu, xTransaction);
+                return ok(html);
+            }
+        });
+        return promise;
+    }
+
+    private final static String DF_YYYYMMDD = "yyyy-MM-dd";
+
+    private static Calendar startOfDay(Calendar cal) {
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        return cal;
+    }
+
+    private static Calendar nextDay(Calendar cal) {
+        Calendar nextDay = (Calendar) cal.clone();
+        nextDay.add(Calendar.DATE, 1);
+        nextDay.set(Calendar.MILLISECOND, 0);
+        nextDay.set(Calendar.SECOND, 0);
+        nextDay.set(Calendar.MINUTE, 0);
+        nextDay.set(Calendar.HOUR_OF_DAY, 0);
+        return nextDay;
+    }
+
+    private static DataPoint[] counterForDate(ICounter counter, Calendar cal) {
+        Calendar startOfDay = startOfDay(cal);
+        Calendar nextDay = nextDay(cal);
+        {
+            // TEMP FIX!
+            startOfDay.add(Calendar.HOUR_OF_DAY, 7);
+            nextDay.add(Calendar.HOUR_OF_DAY, 7);
+        }
+
+        DataPoint[] dpList = counter.getSeries(startOfDay.getTimeInMillis(),
+                nextDay.getTimeInMillis() - 1, ICounter.STEPS_1_HOUR, DataPoint.Type.SUM);
+        System.out.println("Getting DPs for [" + cal.getTime() + "]: from [" + startOfDay.getTime()
+                + "] to [" + nextDay.getTime() + "]...");
+        System.out.println("\tNum points: " + dpList.length);
+        final String DF = "yyyy-MM-dd HH:mm";
+        for (DataPoint dp : dpList) {
+            Date d = new Date(dp.timestamp());
+            System.out.println("\t" + DateFormatUtils.toString(d, DF) + "\t" + dp.value());
+        }
+        return dpList;
+    }
+
+    /*
+     * Handles GET:/dateCompare
+     */
+    public static Promise<Result> dateCompare(final String strDate1, final String strDate2) {
+        Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            public Result apply() throws Exception {
+                Calendar date1 = Calendar.getInstance(); // today
+                try {
+                    date1.setTime(DateFormatUtils.fromString(strDate1, DF_YYYYMMDD));
+                } catch (Exception e) {
+                }
+
+                Calendar date2 = Calendar.getInstance();
+                date2.add(Calendar.DATE, -1); // yesterday
+                try {
+                    date2.setTime(DateFormatUtils.fromString(strDate2, DF_YYYYMMDD));
+                } catch (Exception e) {
+                }
+
+                Calendar date3 = (Calendar) date1.clone();
+                date3.add(Calendar.DATE, -7); // 7 days ago
+
+                final String siteName = SiteUtils.extractSiteName();
+                final SiteBo site = SiteDao.getSite(siteName);
+                final String PRODUCT_ID = site.getProduct();
+                ICounterFactory counterFactory = ModuleBootstrap.getCassandraCounterFactory();
+                ICounter counter = counterFactory.getCounter("pc_product_xu_" + PRODUCT_ID);
+                DataPoint[] dpDate1 = counterForDate(counter, date1);
+                DataPoint[] dpDate2 = counterForDate(counter, date2);
+                DataPoint[] dpDate3 = counterForDate(counter, date3);
+
+                int numPoints = dpDate1.length;
+                String[] xTimestamp = new String[numPoints];
+                long[] xDate1 = new long[numPoints];
+                long[] xDate2 = new long[numPoints];
+                long[] xDate3 = new long[numPoints];
+
+                long sumDate1 = 0, sumDate2 = 0, sumDate3 = 0;
+                for (int i = 0; i < numPoints; i++) {
+                    xTimestamp[i] = i + ":00";
+                    xDate1[i] = dpDate1[i].value();
+                    sumDate1 += xDate1[i];
+                    xDate2[i] = dpDate2[i].value();
+                    sumDate2 += xDate2[i];
+                    xDate3[i] = dpDate3[i].value();
+                    sumDate3 += xDate3[i];
+                }
+
+                Html html = render(VIEW_DATE_COMPARE,
+                        DateFormatUtils.toString(date1.getTime(), DF_YYYYMMDD),
+                        DateFormatUtils.toString(date2.getTime(), DF_YYYYMMDD),
+                        DateFormatUtils.toString(date3.getTime(), DF_YYYYMMDD), xTimestamp, xDate1,
+                        sumDate1, xDate2, sumDate2, xDate3, sumDate3);
                 return ok(html);
             }
         });
