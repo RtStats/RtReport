@@ -3,7 +3,6 @@ package controllers.paycharging;
 import global.paycharging.ModuleBootstrap;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import play.api.templates.Html;
 import play.libs.F.Function0;
@@ -137,14 +136,16 @@ public class ModuleController extends AuthRequiredController {
 
         DataPoint[] dpList = counter.getSeries(startOfDay.getTimeInMillis(),
                 nextDay.getTimeInMillis() - 1, ICounter.STEPS_1_HOUR, DataPoint.Type.SUM);
-        System.out.println("Getting DPs for [" + cal.getTime() + "]: from [" + startOfDay.getTime()
-                + "] to [" + nextDay.getTime() + "]...");
-        System.out.println("\tNum points: " + dpList.length);
-        final String DF = "yyyy-MM-dd HH:mm";
-        for (DataPoint dp : dpList) {
-            Date d = new Date(dp.timestamp());
-            System.out.println("\t" + DateFormatUtils.toString(d, DF) + "\t" + dp.value());
-        }
+        // System.out.println("Getting DPs for [" + cal.getTime() + "]: from ["
+        // + startOfDay.getTime()
+        // + "] to [" + nextDay.getTime() + "]...");
+        // System.out.println("\tNum points: " + dpList.length);
+        // final String DF = "yyyy-MM-dd HH:mm";
+        // for (DataPoint dp : dpList) {
+        // Date d = new Date(dp.timestamp());
+        // System.out.println("\t" + DateFormatUtils.toString(d, DF) + "\t"
+        // + dp.value());
+        // }
         return dpList;
     }
 
