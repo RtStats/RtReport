@@ -73,7 +73,7 @@
                                         <td style="text-align: center">@row.appId</td>
                                         @for(date <- dateList){
                                             <td style="text-align: right">@defining(row.getValue(date)){value =>
-                                                @if(value!=null){@("%.2f".format(value))}}</td>
+                                                @if(value!=null){@("%.0f".format(value))}}</td>
                                         }
                                     </tr>
                                 }
@@ -82,7 +82,7 @@
                                 <tr>
                                     <th style="text-align:center; white-space:nowrap;" nowrap="nowrap">@Messages("msg.sum_total")</th>
                                     @for(sum <- sumList){
-                                        <th style="text-align: right">@("%.2f".format(sum))</th>
+                                        <th style="text-align: right">@("%.0f".format(sum))</th>
                                     }
                                 </tr>
                             </tfoot>

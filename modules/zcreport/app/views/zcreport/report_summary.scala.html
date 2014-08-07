@@ -68,10 +68,10 @@
                                 @for(row <- data){
                                     <tr @if(row.error){class="danger"}>
                                         <td style="text-align: center">@row.date</td>
-                                        <td style="text-align: center">@("%10.2f".format(row.openingBalance))</td>
-                                        <td style="text-align: center">@("%10.2f".format(row.income))</td>
-                                        <td style="text-align: center">@("%10.2f".format(row.payroll))</td>
-                                        <td style="text-align: center">@("%10.2f".format(row.closingBalance))</td>
+                                        <td style="text-align: center">@("%10.0f".format(row.openingBalance))</td>
+                                        <td style="text-align: center">@("%10.0f".format(row.income))</td>
+                                        <td style="text-align: center">@("%10.0f".format(row.payroll))</td>
+                                        <td style="text-align: center">@("%10.0f".format(row.closingBalance))</td>
                                     </tr>
                                 }
                             </tbody>
