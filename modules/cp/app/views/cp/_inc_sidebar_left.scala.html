@@ -1,0 +1,19 @@
+@(active: String="")(implicit lang: Lang)
+<nav id="page-leftbar" role="navigation">
+	<ul class="acc-menu" id="sidebar">
+		<li @if(active== "dashboard"){class="active"}><a
+			href="@controllers.cp.routes.ModuleController.dashboard()"><i
+				class="fa fa-dashboard"></i> <span>@Messages("msg.dashboard")</span></a></li>
+        @*
+		<li @if(active== "login-summary-rt"){class="active"}><a
+			href="@controllers.cp.routes.ModuleController.loginSummaryRt()"><i
+				class="fa fa-bar-chart-o"></i> <span>@Messages("msg.login_summary_rt")</span></a></li>
+		<li @if(active== "login-actionid-rt"){class="active"}><a
+			href="@controllers.cp.routes.ModuleController.loginActionIdRt()"><i
+				class="fa fa-bar-chart-o"></i> <span>@Messages("msg.login_actionid_rt")</span></a></li>
+		<li @if(active== "login-summary"){class="active"}><a
+			href="@controllers.cp.routes.ModuleController.loginSummary()"><i
+				class="fa fa-bar-chart-o"></i> <span>@Messages("msg.login_summary")</span></a></li>
+		*@
+	</ul>
+</nav>

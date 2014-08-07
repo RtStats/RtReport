@@ -1,0 +1,129 @@
+@()(implicit lang: Lang)
+@import com.github.ddth.plommon.utils._
+@import play.mvc._
+@import vngup.rtreports.common._
+@_layout(
+	active   = "login-actionid-rt",
+	customJs = Array("highcharts-3.0.9/js/highcharts.js")
+){
+<div id="page-heading">
+    <ol class="breadcrumb">
+        <li><a href="@controllers.cp.routes.ModuleController.dashboard()">@Messages("msg.dashboard")</a></li>
+        <li class="active">@Messages("msg.login_actionid_rt")</li>
+    </ol>
+</div>
+    
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            @defining(Controller.flash(controllers.cp.ModuleController.VIEW_LOGIN_ACTIONID_RT)){flashMsg =>
+                @if(flashMsg!=null && !flashMsg.equals("")){
+                    <div class="alert alert-info alert-dismissable">
+                        <i class="fa fa-info-circle"></i> @flashMsg
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="col-md-12">
+	        <div class="panel panel-info">
+		        <div class="panel-heading"><h3 class="panel-title">Passport Login by ActionId</h3></div>
+		        <div class="panel-body">
+		            <div class="container" style="width: 100%">
+		                <div id="_highcharts" style="width: 100%"></div>
+		            </div>
+		        </div>
+		    </div>
+        </div>
+    </div>
+</div>
+    
+<script type="text/javascript">
+var CHART;
+var DATA;
+
+function _loadData() {
+    $.ajax({
+        url: '@controllers.cp.routes.JsonController.jsonLoginActionIdRt()',
+        success: function(jsonResult) {
+            for (var i = 0; i < jsonResult.length; i++) {
+                var serieObject = jsonResult[i];
+                var serieLabel = serieObject.name;
+                var serieData = serieObject.data;
+                var chartSerie = CHART.get(serieLabel);
+                if (chartSerie == null) { // chart serie is not defined
+                    CHART.addSeries({id:serieLabel, data:[], name:serieLabel});
+                    chartSerie = CHART.get(serieLabel);
+                }
+                if (chartSerie != null ) {
+                    chartSerie.setData(serieData, true, false, true);
+                }
+            }
+            setTimeout(_loadData, 1*1000);
+        },
+        cache: false
+    });
+}
+    
+$(document).ready(function(){
+    Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
+    
+    DATA = [];
+    CHART = new Highcharts.Chart({
+        chart: {
+            renderTo: '_highcharts',
+            type    : 'spline',
+            events  : {
+                load: _loadData
+            }
+        },
+        plotOptions: {
+            spline: {
+                lineWidth: 1,
+                marker: {
+                    enabled: false
+                },
+            }
+        },
+        title: { text: null, style: {display: 'none'} },
+        xAxis: {
+            type: 'datetime',
+            minTickInterval: 0.5,
+            dateTimeLabelFormats: {
+                millisecond: '%H:%M:%S.%L',
+                second: '%H:%M:%S',
+                minute: '%H:%M',
+                hour: '%H:%M',
+                day: '%d-%m',
+                week: '%e. %b',
+                month: '%b \'%y',
+                year: '%Y'
+            }
+        },
+        yAxis: {
+            title          : {text: '# requests'},
+            minTickInterval: 1,
+            min            : 0
+        },
+        series: DATA,
+        tooltip: {
+            formatter: function() {
+                return '<b>'+ this.series.name + ': '
+                    + Highcharts.numberFormat(this.y, 0) + '</b><br/>'
+                    + '<small>' + Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x) +'</small>';
+            }
+        },
+        legend: {
+            enabled: true
+        }
+    });
+});
+</script>   
+}

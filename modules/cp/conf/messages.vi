@@ -1,0 +1,30 @@
+msg.cp.title = ControlPanel
+msg.cp.desc = Control Panel - Application Configurations
+
+msg.or = hoặc
+msg.and = và
+msg.yes = Có
+msg.no = Không
+msg.ok = Đồng ý
+msg.cancel = Bỏ chọn
+msg.close = Đóng
+msg.reset = Xoá form
+msg.update = Cập nhật
+msg.delete = Xoá
+msg.preview = Xem trước
+
+msg.search = Tìm kiếm
+msg.prev = Trước
+msg.next = Kế tiếp
+msg.first = Đầu
+msg.last = Cuối
+
+msg.nodata = Không có dữ liệu
+msg.records_per_page = dòng/trang
+msg.datatables.sInfo = Hiển thị từ _START_ đến _END_ của _TOTAL_ dòng
+msg.datatables.sInfoFiltered = (lọc từ tổng cộng _MAX_ dòng)
+
+msg.dashboard = Dashboard
+msg.charging.vnd = Tiền Nạp: VND
+msg.charging.xu = Tiền Nạp: XU
+msg.charging.transaction = Tiền Nạp: Transaction
