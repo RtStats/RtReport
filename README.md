@@ -4,6 +4,9 @@ RtReports - Real-time Reports
 Releast Notes
 =============
 
+** 2014-08-07: v1.1.2 **
+- ZCReport for FA team
+
 ** 2014-08-06: v1.1.0 **
 - PaymentCharging: compare data of 2/(3) days
 - Temporarily disable dashboard.

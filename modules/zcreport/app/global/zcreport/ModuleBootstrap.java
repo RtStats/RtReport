@@ -48,7 +48,7 @@ public class ModuleBootstrap extends AbstractModuleBootstrap {
 
     private static void _initCache() {
         cacheFactory = new GuavaCacheFactory();
-        cacheFactory.setDefaultCacheCapacity(10000).setDefaultExpireAfterAccess(3600);
+        cacheFactory.setDefaultCacheCapacity(10000).setDefaultExpireAfterWrite(3600);
         cacheFactory.init();
     }
 

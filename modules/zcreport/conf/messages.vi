@@ -5,6 +5,15 @@ msg.dashboard = Dashboard
 
 msg.report = Báo cáo
 msg.report_summary = Tổng hợp nhập/xuất Xu
+msg.report_details = Chi tiết xuất Xu
+
+msg.app = Ứng dụng
+msg.sum_total = Tổng cộng
+msg.date = Ngày
+msg.balance.opening = Tồn đầu kỳ
+msg.balance.closing = Tồn cuối kỳ
+msg.income = Nhập
+msg.payroll = Xuất
 
 error.from_date_to_date = Lỗi: Ngày bắt đầu phải nhỏ hơn ngày kết thúc!
 error.long_from_date_to_date = Lỗi: Ngày bắt đầu và ngày kết thúc cách nhau quá xa (hơn 31 ngày)!

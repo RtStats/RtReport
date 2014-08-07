@@ -3,7 +3,9 @@ package controllers.zcreport;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
+import models.zcreport.ReportDetailsEntry;
 import models.zcreport.ReportSummaryEntry;
 import play.api.templates.Html;
 import play.i18n.Lang;
@@ -24,6 +26,7 @@ public class ModuleController extends AuthRequiredController {
     private final static String SECTION = "zcreport.";
     public final static String VIEW_DASHBOARD = SECTION + "dashboard";
     public final static String VIEW_REPORT_SUMMARY = SECTION + "report_summary";
+    public final static String VIEW_REPORT_DETAILS = SECTION + "report_details";
 
     /*
      * Handles GET:/dashboard
@@ -41,7 +44,7 @@ public class ModuleController extends AuthRequiredController {
     private final static String DF_YYYYMMDD = "yyyy-MM-dd";
 
     /*
-     * Handles GET:/summary
+     * Handles GET:/reportSummary
      */
     public static Promise<Result> reportSummary(final String strDate1, final String strDate2) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
@@ -105,6 +108,82 @@ public class ModuleController extends AuthRequiredController {
                 Html html = render(VIEW_REPORT_SUMMARY,
                         DateFormatUtils.toString(date1.getTime(), DF_YYYYMMDD),
                         DateFormatUtils.toString(date2.getTime(), DF_YYYYMMDD), data);
+                return ok(html);
+            }
+        });
+        return promise;
+    }
+
+    /*
+     * Handles GET:/summary
+     */
+    public static Promise<Result> reportDetails(final String strDate1, final String strDate2) {
+        Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            public Result apply() throws Exception {
+                Calendar now = DateTimeUtils.startOfDay(Calendar.getInstance()); // today
+
+                Calendar date1 = (Calendar) now.clone();
+                date1.add(Calendar.DATE, -1); // yesterday
+                Calendar date2 = (Calendar) date1.clone();
+
+                try {
+                    date1.setTime(DateFormatUtils.fromString(strDate1, DF_YYYYMMDD));
+                } catch (Exception e) {
+                }
+
+                try {
+                    date2.setTime(DateFormatUtils.fromString(strDate2, DF_YYYYMMDD));
+                } catch (Exception e) {
+                }
+
+                final long MAX_MONTH_MS = 30 * 24 * 3600 * (long) 1000;
+                Lang lang = Lang.forCode("vi");
+                List<ReportDetailsEntry> data = new ArrayList<ReportDetailsEntry>();
+                List<String> dateList = new ArrayList<String>();
+                List<Double> sumList = new ArrayList<Double>();
+                if (date1.after(date2)) {
+                    String msg = Constants.FLASH_MSG_PREFIX_ERROR
+                            + Messages.get(lang, "error.from_date_to_date");
+                    flash(VIEW_REPORT_DETAILS, msg);
+                } else if (!date1.before(now)) {
+                    String msg = Constants.FLASH_MSG_PREFIX_ERROR
+                            + Messages.get(lang, "error.from_date_now");
+                    flash(VIEW_REPORT_DETAILS, msg);
+                } else if (date2.getTimeInMillis() - date1.getTimeInMillis() > MAX_MONTH_MS) {
+                    String msg = Constants.FLASH_MSG_PREFIX_ERROR
+                            + Messages.get(lang, "error.long_from_date_to_date");
+                    flash(VIEW_REPORT_DETAILS, msg);
+                } else {
+                    List<String> appList = ReportDao.getAppListForDates(date1, date2);
+                    Map<String, Map<String, Double>> analyticData = ReportDao.getAnalyticForDates(
+                            date1, date2);
+                    for (String appId : appList) {
+                        ReportDetailsEntry entry = new ReportDetailsEntry(appId, analyticData
+                                .get(appId));
+                        data.add(entry);
+                    }
+
+                    Calendar cal = (Calendar) date1.clone();
+                    while (!cal.after(date2)) {
+                        String dateStr = DateFormatUtils.toString(cal.getTime(), DF_YYYYMMDD);
+                        dateList.add(dateStr);
+                        double sum = 0;
+                        for (ReportDetailsEntry entry : data) {
+                            Double value = entry.getValue(dateStr);
+                            if (value != null) {
+                                sum += value.doubleValue();
+                            }
+                        }
+                        sumList.add(sum);
+
+                        cal = DateTimeUtils.nextDate(cal);
+                    }
+                }
+
+                Html html = render(VIEW_REPORT_DETAILS,
+                        DateFormatUtils.toString(date1.getTime(), DF_YYYYMMDD),
+                        DateFormatUtils.toString(date2.getTime(), DF_YYYYMMDD), data, dateList,
+                        sumList);
                 return ok(html);
             }
         });

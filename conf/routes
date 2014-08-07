@@ -9,7 +9,7 @@ GET     /qnd                        controllers.Application.qnd()
 -> /zcreport    zcreport.Routes
 -> /pplogin     pplogin.Routes
 -> /paycharging paycharging.Routes
--> /cp          cp.Routes
+#-> /cp          cp.Routes
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
