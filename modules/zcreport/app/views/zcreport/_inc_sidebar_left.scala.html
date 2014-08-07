@@ -1,0 +1,11 @@
+@(active: String="")(implicit lang: Lang)
+<nav id="page-leftbar" role="navigation">
+	<ul class="acc-menu" id="sidebar">
+		<li @if(active== "dashboard"){class="active"}><a
+			href="@controllers.zcreport.routes.ModuleController.dashboard()"><i
+				class="fa fa-dashboard"></i> <span>@Messages("msg.dashboard")</span></a></li>
+        <li @if(active== "report-summary"){class="active"}><a
+            href="@controllers.zcreport.routes.ModuleController.reportSummary()"><i
+                class="fa fa-bar-chart-o"></i> <span>@Messages("msg.report_summary")</span></a></li>
+	</ul>
+</nav>

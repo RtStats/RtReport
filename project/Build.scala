@@ -51,6 +51,24 @@ object ApplicationBuild extends Build {
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     )
     
+    val appDepsZcReport = appDependenciesBase
+    val moduleZcReport = play.Project(
+        appName + "-zcreport", appVersion, appDepsZcReport, path = file("modules/zcreport")
+    ).dependsOn(
+        moduleCommon
+    ).aggregate(
+        moduleCommon
+    ).settings(
+        // Disable generating scaladoc
+        sources in doc in Compile := List(),
+        
+        // Custom Maven repository
+        resolvers += "Sonatype OSS repository" at "https://oss.sonatype.org/content/repositories/releases/",
+        
+        // Force compilation in java 1.6
+        javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
+    )
+    
     val appDepsPplogin = appDependenciesBase
     val modulePplogin = play.Project(
         appName + "-pplogin", appVersion, appDepsPplogin, path = file("modules/pplogin")
@@ -97,8 +115,8 @@ object ApplicationBuild extends Build {
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     ).dependsOn(
-        moduleCommon, modulePplogin, modulePayCharging
+        moduleCommon, modulePplogin, modulePayCharging, moduleZcReport
     ).aggregate(
-        moduleCommon, modulePplogin, modulePayCharging
+        moduleCommon, modulePplogin, modulePayCharging, moduleZcReport
     )
 }

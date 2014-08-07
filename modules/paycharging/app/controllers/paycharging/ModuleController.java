@@ -37,11 +37,12 @@ public class ModuleController extends AuthRequiredController {
     public static Promise<Result> dashboard(final int period) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
-                if (true) {
-                    String url = controllers.paycharging.routes.ModuleController.dateCompare(null,
-                            null).url();
-                    return redirect(url);
-                }
+                // if (true) {
+                // String url =
+                // controllers.paycharging.routes.ModuleController.dateCompare(null,
+                // null).url();
+                // return redirect(url);
+                // }
 
                 final String siteName = SiteUtils.extractSiteName();
                 final SiteBo site = SiteDao.getSite(siteName);
