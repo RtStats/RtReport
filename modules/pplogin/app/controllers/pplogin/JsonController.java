@@ -109,9 +109,9 @@ public class JsonController extends BaseController {
                         && duration < 10 * 60 * 60 * (long) 1000) {
                     steps = ICounter.STEPS_10_MINS;
                 } else if (duration >= 10 * 60 * 60 * (long) 1000
-                        && duration < 20 * 60 * 60 * (long) 1000) {
+                        && duration < 18 * 60 * 60 * (long) 1000) {
                     steps = ICounter.STEPS_15_MINS;
-                } else if (duration >= 20 * 60 * 60 * (long) 1000
+                } else if (duration >= 18 * 60 * 60 * (long) 1000
                         && duration < 24 * 60 * 60 * (long) 1000) {
                     steps = ICounter.STEPS_30_MINS;
                 } else if (duration >= 24 * 60 * 60 * (long) 1000
@@ -122,9 +122,6 @@ public class JsonController extends BaseController {
                     steps = ICounter.STEPS_1_HOUR * 24;
                 } else {
                     return badRequest("Thời gian report tối đa là 1 tháng");
-                    // JOptionPane.showMessageDialog(null,
-                    // "Thời gian report tối đa là 1 tháng");
-                    // return null;
                 }
 
                 List<Object> result = new ArrayList<Object>();

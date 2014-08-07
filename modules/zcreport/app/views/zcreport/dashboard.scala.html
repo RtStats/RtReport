@@ -1,0 +1,28 @@
+@(implicit lang: Lang)
+@import com.github.ddth.plommon.utils._
+@import play.mvc._
+@import vngup.rtreports.common._
+@_layout(
+	active   = "dashboard"
+){
+<div id="page-heading">
+    <ol class="breadcrumb">
+        <li><a href="@controllers.zcreport.routes.ModuleController.dashboard()">@Messages("msg.dashboard")</a></li>
+    </ol>
+</div>
+    
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            @_macro_displayPageFlashMessage(Controller.flash(controllers.zcreport.ModuleController.VIEW_DASHBOARD))
+        </div>
+    </div>
+        
+    <div class="row">
+        <div class="col-md-12">
+            <h1>@Messages("msg.zcreport.title")</h1>
+            <h3>@Messages("msg.zcreport.desc")</h3>
+        </div>
+    </div>
+</div>
+}
