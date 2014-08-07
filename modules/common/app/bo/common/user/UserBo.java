@@ -60,7 +60,7 @@ public class UserBo extends BaseBo {
             return true;
         }
         List<String> siteList = getSites();
-        return siteList != null && siteList.contains(siteList);
+        return siteList != null && siteList.contains(siteName);
     }
 
     public boolean canAccessModule(String moduleName) {
