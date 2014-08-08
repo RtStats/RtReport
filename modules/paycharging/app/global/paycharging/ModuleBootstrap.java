@@ -81,7 +81,7 @@ public class ModuleBootstrap extends AbstractModuleBootstrap {
 
             String cassandraKeyspace = config.getString("keyspace");
             cassandraCounterFactory.setHosts(hosts).setPort(cassandraPort)
-                    .setKeyspace(cassandraKeyspace);
+                    .setKeyspace(cassandraKeyspace).setCacheEnabled(false);
             cassandraCounterFactory.init();
             Logger.info("Cassandra Counter Factory initialized.");
 

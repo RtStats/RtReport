@@ -28,9 +28,9 @@ object ApplicationBuild extends Build {
         "com.ibm.icu"           %  "icu4j"                  % "53.1",
         "com.github.ddth"       %  "ddth-commons"           % "0.2.2.2",
         "com.github.ddth"       %  "spring-social-helper"   % "0.2.1",
-        "com.github.ddth"       %  "ddth-tsc"               % "0.5.0",
-        "com.github.ddth"       %  "ddth-tsc-cassandra"     % "0.5.0",
-        "com.github.ddth"       %  "ddth-tsc-redis"         % "0.5.0",
+        "com.github.ddth"       %  "ddth-tsc"               % "0.5.1",
+        "com.github.ddth"       %  "ddth-tsc-cassandra"     % "0.5.1",
+        "com.github.ddth"       %  "ddth-tsc-redis"         % "0.5.1",
         "com.github.ddth"       %% "play-module-plommon"    % "0.5.1.5"
     )
     

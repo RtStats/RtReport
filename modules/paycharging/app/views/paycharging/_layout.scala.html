@@ -208,6 +208,21 @@
     function _go(url) {
         document.location.href = url;
     }
+    function exportExcel(tableId, filename) {
+        //creating a temporary HTML link element (they support setting file names)
+        var a = $('#exportExcel');
+
+        //getting data from our div that contains the HTML table
+        var data_type = 'data:application/vnd.ms-excel';
+        var table_div = document.getElementById(tableId);
+        var table_html = table_div.outerHTML;
+        table_html = table_html.replace(/ /g, '%20');
+            
+        a.attr('href', data_type + ', ' + table_html);
+
+        //setting the file name
+        a.attr('download', filename);
+    }
     </script>
     <div class="loading_img"></div>
 </body>

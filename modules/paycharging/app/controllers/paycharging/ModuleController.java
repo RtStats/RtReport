@@ -129,11 +129,11 @@ public class ModuleController extends AuthRequiredController {
     private static DataPoint[] counterForDate(ICounter counter, Calendar cal) {
         Calendar startOfDay = startOfDay(cal);
         Calendar nextDay = nextDay(cal);
-        {
-            // TEMP FIX!
-            startOfDay.add(Calendar.HOUR_OF_DAY, 7);
-            nextDay.add(Calendar.HOUR_OF_DAY, 7);
-        }
+        // {
+        // // TEMP FIX!
+        // startOfDay.add(Calendar.HOUR_OF_DAY, 7);
+        // nextDay.add(Calendar.HOUR_OF_DAY, 7);
+        // }
 
         DataPoint[] dpList = counter.getSeries(startOfDay.getTimeInMillis(),
                 nextDay.getTimeInMillis() - 1, ICounter.STEPS_1_HOUR, DataPoint.Type.SUM);
