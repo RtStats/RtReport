@@ -1,4 +1,7 @@
-@(tags: Array[String], counters: Array[String], tagName: String, counterName: String)(implicit lang: Lang)
+@(tags: Array[String], counters: Array[String], counters2: Array[String],
+    tagName: String, counterName: String,
+    tagName2: String, counterName2: String
+)(implicit lang: Lang)
 @import com.github.ddth.plommon.utils._
 @import play.mvc._
 @import rtreport.common._
@@ -25,23 +28,38 @@
             <div class="panel panel-info">
                 <div class="panel-heading"><h3 class="panel-title">@Messages("msg.rtstats")</h3></div>
                 <div class="panel-body">
-                    <form class="form-horizontal row-border" role="form" method="get">
-                        <div class="form-group">
-                            <div class="col-sm-5">
+                    <div class="container" style="margin-bottom: 10px">
+                        <form class="form-inline" role="form" method="get">
+                            <div class="form-group">
+                                <label class="sr-only" for="frm_tags">@Messages("msg.tags")</label>
                                 <select class="form-control" name="t" id="frm_tags">
                                     @for(tag <- tags){<option value="@tag" @if(tag==tagName){selected="selected"}>@tag</option>}
                                 </select>
                             </div>
-                            <div class="col-sm-5">
+                            <div class="form-group">
+                                <label class="sr-only" for="frm_counters">@Messages("msg.counters")</label>
                                 <select class="form-control" name="c" id="frm_counters">
                                     @for(counter <- counters){<option value="@counter" @if(counter==counterName){selected="selected"}>@counter</option>}
                                 </select>
                             </div>
-                            <div class="col-sm-2">
-                                <button type="submit" class="btn btn-primary">@Messages("msg.update")</button>
+                            <div class="form-group">&nbsp;@Messages("msg.compare")&nbsp;</div>
+                            <div class="form-group">
+                                <label class="sr-only" for="frm_tags2">@Messages("msg.tags")</label>
+                                <select class="form-control" name="t2" id="frm_tags2">
+                                    <option value="">-= @Messages("msg.tags") =-</option>
+                                    @for(tag <- tags){<option value="@tag" @if(tag==tagName2){selected="selected"}>@tag</option>}
+                                </select>
                             </div>
-                        </div>
-                    </form>
+                            <div class="form-group">
+                                <label class="sr-only" for="frm_counters2">@Messages("msg.counters")</label>
+                                <select class="form-control" name="c2" id="frm_counters2">
+                                    <option value="">-= @Messages("msg.counters") =-</option>
+                                    @for(counter <- counters2){<option value="@counter" @if(counter==counterName2){selected="selected"}>@counter</option>}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">@Messages("msg.update")</button>
+                        </form>
+	                </div>
                     
                     <div class="container" style="width: 100%">
                         <div id="_highcharts" style="width: 100%"></div>
@@ -71,12 +89,30 @@ $('#frm_tags').on('change', function(){
     });
 });
 
+$('#frm_tags2').on('change', function(){
+    var url = '@controllers.report.routes.JsonController.countersForTag(tagName2)'.split('?')[0];
+    url += '?t=' + $(this).val();
+    $.ajax({
+        url: url,
+        success: function(jsonResult) {
+            console.log(jsonResult);
+            $("#frm_counters2 option").remove();
+            $.each(jsonResult, function(index, item) {
+                $("#frm_counters2").append(
+                    $("<option></option>").text(item).val(item)
+                );
+            });
+        },
+        cache: false
+    });
+});
+
 var CHART;
 var DATA;
 
 function _loadData() {
     $.ajax({
-        url: '@controllers.report.routes.JsonController.rtstats(tagName, counterName)',
+        url: '@controllers.report.routes.JsonController.rtstats(counterName, counterName2)',
         success: function(jsonResult) {
             for (var i = 0; i < jsonResult.length; i++) {
                 var serieObject = jsonResult[i];

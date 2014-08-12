@@ -5,6 +5,10 @@ msg.dashboard = Dashboard
 msg.rtstats = Thống kê thời gian thực
 msg.report_single = Báo cáo đơn
 
+msg.compare = So sánh
+msg.tags = Danh sách tag
+msg.counters = Danh sách counter
+
 error.from_date_to_date = Lỗi: Ngày bắt đầu phải nhỏ hơn ngày kết thúc!
 error.long_from_date_to_date = Lỗi: Ngày bắt đầu và ngày kết thúc cách nhau quá xa (hơn 31 ngày)!
 error.from_date_now = Lỗi: Ngày bắt đầu phải nhỏ hơn hiện tại!

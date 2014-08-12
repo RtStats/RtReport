@@ -3,6 +3,7 @@ package controllers.report;
 import global.common.ModuleBootstrap;
 import global.common.Registry;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -52,23 +53,32 @@ public class ModuleController extends BaseController {
     /*
      * Handles GET:/rtstats
      */
-    public static Promise<Result> rtstats(final String tag, final String counter) {
+    public static Promise<Result> rtstats(final String tag, final String counter,
+            final String tag2, final String counter2) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
                 IMetadataDao metadataDao = ModuleBootstrap.getMetadataDao();
                 List<String> tags = metadataDao.getAllTags();
                 String tagName = tag;
-                if (StringUtils.isBlank(tag)) {
+                if (StringUtils.isBlank(tagName)) {
                     tagName = tags.size() > 0 ? tags.get(0) : "";
                 }
-                List<String> counters = metadataDao.getCountersForTag(tagName);
+                List<String> counters = !StringUtils.isBlank(tagName) ? metadataDao
+                        .getCountersForTag(tagName) : new ArrayList<String>();
                 String counterName = counter;
                 if (StringUtils.isBlank(counterName)) {
                     counterName = counters.size() > 0 ? counters.get(0) : "";
                 }
 
+                String tagName2 = !StringUtils.isBlank(tag2) ? tag2 : "";
+                List<String> counters2 = !StringUtils.isBlank(tagName2) ? metadataDao
+                        .getCountersForTag(tagName2) : new ArrayList<String>();
+                String counterName2 = !StringUtils.isBlank(counter2) ? counter2 : "";
+
                 Html html = render(VIEW_RTSTATS, tags.toArray(ArrayUtils.EMPTY_STRING_ARRAY),
-                        counters.toArray(ArrayUtils.EMPTY_STRING_ARRAY), tagName, counterName);
+                        counters.toArray(ArrayUtils.EMPTY_STRING_ARRAY),
+                        counters2.toArray(ArrayUtils.EMPTY_STRING_ARRAY), tagName, counterName,
+                        tagName2, counterName2);
                 return ok(html);
             }
         });
@@ -117,6 +127,7 @@ public class ModuleController extends BaseController {
                 long[] xTimestamp = ArrayUtils.EMPTY_LONG_ARRAY;
                 long[] xDp = ArrayUtils.EMPTY_LONG_ARRAY;
                 long sum = 0;
+                String df = "dd-MMM HH:mm";
 
                 Lang lang = Registry.getLanguage();
                 if (dateFrom.after(dateTo)) {
@@ -142,6 +153,7 @@ public class ModuleController extends BaseController {
                         final long duration = timestampEnd - timestampStart;
                         if (duration > 2 * 24 * 3600 * 1000) {
                             STEPS = ICounter.STEPS_1_HOUR * 24;
+                            df = "dd-MMM";
                         }
                         DataPoint[] dp = counter.getSeries(timestampStart, timestampEnd, STEPS,
                                 DataPoint.Type.SUM);
@@ -160,7 +172,7 @@ public class ModuleController extends BaseController {
                         counters.toArray(ArrayUtils.EMPTY_STRING_ARRAY), tagName, counterName,
                         DateFormatUtils.toString(dateFrom.getTime(), DF_YYYYMMDD),
                         DateFormatUtils.toString(dateTo.getTime(), DF_YYYYMMDD), xTimestamp, xDp,
-                        sum);
+                        sum, df);
                 return ok(html);
             }
         });
