@@ -1,0 +1,191 @@
+@(tags: Array[String], counters: Array[String], tagName: String, counterName: String, 
+    dateFrom: String, dateTo: String,
+    xTimestamp: Array[Long], xDp: Array[Long], sumTotal: Long
+    )(implicit lang: Lang)
+@import com.github.ddth.plommon.utils._
+@import play.mvc._
+@import rtreport.common._
+@_layout(
+	active   = "report-single",
+	customJs = Array("highcharts-4.0.3/js/highcharts.js", "highcharts-4.0.3/js/highcharts-3d.js",
+	    "avant-1.2.1/assets/plugins/form-datepicker/js/bootstrap-datepicker.js"
+	)
+){
+<div id="page-heading">
+    <ol class="breadcrumb">
+        <li><a href="@controllers.report.routes.ModuleController.dashboard()">@Messages("msg.dashboard")</a></li>
+        <li class="active">@Messages("msg.report_single")</li>
+    </ol>
+</div>
+    
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            @_macro_displayPageFlashMessage(Controller.flash(controllers.report.ModuleController.VIEW_REPORT_SINGLE))
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading"><h3 class="panel-title">@Messages("msg.rtstats")</h3></div>
+                <div class="panel-body">
+	                <div class="container" style="margin-bottom: 10px">
+	                    <form class="form-inline" role="form" method="get">
+	                        <div class="form-group">
+	                            <label class="sr-only" for="frm_tags">@Messages("msg.tags")</label>
+	                            <select class="form-control" name="t" id="frm_tags">
+	                                @for(tag <- tags){<option value="@tag" @if(tag==tagName){selected="selected"}>@tag</option>}
+	                            </select>
+	                        </div>
+	                        <div class="form-group">
+	                            <label class="sr-only" for="frm_counters">@Messages("msg.counters")</label>
+	                            <select class="form-control" name="c" id="frm_counters">
+	                                @for(counter <- counters){<option value="@counter" @if(counter==counterName){selected="selected"}>@counter</option>}
+	                            </select>
+	                        </div>
+	                        <div class="form-group">
+	                            <label class="sr-only" for="date_from">@Messages("msg.date.from")</label>
+	                            <div class="input-group date" id="datepicker1">
+	                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+	                                <input type="text" class="form-control" id="date_from" name="from" value="@dateFrom" placeholder="@Messages("msg.date.from")" />
+	                            </div>
+	                        </div>
+	                        <div class="form-group">
+	                            <label class="sr-only" for="date_to">@Messages("msg.date.to")</label>
+	                            <div class="input-group date" id="datepicker2">
+	                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+	                                <input type="text" class="form-control" id="date_to" name="to" value="@dateTo" placeholder="@Messages("msg.date.to")" />
+	                            </div>
+	                        </div>
+	                        <button type="submit" class="btn btn-primary">@Messages("msg.update")</button>
+	                    </form>
+	                </div>
+                    
+                    <div class="container" style="width: 100%">
+                        <div id="_highcharts" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+
+<script type="text/javascript">
+$('#frm_tags').on('change', function(){
+    var url = '@controllers.report.routes.JsonController.countersForTag(tagName)'.split('?')[0];
+    url += '?t=' + $(this).val();
+    $.ajax({
+        url: url,
+        success: function(jsonResult) {
+            console.log(jsonResult);
+            $("#frm_counters option").remove();
+            $.each(jsonResult, function(index, item) {
+                $("#frm_counters").append(
+                    $("<option></option>").text(item).val(item)
+                );
+            });
+        },
+        cache: false
+    });
+});
+
+var CHART;
+var DATA;
+
+@*
+function _loadData() {
+    $.ajax({
+        url: '@controllers.report.routes.JsonController.rtstats(tagName, counterName)',
+        success: function(jsonResult) {
+            for (var i = 0; i < jsonResult.length; i++) {
+                var serieObject = jsonResult[i];
+                var serieLabel = serieObject.name;
+                var serieData = serieObject.data;
+                var chartSerie = CHART.get(serieLabel);
+                if (chartSerie == null) { // chart serie is not defined
+                    CHART.addSeries({id:serieLabel, data:[], name:serieLabel});
+                    chartSerie = CHART.get(serieLabel);
+                }
+                if (chartSerie != null ) {
+                    chartSerie.setData(serieData, true, false, true);
+                }
+            }
+            setTimeout(_loadData, 1*1000);
+        },
+        cache: false
+    });
+}
+*@
+
+$(document).ready(function(){
+	Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
+    
+    DATA = [{
+        id  : '@counterName',
+        name: '@counterName',
+        data: [@defining(xTimestamp.length){n => @for(i <- 0 to (n-1)){[@xTimestamp(i),@xDp(i)],}}]
+    }];
+
+	CHART = new Highcharts.Chart({
+        chart: {
+            renderTo : '_highcharts',
+            type     : 'column',
+            options3d: {
+                enabled: true,
+                alpha  : 5,
+                beta   : 0,
+                depth  : 50,
+                viewDistance: 25
+            }
+            @*
+            events  : {
+                load: _loadData
+            }
+            *@
+        },
+        title: { text: null, style: {display: 'none'} },
+        plotOptions: {
+            spline: {
+                lineWidth: 1,
+                marker: {
+                    enabled: false
+                },
+            }
+        },
+        xAxis: {
+            type                : 'datetime',
+            minTickInterval     : 0.5,
+            dateTimeLabelFormats: {
+                millisecond: '%H:%M:%S.%L',
+                second     : '%H:%M:%S',
+                minute     : '%H:%M',
+                hour       : '%H:%M',
+                day        : '%d-%m',
+                week       : '%e. %b',
+                month      : '%b \'%y',
+                year       : '%Y'
+            }
+        },
+        yAxis: {
+            title          : {text: ''},
+            minTickInterval: 1,
+            min            : 0
+        },
+        series: DATA,
+        @*colors: ['#0000ff', '#ff0000', '#009010'],*@
+        tooltip: {
+            formatter: function() {
+                return '<b>'+ this.series.name + ': '
+                    + Highcharts.numberFormat(this.y, 0) + '</b><br/>'
+                    + '<small>' + Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x) +'</small>';
+            }
+        }
+    });
+});
+</script>
+}

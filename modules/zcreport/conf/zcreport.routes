@@ -1,7 +1,0 @@
-GET     /                               controllers.common.BaseController.redirectTo(url="/zcreport/dashboard")
-GET     /dashboard                      controllers.zcreport.ModuleController.dashboard()
-GET     /reportSummary                  controllers.zcreport.ModuleController.reportSummary(date1:String?=null, date2:String?=null)
-GET     /reportDetails                  controllers.zcreport.ModuleController.reportDetails(date1:String?=null, date2:String?=null)
-
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                   controllers.zcreport.Assets.at(path="/public", file)

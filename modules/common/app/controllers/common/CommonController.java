@@ -5,7 +5,7 @@ import play.data.Form;
 import play.libs.F.Function0;
 import play.libs.F.Promise;
 import play.mvc.Result;
-import vngup.rtreports.common.Application;
+import rtreport.common.Application;
 import bo.common.user.UserBo;
 import bo.common.user.UserDao;
 import forms.common.FormLogin;

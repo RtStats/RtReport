@@ -10,9 +10,6 @@ import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import compisitions.common.SiteCheck;
-
-@SiteCheck
 public class BaseController extends Controller {
 
     /**

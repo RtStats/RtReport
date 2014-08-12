@@ -2,7 +2,7 @@ package bo.common.user;
 
 import java.util.List;
 
-import vngup.rtreports.common.Constants;
+import rtreport.common.Constants;
 
 import com.github.ddth.plommon.bo.BaseBo;
 

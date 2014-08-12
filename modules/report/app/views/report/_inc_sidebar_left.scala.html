@@ -1,0 +1,18 @@
+@(active: String="")(implicit lang: Lang)
+<nav id="page-leftbar" role="navigation">
+	<ul class="acc-menu" id="sidebar">
+		<li @if(active=="dashboard"){class="active"}><a
+			href="@controllers.report.routes.ModuleController.dashboard()"><i
+				class="fa fa-dashboard"></i> <span>@Messages("msg.dashboard")</span></a></li>
+        <li @if(active=="rtstats"){class="active"}><a
+            href="@controllers.report.routes.ModuleController.rtstats()"><i
+                class="fa fa-bar-chart-o"></i> <span>@Messages("msg.rtstats")</span></a></li>
+        <li @if(active=="report-single"){class="active"}><a
+            href="@controllers.report.routes.ModuleController.reportSingle()"><i
+                class="fa fa-bar-chart-o"></i> <span>@Messages("msg.report_single")</span></a></li>
+        <li class="divider"></li>
+        <li @if(active=="config"){class="active"}><a
+            href="@controllers.report.routes.ModuleController.dashboard()"><i
+                class="fa fa-cogs"></i> <span>@Messages("msg.config")</span></a></li>
+	</ul>
+</nav>

@@ -1,0 +1,231 @@
+@(active: String="", customJs: Array[String]=Array(), customCss: Array[String]=Array())(content: Html)(implicit lang: Lang)
+@import play.mvc._
+@import com.github.ddth.plommon.utils._
+@import rtreport.common._
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>@PlayAppUtils.appConfigString("app.name")</title>   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @*
+    <meta name="keywords" content="@Application.appConfig(Constants.CONFIG_SITE_KEYWORDS)" />
+    <meta name="description" content="@Application.appConfig(Constants.CONFIG_SITE_DESCRTIPTION)" />
+    *@
+    <meta name="author" content="@PlayAppUtils.appConfigString("app.name")" />
+
+    <link rel="stylesheet" href="@controllers.report.routes.Assets.at("avant-1.2.1/assets/fonts/font-awesome/css/font-awesome.min.css")" />
+    <link rel="stylesheet" href="@controllers.report.routes.Assets.at("avant-1.2.1/assets/css/styles.min.css")" />
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&subset=latin,vietnamese,latin-ext' rel='stylesheet' type='text/css' />
+    
+    <link href='@controllers.report.routes.Assets.at("avant-1.2.1/assets/demo/variations/default.css")' rel='stylesheet' type='text/css' media='all' id='styleswitcher'> 
+    <link href='@controllers.report.routes.Assets.at("avant-1.2.1/assets/demo/variations/default.css")' rel='stylesheet' type='text/css' media='all' id='headerswitcher'> 
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries. Placeholdr.js enables the placeholder attribute -->
+    <!--[if lt IE 9]>
+        <link rel="stylesheet" href="assets/css/ie8.css">
+        <script type="text/javascript" src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+        <script type="text/javascript" src="@controllers.report.routes.Assets.at("avant-1.2.1/assets/plugins/charts-flot/excanvas.min.js")"></script>
+    <![endif]-->
+    
+    <link rel='stylesheet' type='text/css' href='@controllers.report.routes.Assets.at("avant-1.2.1/assets/plugins/codeprettifier/prettify.css")' />
+    <link rel='stylesheet' type='text/css' href='@controllers.report.routes.Assets.at("avant-1.2.1/assets/plugins/form-toggle/toggles.css")' />
+    @for(css <- customCss){<link rel="stylesheet" href="@controllers.report.routes.Assets.at(css)" />}
+    <style type="text/css">
+    /* Avant template fix! */
+    label {font-weight: bold !important;}
+    .input-group-addon {width: auto !important;}
+    
+    .loading_img {
+    	display:    none;
+    	position:   fixed;
+    	z-index:    1000;
+    	top:        0;
+    	left:       0;
+    	height:     100%;
+    	width:      100%;
+    	background: rgba(255, 255, 255, .8) url('@controllers.report.routes.Assets.at("images/loading.gif")') 50% 50% no-repeat;
+	}
+	body.loading {
+    	overflow: hidden;   
+	}
+	body.loading .loading_img {
+    	display: block;
+	}
+    </style>
+    <script type='text/javascript' src='@controllers.report.routes.Assets.at("avant-1.2.1/assets/js/jquery-1.10.2.min.js")'></script>
+</head>
+
+<body class="">
+    <div class="modal fade" id="_dialog-confirm" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="_dialog-confirm-btnClose">&times;</button>
+                    <h4 class="modal-title" id="_dialog-confirm-title">${title}</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="_dialog-confirm-message">${message}</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="_dialog-confirm-btnYes" type="button" class="btn btn-primary">@Messages("msg.yes")</button>
+                    <button id="_dialog-confirm-btnNo" type="button" class="btn btn-default" data-dismiss="modal">@Messages("msg.no")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    function _execConfirmYesNo(title, message, callbackYes, callbackNo, warning) {
+    	if (typeof callbackYes=='undefined' || callbackYes == null){
+            callbackYes = function(){};
+        }
+        if (typeof callbackNo=='undefined' || callbackNo == null){
+            callbackNo = function(){};
+        }
+        var _confirmed = false;
+        var myCallbackYes = function() {
+        	_confirmed = true;
+            $('#_dialog-confirm').modal('hide');
+        }
+        $('#_dialog-confirm-btnYes').one('click', myCallbackYes);
+        $('#_dialog-confirm').one('hidden.bs.modal', function(e){
+            if ( !_confirmed ) {
+                callbackNo();
+            } else {
+                callbackYes();
+            }
+        });
+        $('#_dialog-confirm-title').text(title);
+        $('#_dialog-confirm-message').html(message);
+        $('#_dialog-confirm-btnYes').text('@Messages("msg.yes")');
+        $('#_dialog-confirm-btnNo').text('@Messages("msg.no")');
+        if ( warning ) {
+            $('#_dialog-confirm-btnYes').attr("class", "btn btn-danger");
+        } else {
+            $('#_dialog-confirm-btnYes').attr("class", "btn btn-primary");
+        }
+        $('#_dialog-confirm').modal('show');
+    }
+    function _execConfirmOkCancel(title, message, callbackYes, callbackNo) {
+        if (typeof callbackYes=='undefined' || callbackYes == null){
+            callbackYes = function(){};
+        }
+        if (typeof callbackNo=='undefined' || callbackNo == null){
+            callbackNo = function(){};
+        }
+        var _confirmed = false;
+        var myCallbackYes = function() {
+            _confirmed = true;
+            $('#_dialog-confirm').modal('hide');
+        }
+        $('#_dialog-confirm-btnYes').one('click', myCallbackYes);
+        $('#_dialog-confirm').one('hidden.bs.modal', function(e){
+            if ( !_confirmed ) {
+                callbackNo();
+            } else {
+                callbackYes();
+            }
+        });
+        $('#_dialog-confirm-title').text(title);
+        $('#_dialog-confirm-message').html(message);
+        $('#_dialog-confirm-btnYes').text('@Messages("msg.ok")');
+        $('#_dialog-confirm-btnNo').text('@Messages("msg.cancel")');
+        if ( warning ) {
+            $('#_dialog-confirm-btnYes').attr("class", "btn btn-danger");
+        } else {
+            $('#_dialog-confirm-btnYes').attr("class", "btn btn-primary");
+        }
+        $('#_dialog-confirm').modal('show');
+    }
+    </script>
+    
+    @_inc_headerbar()
+    @_inc_navbar(section=global.report.ModuleBootstrap.MODULE_ID)
+
+    <div id="page-container">
+        @_inc_sidebar_left(active)
+        @_inc_sidebar_right()
+        
+        <style type="text/css">
+        .breadcrumb>li{font-size: inherit !important;}
+        </style>
+        <div id="page-content">
+            <div id='wrap'>
+                @content
+            </div>
+        </div>
+
+        <footer role="contentinfo">
+            <div class="clearfix">
+                <ul class="list-unstyled list-inline pull-left">
+                    <li>@PlayAppUtils.appConfigString("app.fullname") &copy; 2014</li>
+                </ul>
+                <button class="pull-right btn btn-inverse-alt btn-xs hidden-print" id="back-to-top"><i class="fa fa-arrow-up"></i></button>
+                <!-- <button class="pull-right btn btn-inverse btn-xs" id="back-to-top" style="margin-top: -1px; text-transform: uppercase;"><i class="fa fa-arrow-up"></i></button> -->
+            </div>
+        </footer>
+    </div>
+    
+    @if(PlayAppUtils.queryString("debug")!=null) {
+	    @defining(com.github.ddth.plommon.bo.BaseDao.getProfiling()){profilingData =>
+	        <div class="panel panel-danger" style="font-size: x-small">
+                <div class="panel-heading" style="font-size: x-small; height: auto">SQL Debug</div>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>SQL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+	                    @for(record <- profilingData){
+	                        <tr>
+	                            <td align="center">@record.execTime</td>
+	                            <td>@record.command</td>
+	                        </tr>
+			            }
+		            </tbody>
+                </table>
+            </div>
+	    }
+	}
+    
+    <script type='text/javascript' src='@controllers.report.routes.Assets.at("avant-1.2.1/assets/js/bootstrap.min.js")'></script> 
+    <script type='text/javascript' src='@controllers.report.routes.Assets.at("avant-1.2.1/assets/js/enquire.js")'></script> 
+    <script type='text/javascript' src='@controllers.report.routes.Assets.at("avant-1.2.1/assets/js/jquery.cookie.js")'></script> 
+    <script type='text/javascript' src='@controllers.report.routes.Assets.at("avant-1.2.1/assets/js/jquery.nicescroll.min.js")'></script> 
+    <script type='text/javascript' src='@controllers.report.routes.Assets.at("avant-1.2.1/assets/plugins/codeprettifier/prettify.js")'></script> 
+    <script type='text/javascript' src='@controllers.report.routes.Assets.at("avant-1.2.1/assets/plugins/easypiechart/jquery.easypiechart.min.js")'></script> 
+    <script type='text/javascript' src='@controllers.report.routes.Assets.at("avant-1.2.1/assets/plugins/sparklines/jquery.sparklines.min.js")'></script> 
+    <script type='text/javascript' src='@controllers.report.routes.Assets.at("avant-1.2.1/assets/plugins/form-toggle/toggle.min.js")'></script> 
+    <script type='text/javascript' src='@controllers.report.routes.Assets.at("avant-1.2.1/assets/js/placeholdr.js")'></script> 
+    <script type='text/javascript' src='@controllers.report.routes.Assets.at("avant-1.2.1/assets/js/application.js")'></script> 
+    @for(js <- customJs){<script type="text/javascript" src="@controllers.report.routes.Assets.at(js)"></script>}
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('.popovers').popover({container: 'body', trigger: 'hover', placement: 'top'}); //bootstrap's popover
+        $('.tooltips').tooltip(); //bootstrap's tooltip
+    });
+    function _go(url) {
+        document.location.href = url;
+    }
+    function exportExcel(tableId, filename) {
+        //creating a temporary HTML link element (they support setting file names)
+        var a = $('#exportExcel');
+
+        //getting data from our div that contains the HTML table
+        var data_type = 'data:application/vnd.ms-excel';
+        var table_div = document.getElementById(tableId);
+        var table_html = table_div.outerHTML;
+        table_html = table_html.replace(/ /g, '%20');
+            
+        a.attr('href', data_type + ', ' + table_html);
+
+        //setting the file name
+        a.attr('download', filename);
+    }
+    </script>
+    <div class="loading_img"></div>
+</body>
+</html>

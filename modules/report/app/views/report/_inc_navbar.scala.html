@@ -1,0 +1,31 @@
+@(section: String=null)(implicit lang: Lang)
+@import global.common._
+@import play.mvc._
+@import com.github.ddth.plommon.utils._
+<header class="navbar navbar-inverse navbar-fixed-top" role="banner">
+	<a id="leftmenu-trigger" class="tooltips" data-toggle="tooltip" data-placement="right" title="Toggle Sidebar"></a>
+	@*
+	<a id="rightmenu-trigger" class="tooltips" data-toggle="tooltip" data-placement="left" title="Toggle Infobar"></a>
+	*@
+
+	<style type="text/css">@* replaced logo image with text *@
+	.navbar-brand{width: auto !important; background: none !important; font: inherit !important; color: white !important; white-space:nowrap !important;}
+	</style>
+	<div class="navbar-header">
+	    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+        </button>
+		<a class="navbar-brand" href="/">@PlayAppUtils.appConfigString("app.name")</a>
+	</div>
+	
+	<div class="collapse navbar-collapse" id="navbar-collapse-1">
+		<ul class="nav navbar-nav">
+		    @for(menuItem <- Registry.getMenuBarItems()){
+		        <li @if(section==menuItem.id){class="active"}><a href="@menuItem.url">@menuItem.title</a></li>
+		    }
+	    </ul>
+	</div>
+</header>

@@ -14,7 +14,7 @@ import play.api.mvc.EssentialFilter;
 import play.filters.gzip.GzipFilter;
 import play.mvc.Action;
 import play.mvc.Http.Request;
-import vngup.rtreports.common.module.IModuleBootstrap;
+import rtreport.common.module.IModuleBootstrap;
 import bo.common.auth.IAuthenticationService;
 
 import com.github.ddth.plommon.bo.BaseDao;

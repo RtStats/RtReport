@@ -10,10 +10,13 @@ object ApplicationBuild extends Build {
     )
 
     val conf            = ConfigFactory.parseFile(new File("conf/application.conf")).resolve()
-    val appName         = "vngup-rtreports"
+    val appName         = "rtreport"
     val appVersion      = conf.getString("app.version")
     
     val _javaVersion = "1.6"
+    val _versionSpringFramework = "3.2.10.RELEASE"
+    val _versionSpringSecurity = "3.2.4.RELEASE"
+    val _versionTsc = "0.5.1"
       
     val appDependenciesBase = Seq(
         javaJdbc,
@@ -28,15 +31,19 @@ object ApplicationBuild extends Build {
         "com.ibm.icu"           %  "icu4j"                  % "53.1",
         "com.github.ddth"       %  "ddth-commons"           % "0.2.2.2",
         "com.github.ddth"       %  "spring-social-helper"   % "0.2.1",
-        "com.github.ddth"       %  "ddth-tsc"               % "0.5.1",
-        "com.github.ddth"       %  "ddth-tsc-cassandra"     % "0.5.1",
-        "com.github.ddth"       %  "ddth-tsc-redis"         % "0.5.1",
+        "com.github.ddth"       %  "ddth-tsc"               % _versionTsc,
+        "com.github.ddth"       %  "ddth-tsc-cassandra"     % _versionTsc,
+        "com.github.ddth"       %  "ddth-tsc-redis"         % _versionTsc,
         "com.github.ddth"       %% "play-module-plommon"    % "0.5.1.5"
     )
     
     val appDepsCommon = appDependenciesBase ++ Seq(
-        "org.springframework.security" % "spring-security-core" % "3.2.4.RELEASE",
-        "org.springframework.security" % "spring-security-ldap" % "3.2.4.RELEASE"
+        "com.datastax.cassandra"       % "cassandra-driver-core" % "2.0.1",
+        "org.springframework.security" % "spring-security-core"  % _versionSpringSecurity,
+        "org.springframework.security" % "spring-security-ldap"  % _versionSpringSecurity,
+        "org.springframework"          % "spring-core"           % _versionSpringFramework,
+        "org.springframework"          % "spring-expression"     % _versionSpringFramework
+        
     )
     
     val moduleCommon = play.Project(
@@ -52,9 +59,9 @@ object ApplicationBuild extends Build {
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     )
     
-    val appDepsZcReport = appDependenciesBase
-    val moduleZcReport = play.Project(
-        appName + "-zcreport", appVersion, appDepsZcReport, path = file("modules/zcreport")
+    val appDepsReport = appDependenciesBase
+    val moduleReport = play.Project(
+        appName + "-report", appVersion, appDepsReport, path = file("modules/report")
     ).dependsOn(
         moduleCommon
     ).aggregate(
@@ -70,60 +77,6 @@ object ApplicationBuild extends Build {
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     )
     
-    val appDepsPplogin = appDependenciesBase
-    val modulePplogin = play.Project(
-        appName + "-pplogin", appVersion, appDepsPplogin, path = file("modules/pplogin")
-    ).dependsOn(
-        moduleCommon
-    ).aggregate(
-        moduleCommon
-    ).settings(
-        // Disable generating scaladoc
-        sources in doc in Compile := List(),
-        
-        // Custom Maven repository
-        resolvers += "Sonatype OSS repository" at "https://oss.sonatype.org/content/repositories/releases/",
-        
-        // Force compilation in java 1.6
-        javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
-    )
-    
-    val appDepsPayCharging = appDependenciesBase
-    val modulePayCharging = play.Project(
-        appName + "-paycharging", appVersion, appDepsPplogin, path = file("modules/paycharging")
-    ).dependsOn(
-        moduleCommon
-    ).aggregate(
-        moduleCommon
-    ).settings(
-        // Disable generating scaladoc
-        sources in doc in Compile := List(),
-        
-        // Custom Maven repository
-        resolvers += "Sonatype OSS repository" at "https://oss.sonatype.org/content/repositories/releases/",
-        
-        // Force compilation in java 1.6
-        javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
-    )
-
-    val appDepsCp = appDependenciesBase
-    val moduleCp = play.Project(
-        appName + "-cp", appVersion, appDepsCp, path = file("modules/cp")
-    ).dependsOn(
-        moduleCommon
-    ).aggregate(
-        moduleCommon
-    ).settings(
-          // Disable generating scaladoc
-          sources in doc in Compile := List(),
-
-          // Custom Maven repository
-          resolvers += "Sonatype OSS repository" at "https://oss.sonatype.org/content/repositories/releases/",
-
-          // Force compilation in java 1.6
-          javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
-    )
-
     val main = play.Project(appName, appVersion, appDependenciesBase, path = file(".")).settings(
         // Disable generating scaladoc
         sources in doc in Compile := List(),
@@ -134,8 +87,8 @@ object ApplicationBuild extends Build {
         // Force compilation in java 1.6
         javacOptions in Compile ++= Seq("-source", _javaVersion, "-target", _javaVersion)
     ).dependsOn(
-        moduleCommon, modulePplogin, modulePayCharging, moduleZcReport, moduleCp
+        moduleCommon, moduleReport
     ).aggregate(
-        moduleCommon, modulePplogin, modulePayCharging, moduleZcReport, moduleCp
+        moduleCommon, moduleReport
     )
 }

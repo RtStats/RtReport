@@ -1,6 +1,6 @@
 package controllers.common;
 
-import compisitions.common.AuthRequired;
+import compositions.common.AuthRequired;
 
 @AuthRequired
 public class AuthRequiredController extends BaseController {

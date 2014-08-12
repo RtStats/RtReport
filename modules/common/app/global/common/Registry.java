@@ -1,22 +1,18 @@
 package global.common;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import play.Logger;
 import play.Play;
-import utils.common.SiteUtils;
-import vngup.rtreports.common.MenuItem;
-import vngup.rtreports.common.MenuItemComparator;
-import vngup.rtreports.common.module.IModuleBootstrap;
+import play.i18n.Lang;
+import rtreport.common.MenuItem;
+import rtreport.common.MenuItemComparator;
+import rtreport.common.module.IModuleBootstrap;
 import bo.common.auth.IAuthenticationService;
-import bo.common.site.SiteBo;
-import bo.common.site.SiteDao;
 
 public class Registry {
 
@@ -49,6 +45,10 @@ public class Registry {
         }
     }
 
+    public static Lang getLanguage() {
+        return Lang.forCode("vi");
+    }
+
     public static IAuthenticationService getAuthenticationService() {
         return authenticationService;
     }
@@ -74,17 +74,7 @@ public class Registry {
     }
 
     public static MenuItem[] getMenuBarItems() {
-        String siteName = SiteUtils.extractSiteName();
-        SiteBo site = SiteDao.getSite(siteName);
-        List<MenuItem> result = new ArrayList<MenuItem>();
-        if (menuBarItemArr != null) {
-            for (MenuItem menuItem : menuBarItemArr) {
-                if (site != null && site.isModuleVisible(menuItem.id)) {
-                    result.add(menuItem);
-                }
-            }
-        }
-        return result.toArray(MenuItem.EMPTY_ARRAY);
+        return menuBarItemArr != null ? menuBarItemArr : MenuItem.EMPTY_ARRAY;
     }
 
     /**

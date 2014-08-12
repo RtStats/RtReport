@@ -1,0 +1,8 @@
+GET     /dashboard                      controllers.report.ModuleController.dashboard()
+GET     /rtstats                        controllers.report.ModuleController.rtstats(t:String?=null, c:String?=null)
+GET     /json/rtstats                   controllers.report.JsonController.rtstats(t:String?=null, c:String?=null)
+GET     /reportSingle                   controllers.report.ModuleController.reportSingle(t:String?=null, c:String?=null, from:String?=null, to:String?=null)
+GET     /json/countersForTag            controllers.report.JsonController.countersForTag(t:String)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                   controllers.report.Assets.at(path="/public", file)
