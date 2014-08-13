@@ -2,5 +2,5 @@
 /.settings
 /.classpath
 /.project
-/.cache
+.cache
 /bin

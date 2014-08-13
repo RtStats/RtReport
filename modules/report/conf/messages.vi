@@ -10,6 +10,9 @@ msg.compare = So sánh
 msg.tags = Danh sách tag
 msg.counters = Danh sách counter
 
+msg.sum = Cộng
+msg.sum_total = Tổng cộng
+
 msg.date.from = Ngày bắt đầu
 msg.date.to = Ngày kết thúc
 

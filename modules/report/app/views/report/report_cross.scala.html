@@ -72,6 +72,7 @@
                             <thead>
                                 <tr>
                                     <th style="text-align:center; white-space:nowrap;" nowrap="nowrap">&nbsp;</th>
+                                    <th style="text-align:center; white-space:nowrap;" nowrap="nowrap" colspan="2">@Messages("msg.sum")</th>
                                     @for(x <- xTimestamp){
                                         <th style="text-align: center">@(new java.util.Date(x).format(dtFormat))</th>
                                     }
@@ -80,15 +81,35 @@
                             <tbody>
                                 @for(r <- highchartsData){
                                     @defining(r.asInstanceOf[java.util.Map[_,_]]){row =>
-	                                    <tr>                                    
-	                                        <td style="text-align: center">@row.get("name")</td>
-	                                        @for(dp <- row.get("data").asInstanceOf[java.util.List[_]]){
-	                                            <td style="text-align: right">@("%,d".format(dp.asInstanceOf[Array[_]](1)))</td>
-	                                        }
-	                                    </tr>
+                                        @if(row.get("id")!="*"){
+		                                    <tr>                                    
+		                                        <td style="text-align: center">@row.get("name")</td>
+		                                        <td style="text-align: right; font-weight: bold">@("%,d".format(row.get("sum")))</td>
+		                                        <td style="text-align: right; font-weight: bold">@row.get("percent")</td>
+		                                        @for(dp <- row.get("data").asInstanceOf[java.util.List[_]]){
+		                                            <td style="text-align: right">@("%,d".format(dp.asInstanceOf[Array[_]](1)))</td>
+		                                        }
+		                                    </tr>
+		                                }
                                     }
                                 }
                             </tbody>
+                            <tfoot>
+                                @for(r <- highchartsData){
+                                    @defining(r.asInstanceOf[java.util.Map[_,_]]){row =>
+                                        @if(row.get("id")=="*"){
+	                                        <tr>                                    
+	                                            <th style="text-align: center">@Messages("msg.sum_total")</th>
+	                                            <th style="text-align: right; font-weight: bold">@("%,d".format(row.get("sum")))</th>
+	                                            <td style="text-align: right; font-weight: bold">@row.get("percent")</td>
+	                                            @for(dp <- row.get("data").asInstanceOf[java.util.List[_]]){
+	                                                <th style="text-align: right">@("%,d".format(dp.asInstanceOf[Array[_]](1)))</th>
+	                                            }
+	                                        </tr>
+                                        }
+                                    }
+                                }
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -118,20 +139,44 @@ $(document).ready(function(){
 
     DATA = [@for(r <- highchartsData){
         @defining(r.asInstanceOf[java.util.Map[_,_]]){row =>
-            {
-                id  : '@row.get("id")',
-                name: '@row.get("name")',
-                data: [@for(dp <- row.get("data").asInstanceOf[java.util.List[_]]){
-                    [@dp.asInstanceOf[Array[_]](0), @dp.asInstanceOf[Array[_]](1)],
-                }]
-            },
+            @if(row.get("id")!="*"){
+	            {
+	                type: 'column',
+	                id  : '@row.get("id")',
+	                name: '@row.get("name")',
+	                data: [@for(dp <- row.get("data").asInstanceOf[java.util.List[_]]){
+	                    [@dp.asInstanceOf[Array[_]](0), @dp.asInstanceOf[Array[_]](1)],
+	                }]
+	            },
+	        }
         }
-    }];
+    }
+    @*
+    {
+        type  : 'pie',
+        name  : 'Total',
+        center: [100, 60],
+        size  : 125,
+        showInLegend: false,
+        dataLabels  : {enabled: false},
+        tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+        data  : [@for(r <- highchartsData){
+            @defining(r.asInstanceOf[java.util.Map[_,_]]){row =>
+                ['@row.get("name")', @row.get("sum")],
+            }
+        }]
+    }
+    *@
+    ];
     
     CHART = new Highcharts.Chart({
         chart: {
             renderTo : '_highcharts',
+            @*
             type     : 'column',
+            *@
             options3d: {
                 enabled: true,
                 alpha  : 5,
@@ -163,6 +208,7 @@ $(document).ready(function(){
         },
         series: DATA,
         @*colors: ['#0000ff', '#ff0000', '#009010'],*@
+        @*
         tooltip: {
             formatter: function() {
                 return '<b>'+ this.series.name + ': '
@@ -170,6 +216,7 @@ $(document).ready(function(){
                     + '<small>' + Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x) +'</small>';
             }
         }
+        *@
     });
 });
 </script>

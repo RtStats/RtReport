@@ -24,6 +24,7 @@ import rtreport.common.Constants;
 import utils.common.DateTimeUtils;
 import bo.common.metadata.IMetadataDao;
 
+import com.github.ddth.commons.utils.DPathUtils;
 import com.github.ddth.commons.utils.DateFormatUtils;
 import com.github.ddth.tsc.DataPoint;
 import com.github.ddth.tsc.ICounter;
@@ -189,6 +190,7 @@ public class ModuleController extends BaseController {
      */
     public static Promise<Result> reportCross(final String fromDateStr, final String toDateStr) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            @SuppressWarnings("unchecked")
             public Result apply() throws Exception {
                 Collection<String> selectedCounterNames = new HashSet<String>();
                 String[] counterList = request().queryString().get("c");
@@ -243,6 +245,12 @@ public class ModuleController extends BaseController {
                         df = "dd-MMM";
                     }
 
+                    Map<String, Object> seriTotal = new HashMap<String, Object>();
+                    List<long[]> seriTotalData = new ArrayList<long[]>();
+                    seriTotal.put("id", "*");
+                    seriTotal.put("name", "*");
+                    seriTotal.put("data", seriTotalData);
+                    long grandTotal = 0;
                     for (String counterName : selectedCounterNames) {
                         ICounter counter = ModuleBootstrap.getCounter(counterName);
                         if (counter != null) {
@@ -261,8 +269,42 @@ public class ModuleController extends BaseController {
                                     xTimestamp[i] = dpList[i].timestamp();
                                 }
                             }
+                            long sum = 0;
                             for (DataPoint dp : dpList) {
+                                sum += dp.value();
                                 seriData.add(new long[] { dp.timestamp(), dp.value() });
+                            }
+                            seri.put("sum", sum);
+                            grandTotal += sum;
+                        }
+                    }
+                    seriTotal.put("sum", grandTotal);
+                    seriTotal.put("percent", "100.0%");
+                    data.add(seriTotal);
+
+                    // calc percent
+                    for (Object temp : data) {
+                        if (grandTotal == 0) {
+                            DPathUtils.setValue(temp, "percent", "-");
+                        } else {
+                            long sum = DPathUtils.getValue(temp, "sum", long.class);
+                            double percent = (double) sum * 1.0 / (double) grandTotal;
+                            percent *= 100.0;
+                            String percentStr = String.format("%.1f", percent);
+                            DPathUtils.setValue(temp, "percent", percentStr + "%");
+                        }
+                    }
+
+                    // calc sum for seri "total"
+                    for (int i = 0; i < xTimestamp.length; i++) {
+                        long sumTotal = 0;
+                        for (Object temp : data) {
+                            String id = DPathUtils.getValue(temp, "id", String.class);
+                            List<long[]> seriData = DPathUtils.getValue(temp, "data", List.class);
+                            if ("*".equals(id)) {
+                                seriData.add(new long[] { xTimestamp[i], sumTotal });
+                            } else {
+                                sumTotal += seriData.get(i)[1];
                             }
                         }
                     }
