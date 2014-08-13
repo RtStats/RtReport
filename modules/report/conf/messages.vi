@@ -10,6 +10,7 @@ msg.compare = So sánh
 msg.tags = Danh sách tag
 msg.counters = Danh sách counter
 
+msg.all = Tất cả
 msg.sum = Cộng
 msg.sum_total = Tổng cộng
 

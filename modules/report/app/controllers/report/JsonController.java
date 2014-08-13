@@ -30,7 +30,12 @@ public class JsonController extends BaseController {
     public static Promise<Result> countersForTag(final String tagName) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
-                List<String> result = ModuleBootstrap.getMetadataDao().getCountersForTag(tagName);
+                List<String> result;
+                if ("*".equals(tagName)) {
+                    result = ModuleBootstrap.getMetadataDao().getAllCounters();
+                } else {
+                    result = ModuleBootstrap.getMetadataDao().getCountersForTag(tagName);
+                }
                 return ok(Json.toJson(result));
             }
         });

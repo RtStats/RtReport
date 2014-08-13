@@ -69,16 +69,24 @@ public class ModuleController extends BaseController {
                 if (StringUtils.isBlank(tagName)) {
                     tagName = tags.size() > 0 ? tags.get(0) : "";
                 }
-                List<String> counters = !StringUtils.isBlank(tagName) ? metadataDao
-                        .getCountersForTag(tagName) : new ArrayList<String>();
+                List<String> counters;
+                if ("*".equals(tagName)) {
+                    counters = metadataDao.getAllCounters();
+                } else {
+                    counters = metadataDao.getCountersForTag(tagName);
+                }
                 String counterName = counter;
                 if (StringUtils.isBlank(counterName)) {
                     counterName = counters.size() > 0 ? counters.get(0) : "";
                 }
 
                 String tagName2 = !StringUtils.isBlank(tag2) ? tag2 : "";
-                List<String> counters2 = !StringUtils.isBlank(tagName2) ? metadataDao
-                        .getCountersForTag(tagName2) : new ArrayList<String>();
+                List<String> counters2;
+                if ("*".equals(tagName2)) {
+                    counters2 = metadataDao.getAllCounters();
+                } else {
+                    counters2 = metadataDao.getCountersForTag(tagName2);
+                }
                 String counterName2 = !StringUtils.isBlank(counter2) ? counter2 : "";
 
                 Html html = render(VIEW_RTSTATS, tags.toArray(ArrayUtils.EMPTY_STRING_ARRAY),
@@ -102,10 +110,9 @@ public class ModuleController extends BaseController {
             final String fromDateStr, final String toDateStr) {
         Promise<Result> promise = Promise.promise(new Function0<Result>() {
             public Result apply() throws Exception {
-                Calendar now = DateTimeUtils.startOfDay(Calendar.getInstance());
+                Calendar now = Calendar.getInstance();
 
-                Calendar dateFrom = (Calendar) now.clone();
-                dateFrom.add(Calendar.DATE, -1); // yesterday
+                Calendar dateFrom = DateTimeUtils.startOfDay(now);
                 Calendar dateTo = (Calendar) dateFrom.clone();
 
                 try {
@@ -124,7 +131,12 @@ public class ModuleController extends BaseController {
                 if (StringUtils.isBlank(tag)) {
                     tagName = tags.size() > 0 ? tags.get(0) : "";
                 }
-                List<String> counters = metadataDao.getCountersForTag(tagName);
+                List<String> counters;
+                if ("*".equals(tagName)) {
+                    counters = metadataDao.getAllCounters();
+                } else {
+                    counters = metadataDao.getCountersForTag(tagName);
+                }
                 String counterName = counter;
                 if (StringUtils.isBlank(counterName)) {
                     counterName = counters.size() > 0 ? counters.get(0) : "";
@@ -140,7 +152,7 @@ public class ModuleController extends BaseController {
                     String msg = Constants.FLASH_MSG_PREFIX_ERROR
                             + Messages.get(lang, "error.from_date_to_date");
                     flash(VIEW_REPORT_SINGLE, msg);
-                } else if (!dateFrom.before(now)) {
+                } else if (dateFrom.after(now)) {
                     String msg = Constants.FLASH_MSG_PREFIX_ERROR
                             + Messages.get(lang, "error.from_date_now");
                     flash(VIEW_REPORT_SINGLE, msg);
@@ -204,9 +216,8 @@ public class ModuleController extends BaseController {
                 List<String> counters = metadataDao.getAllCounters();
                 List<Object> data = new ArrayList<Object>();
 
-                Calendar now = DateTimeUtils.startOfDay(Calendar.getInstance());
-                Calendar dateFrom = (Calendar) now.clone();
-                dateFrom.add(Calendar.DATE, -1); // yesterday
+                Calendar now = Calendar.getInstance();
+                Calendar dateFrom = DateTimeUtils.startOfDay(now);
                 Calendar dateTo = (Calendar) dateFrom.clone();
                 try {
                     dateFrom.setTime(DateFormatUtils.fromString(fromDateStr, DF_YYYYMMDD));
@@ -225,7 +236,7 @@ public class ModuleController extends BaseController {
                     String msg = Constants.FLASH_MSG_PREFIX_ERROR
                             + Messages.get(lang, "error.from_date_to_date");
                     flash(VIEW_REPORT_CROSS, msg);
-                } else if (!dateFrom.before(now)) {
+                } else if (dateFrom.after(now)) {
                     String msg = Constants.FLASH_MSG_PREFIX_ERROR
                             + Messages.get(lang, "error.from_date_now");
                     flash(VIEW_REPORT_CROSS, msg);

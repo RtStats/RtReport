@@ -36,6 +36,7 @@
 	                            <label class="sr-only" for="frm_tags">@Messages("msg.tags")</label>
 	                            <select class="form-control" name="t" id="frm_tags">
 	                                @for(tag <- tags){<option value="@tag" @if(tag==tagName){selected="selected"}>@tag</option>}
+	                                <option value="*" @if("*"==tagName){selected="selected"}>=[@Messages("msg.all")]=</option>
 	                            </select>
 	                        </div>
 	                        <div class="form-group">
@@ -104,7 +105,6 @@ $('#frm_tags').on('change', function(){
     $.ajax({
         url: url,
         success: function(jsonResult) {
-            console.log(jsonResult);
             $("#frm_counters option").remove();
             $.each(jsonResult, function(index, item) {
                 $("#frm_counters").append(
@@ -182,6 +182,11 @@ $(document).ready(function(){
         endDate: 'today' /* can not select date in future */
     });
     
+    $body = $("body");
+    $(document).on({
+        ajaxStart: function() { $body.addClass("loading");    },
+        ajaxStop : function() { $body.removeClass("loading"); }    
+    });
 });
 </script>
 }

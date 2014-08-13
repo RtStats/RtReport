@@ -3,6 +3,8 @@ package bo.common.metadata;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import bo.common.cassandra.BaseCassandraDao;
 
 import com.datastax.driver.core.PreparedStatement;
@@ -75,10 +77,12 @@ public class CassandraMetadataDao extends BaseCassandraDao implements IMetadataD
     @Override
     public List<String> getCountersForTag(String tag) {
         List<String> result = new ArrayList<String>();
-        ResultSet rs = execute(getSession(), pGetCountersForTag, tag);
-        List<Row> rows = rs.all();
-        for (Row row : rows) {
-            result.add(row.getString("c"));
+        if (!StringUtils.isBlank(tag)) {
+            ResultSet rs = execute(getSession(), pGetCountersForTag, tag);
+            List<Row> rows = rs.all();
+            for (Row row : rows) {
+                result.add(row.getString("c"));
+            }
         }
         return result;
     }
