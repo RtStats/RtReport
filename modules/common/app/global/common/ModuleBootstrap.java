@@ -1,5 +1,6 @@
 package global.common;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -27,7 +28,7 @@ public class ModuleBootstrap extends AbstractModuleBootstrap {
     }
 
     public static ICounter getCounter(String name) {
-        return counterFactory.getCounter(name);
+        return !StringUtils.isBlank(name) ? counterFactory.getCounter(name) : null;
     }
 
     @Override

@@ -1,0 +1,176 @@
+@(selectedCounters: java.util.Collection[String], allCounters: Array[String],
+    dateFrom: String, dateTo: String,
+    xTimestamp: Array[Long], highchartsData: Array[_],
+    dtFormat: String
+)(implicit lang: Lang)
+@import com.github.ddth.plommon.utils._
+@import play.mvc._
+@import rtreport.common._
+@_layout(
+	active   = "report-cross",
+	customJs = Array("highcharts-4.0.3/js/highcharts.js", "highcharts-4.0.3/js/highcharts-3d.js",
+	    "avant-1.2.1/assets/plugins/form-datepicker/js/bootstrap-datepicker.js",
+	    "avant-1.2.1/assets/plugins/form-select2/select2.min.js"
+	),
+	customCss = Array("avant-1.2.1/assets/plugins/form-select2/select2.css")
+){
+<div id="page-heading">
+    <ol class="breadcrumb">
+        <li><a href="@controllers.report.routes.ModuleController.dashboard()">@Messages("msg.dashboard")</a></li>
+        <li class="active">@Messages("msg.report_cross")</li>
+    </ol>
+</div>
+    
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            @_macro_displayPageFlashMessage(Controller.flash(controllers.report.ModuleController.VIEW_REPORT_CROSS))
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading"><h3 class="panel-title">@Messages("msg.report_cross")</h3></div>
+                <div class="panel-body">
+                    <div class="container" style="margin-bottom: 10px">
+                        <form class="form-inline" role="form" method="get">
+                            <div class="form-group">
+		                        <label class="sr-only" for="frm_counters">@Messages("msg.counters")</label>
+		                        <select name="c" id="frm_counters" multiple="multiple" style="width:100%">
+		                            @for(c <- allCounters){<option value="@c" @if(selectedCounters.contains(c)){selected="selected"}>@c</option>}
+		                        </select>
+		                    </div>
+		                    <div class="form-group">
+                                <label class="sr-only" for="date_from">@Messages("msg.date.from")</label>
+                                <div class="input-group date" id="datepicker1">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" id="date_from" name="from" value="@dateFrom" placeholder="@Messages("msg.date.from")" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only" for="date_to">@Messages("msg.date.to")</label>
+                                <div class="input-group date" id="datepicker2">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" id="date_to" name="to" value="@dateTo" placeholder="@Messages("msg.date.to")" />
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">@Messages("msg.update")</button>
+                        </form>
+                    </div>
+                    
+                    <div class="container" style="width: 100%">
+                        <div id="_highcharts" style="width: 100%"></div>
+                    </div>
+                    
+                    <div class="container" style="margin-bottom: 10px;">
+                        <a class="btn btn-info btn-sm" onclick="javascript:exportExcel('report_table', 'rtreport_cross_@(dateFrom)_@(dateTo).xls');" id="exportExcel"><i class="fa fa-file-excel-o"></i>&nbsp; Export Excel</a>
+                    </div>
+                    
+                    <div class="container table-responsive">
+                        <table class="table table-striped table-bordered table-condensed" id="report_table">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center; white-space:nowrap;" nowrap="nowrap">&nbsp;</th>
+                                    @for(x <- xTimestamp){
+                                        <th style="text-align: center">@(new java.util.Date(x).format(dtFormat))</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for(r <- highchartsData){
+                                    @defining(r.asInstanceOf[java.util.Map[_,_]]){row =>
+	                                    <tr>                                    
+	                                        <td style="text-align: center">@row.get("name")</td>
+	                                        @for(dp <- row.get("data").asInstanceOf[java.util.List[_]]){
+	                                            <td style="text-align: right">@("%,d".format(dp.asInstanceOf[Array[_]](1)))</td>
+	                                        }
+	                                    </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+
+<script type="text/javascript">
+var CHART;
+var DATA;
+
+$(document).ready(function(){
+	$("#frm_counters").select2({width: 'resolve'});
+	
+	var now = new Date();
+    $('#date_from,#date_to').datepicker({
+        format:  'yyyy-mm-dd',
+        endDate: 'today' /* can not select date in future */
+    });
+
+    Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
+
+    DATA = [@for(r <- highchartsData){
+        @defining(r.asInstanceOf[java.util.Map[_,_]]){row =>
+            {
+                id  : '@row.get("id")',
+                name: '@row.get("name")',
+                data: [@for(dp <- row.get("data").asInstanceOf[java.util.List[_]]){
+                    [@dp.asInstanceOf[Array[_]](0), @dp.asInstanceOf[Array[_]](1)],
+                }]
+            },
+        }
+    }];
+    
+    CHART = new Highcharts.Chart({
+        chart: {
+            renderTo : '_highcharts',
+            type     : 'column',
+            options3d: {
+                enabled: true,
+                alpha  : 5,
+                beta   : 0,
+                depth  : 50,
+                viewDistance: 25
+            }
+        },
+        title: { text: null, style: {display: 'none'} },
+        plotOptions: {},
+        xAxis: {
+            type                : 'datetime',
+            minTickInterval     : 0.5,
+            dateTimeLabelFormats: {
+                millisecond: '%H:%M:%S.%L',
+                second     : '%H:%M:%S',
+                minute     : '%H:%M',
+                hour       : '%H:%M',
+                day        : '%d-%m',
+                week       : '%e. %b',
+                month      : '%b \'%y',
+                year       : '%Y'
+            }
+        },
+        yAxis: {
+            title          : {text: ''},
+            minTickInterval: 1,
+            min            : 0
+        },
+        series: DATA,
+        @*colors: ['#0000ff', '#ff0000', '#009010'],*@
+        tooltip: {
+            formatter: function() {
+                return '<b>'+ this.series.name + ': '
+                    + Highcharts.numberFormat(this.y, 0) + '</b><br/>'
+                    + '<small>' + Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x) +'</small>';
+            }
+        }
+    });
+});
+</script>
+}

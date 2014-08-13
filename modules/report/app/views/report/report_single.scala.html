@@ -28,7 +28,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-info">
-                <div class="panel-heading"><h3 class="panel-title">@Messages("msg.rtstats")</h3></div>
+                <div class="panel-heading"><h3 class="panel-title">@Messages("msg.report_single")</h3></div>
                 <div class="panel-body">
 	                <div class="container" style="margin-bottom: 10px">
 	                    <form class="form-inline" role="form" method="get">
@@ -119,31 +119,6 @@ $('#frm_tags').on('change', function(){
 var CHART;
 var DATA;
 
-@*
-function _loadData() {
-    $.ajax({
-        url: '@controllers.report.routes.JsonController.rtstats(tagName, counterName)',
-        success: function(jsonResult) {
-            for (var i = 0; i < jsonResult.length; i++) {
-                var serieObject = jsonResult[i];
-                var serieLabel = serieObject.name;
-                var serieData = serieObject.data;
-                var chartSerie = CHART.get(serieLabel);
-                if (chartSerie == null) { // chart serie is not defined
-                    CHART.addSeries({id:serieLabel, data:[], name:serieLabel});
-                    chartSerie = CHART.get(serieLabel);
-                }
-                if (chartSerie != null ) {
-                    chartSerie.setData(serieData, true, false, true);
-                }
-            }
-            setTimeout(_loadData, 1*1000);
-        },
-        cache: false
-    });
-}
-*@
-
 $(document).ready(function(){
 	Highcharts.setOptions({
         global: {
@@ -168,21 +143,9 @@ $(document).ready(function(){
                 depth  : 50,
                 viewDistance: 25
             }
-            @*
-            events  : {
-                load: _loadData
-            }
-            *@
         },
         title: { text: null, style: {display: 'none'} },
-        plotOptions: {
-            spline: {
-                lineWidth: 1,
-                marker: {
-                    enabled: false
-                },
-            }
-        },
+        plotOptions: {},
         xAxis: {
             type                : 'datetime',
             minTickInterval     : 0.5,

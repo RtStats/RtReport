@@ -5,7 +5,11 @@ import global.common.Registry;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +35,7 @@ public class ModuleController extends BaseController {
     public final static String VIEW_DASHBOARD = SECTION + "dashboard";
     public final static String VIEW_RTSTATS = SECTION + "rtstats";
     public final static String VIEW_REPORT_SINGLE = SECTION + "report_single";
+    public final static String VIEW_REPORT_CROSS = SECTION + "report_cross";
 
     /*
      * Handles GET:/dashboard
@@ -173,6 +178,101 @@ public class ModuleController extends BaseController {
                         DateFormatUtils.toString(dateFrom.getTime(), DF_YYYYMMDD),
                         DateFormatUtils.toString(dateTo.getTime(), DF_YYYYMMDD), xTimestamp, xDp,
                         sum, df);
+                return ok(html);
+            }
+        });
+        return promise;
+    }
+
+    /*
+     * Handles GET:/reportCross
+     */
+    public static Promise<Result> reportCross(final String fromDateStr, final String toDateStr) {
+        Promise<Result> promise = Promise.promise(new Function0<Result>() {
+            public Result apply() throws Exception {
+                Collection<String> selectedCounterNames = new HashSet<String>();
+                String[] counterList = request().queryString().get("c");
+                if (counterList != null) {
+                    for (String counterName : counterList) {
+                        selectedCounterNames.add(counterName);
+                    }
+                }
+
+                IMetadataDao metadataDao = ModuleBootstrap.getMetadataDao();
+                List<String> counters = metadataDao.getAllCounters();
+                List<Object> data = new ArrayList<Object>();
+
+                Calendar now = DateTimeUtils.startOfDay(Calendar.getInstance());
+                Calendar dateFrom = (Calendar) now.clone();
+                dateFrom.add(Calendar.DATE, -1); // yesterday
+                Calendar dateTo = (Calendar) dateFrom.clone();
+                try {
+                    dateFrom.setTime(DateFormatUtils.fromString(fromDateStr, DF_YYYYMMDD));
+                } catch (Exception e) {
+                }
+                try {
+                    dateTo.setTime(DateFormatUtils.fromString(toDateStr, DF_YYYYMMDD));
+                } catch (Exception e) {
+                }
+
+                String df = "dd-MMM HH:mm";
+                long[] xTimestamp = ArrayUtils.EMPTY_LONG_ARRAY;
+
+                Lang lang = Registry.getLanguage();
+                if (dateFrom.after(dateTo)) {
+                    String msg = Constants.FLASH_MSG_PREFIX_ERROR
+                            + Messages.get(lang, "error.from_date_to_date");
+                    flash(VIEW_REPORT_CROSS, msg);
+                } else if (!dateFrom.before(now)) {
+                    String msg = Constants.FLASH_MSG_PREFIX_ERROR
+                            + Messages.get(lang, "error.from_date_now");
+                    flash(VIEW_REPORT_CROSS, msg);
+                } else if (dateTo.getTimeInMillis() - dateFrom.getTimeInMillis() > MAX_MONTH_MS) {
+                    String msg = Constants.FLASH_MSG_PREFIX_ERROR
+                            + Messages.get(lang, "error.long_from_date_to_date");
+                    flash(VIEW_REPORT_CROSS, msg);
+                } else {
+                    int STEPS = ICounter.STEPS_1_HOUR;
+
+                    final long timestampStart = dateFrom.getTimeInMillis();
+                    final long timestampEnd = DateTimeUtils.nextDate(dateTo).getTimeInMillis() - 1;
+                    final long duration = timestampEnd - timestampStart;
+                    if (duration > 2 * 24 * 3600 * 1000) {
+                        // more than 2 days
+                        STEPS = ICounter.STEPS_1_HOUR * 24;
+                        df = "dd-MMM";
+                    }
+
+                    for (String counterName : selectedCounterNames) {
+                        ICounter counter = ModuleBootstrap.getCounter(counterName);
+                        if (counter != null) {
+                            Map<String, Object> seri = new HashMap<String, Object>();
+                            data.add(seri);
+                            List<long[]> seriData = new ArrayList<long[]>();
+                            seri.put("id", counterName);
+                            seri.put("name", counterName);
+                            seri.put("data", seriData);
+
+                            DataPoint[] dpList = counter.getSeries(timestampStart, timestampEnd,
+                                    STEPS, DataPoint.Type.SUM);
+                            if (xTimestamp.length == 0) {
+                                xTimestamp = new long[dpList.length];
+                                for (int i = 0; i < dpList.length; i++) {
+                                    xTimestamp[i] = dpList[i].timestamp();
+                                }
+                            }
+                            for (DataPoint dp : dpList) {
+                                seriData.add(new long[] { dp.timestamp(), dp.value() });
+                            }
+                        }
+                    }
+                }
+
+                Html html = render(VIEW_REPORT_CROSS, selectedCounterNames,
+                        counters.toArray(ArrayUtils.EMPTY_STRING_ARRAY),
+                        DateFormatUtils.toString(dateFrom.getTime(), DF_YYYYMMDD),
+                        DateFormatUtils.toString(dateTo.getTime(), DF_YYYYMMDD), xTimestamp,
+                        data.toArray(), df);
                 return ok(html);
             }
         });

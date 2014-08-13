@@ -10,6 +10,9 @@
         <li @if(active=="report-single"){class="active"}><a
             href="@controllers.report.routes.ModuleController.reportSingle()"><i
                 class="fa fa-bar-chart-o"></i> <span>@Messages("msg.report_single")</span></a></li>
+        <li @if(active=="report-cross"){class="active"}><a
+            href="@controllers.report.routes.ModuleController.reportCross()"><i
+                class="fa fa-random"></i> <span>@Messages("msg.report_cross")</span></a></li>
         <li class="divider"></li>
         <li @if(active=="config"){class="active"}><a
             href="@controllers.report.routes.ModuleController.dashboard()"><i

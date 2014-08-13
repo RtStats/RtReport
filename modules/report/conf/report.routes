@@ -6,6 +6,7 @@ GET     /rtstats                        controllers.report.ModuleController.rtst
 GET     /json/rtstats                   controllers.report.JsonController.rtstats(c:String?=null, c2:String?=null)
 
 GET     /reportSingle                   controllers.report.ModuleController.reportSingle(t:String?=null, c:String?=null, from:String?=null, to:String?=null)
+GET     /reportCross                    controllers.report.ModuleController.reportCross(from:String?=null, to:String?=null)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                   controllers.report.Assets.at(path="/public", file)
